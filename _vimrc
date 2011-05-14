@@ -99,6 +99,9 @@ map <leader>n :NERDTreeToggle<CR>
 " Load the Gundo window
 map <leader>g :GundoToggle<CR>
 
+" Rope auto assist map to ctr+<space>
+imap <buffer><Tab> <M-/>
+
 " Jump to the definition of whatever the cursor is on
 map <leader>j :RopeGotoDefinition<CR>
 
@@ -109,8 +112,8 @@ map <leader>r :RopeRename<CR>
 " ==========================================================
 " Load pathogen with docs for all plugins
 filetype off
-"call pathogen#runtime_append_all_bundles()
-"call pathogen#helptags()
+call pathogen#runtime_append_all_bundles()
+call pathogen#helptags()
 
 " ==========================================================
 " Basic Settings 
