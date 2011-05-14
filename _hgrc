@@ -1,2 +1,21 @@
+[extensions]
+rebase =
+transplant = 
+fetch =
+hgext.extdiff =
+hgext.mq = 
+hgext.bookmarks =
+hgext.record =
+hgext.graphlog = 
+pager =
+[pager]
+pager = LESS='FSRX' less
 [ui]
-username = sontek <sontek@gmail.com>
+ssh = ssh -C
+username = Yann Malet <yann.malet@gmail.com>
+ignore = ~/.hgignore
+[extdiff]
+cmd.meld=
+[bookmarks]
+track.current = True
+

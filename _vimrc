@@ -4,8 +4,6 @@
 " ==========================================================
 " Pep8 - http://pypi.python.org/pypi/pep8
 " Pyflakes
-" Ack
-" Rake & Ruby for command-t
 " nose, django-nose
 
 " ==========================================================
@@ -19,9 +17,6 @@
 "
 " Pytest
 "     Runs your Python tests in Vim.
-"
-" Commant-T
-"     Allows easy search and opening of files within a given path 
 "
 " Snipmate
 "     Configurable snippets to avoid re-typing common comands
@@ -100,11 +95,6 @@ imap <C-W> <C-O><C-W>
 
 " Open NerdTree
 map <leader>n :NERDTreeToggle<CR>
-
-" Run command-t file search
-map <leader>f :CommandT<CR>
-" Ack searching 
-nmap <leader>a <Esc>:Ack! 
 
 " Load the Gundo window
 map <leader>g :GundoToggle<CR>

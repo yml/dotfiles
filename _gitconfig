@@ -1,12 +1,16 @@
 [user]
-    name = John Anderson
-    email = sontek@gmail.com
-
+        name = Yann Malet
+        email = yann.malet@gmail.com
 [color]
-    diff = auto
-    status = auto
-    branch = auto
-
+        ui = auto
+        status = auto
+        diff = auto
+        branch = auto
+        interactive = auto
+[alias]
+        st = status
+        co = checkout
+        ci = comit
 [push]
     default = matching
 [core]
