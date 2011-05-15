@@ -96,6 +96,9 @@ imap <C-W> <C-O><C-W>
 " Open NerdTree
 map <leader>n :NERDTreeToggle<CR>
 
+"Open TagList Class Browser
+map <leader>b :TlistToggle<CR>
+
 " Load the Gundo window
 map <leader>g :GundoToggle<CR>
 
@@ -200,7 +203,7 @@ set hlsearch                " Highlight searches by default.
 set incsearch               " Incrementally search while typing a /regex
 
 """" Display
-"colorscheme vividchalk
+colorscheme vividchalk
 
 " ==========================================================
 " Python
