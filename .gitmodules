@@ -46,3 +46,6 @@
 [submodule "_vim/bundle/taglist"]
 	path = _vim/bundle/taglist
 	url = https://github.com/vim-scripts/taglist.vim.git
+[submodule "_vim/bundle/sort-python-import"]
+	path = _vim/bundle/sort-python-import
+	url = git://github.com/yml/sort-python-imports.git
