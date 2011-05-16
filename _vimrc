@@ -102,14 +102,14 @@ map <leader>b :TlistToggle<CR>
 " Load the Gundo window
 map <leader>g :GundoToggle<CR>
 
-" Rope auto assist map to ctr+<space>
-imap <buffer><Tab> <M-/>
-
 " Jump to the definition of whatever the cursor is on
-map <leader>j :RopeGotoDefinition<CR>
+map <leader>d :RopeGotoDefinition<CR>
 
 " Rename whatever the cursor is on (including references to it)
 map <leader>r :RopeRename<CR>
+
+" Expand the current directory
+ab <expr> %% expand('%:p:h')
 " ==========================================================
 " Pathogen - Allows us to organize our vim plugins
 " ==========================================================
