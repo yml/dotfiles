@@ -73,8 +73,8 @@ map <leader>dt :set makeprg=python\ manage.py\ test\|:call MakeGreen()<CR>
 
 " ,v brings up my .vimrc
 " ,V reloads it -- making all changes active (have to save first)
-map <leader>v :sp ~/.vimrc<CR><C-W>_
-map <silent> <leader>V :source ~/.vimrc<CR>:filetype detect<CR>:exe ":echo 'vimrc reloaded'"<CR>
+map <leader>vi :sp ~/.vimrc<CR><C-W>_
+map <silent> <leader>VI :source ~/.vimrc<CR>:filetype detect<CR>:exe ":echo 'vimrc reloaded'"<CR>
 
 " open/close the quickfix window
 nmap <leader>c :copen<CR>
@@ -108,6 +108,12 @@ map <leader>d :RopeGotoDefinition<CR>
 " Rename whatever the cursor is on (including references to it)
 map <leader>r :RopeRename<CR>
 
+" Vertical split
+map <leader>v :vsplit<CR>
+
+" Horizontal split
+map <leader>h :split<CR>
+
 " Expand the current directory
 ab <expr> %% expand('%:p:h')
 " ==========================================================
@@ -130,6 +136,7 @@ set background=dark           " We are using dark background in vim
 set title                     " show title in console title bar
 set wildmenu                  " Menu completion in command mode on <Tab>
 set wildmode=full             " <Tab> cycles between all matching choices.
+set wrap                      " wrap tells Vim to word wrap visually
 
 " Ignore these files when completing
 set wildignore+=*.o,*.obj,.git,*.pyc 
@@ -254,4 +261,11 @@ EOF
 " Load up virtualenv's vimrc if it exists
 if filereadable($VIRTUAL_ENV . '/.vimrc')
     source $VIRTUAL_ENV/.vimrc
+endif
+
+" gvim configuration
+if has("gui_running")           " gvim
+    set lines=65 columns=237    " Maximize
+    set guioptions-=m           " Switch off menubar
+    set guioptions-=T           " Switch off toolbar
 endif
