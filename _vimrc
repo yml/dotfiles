@@ -93,10 +93,14 @@ map <c-h> <c-w>h
 "  happen as if in command mode )
 imap <C-W> <C-O><C-W>
 
-" Open NerdTree
+" Open NerdTree in a buffer on the left of the screen
+let NERDTreeShowBookmarks = 1
+let NERDChristmasTree = 1
+let NERDTreeWinPos = "left"
 map <leader>n :NERDTreeToggle<CR>
 
-"Open TagList Class Browser
+"Open TagList Class Browser in a buffer on the right of the screen
+let Tlist_Use_Right_Window = 1
 map <leader>b :TlistToggle<CR>
 
 " Load the Gundo window
