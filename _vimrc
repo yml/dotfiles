@@ -106,12 +106,6 @@ map <leader>b :TlistToggle<CR>
 " Load the Gundo window
 map <leader>g :GundoToggle<CR>
 
-" Jump to the definition of whatever the cursor is on
-map <leader>d :RopeGotoDefinition<CR>
-
-" Rename whatever the cursor is on (including references to it)
-map <leader>r :RopeRename<CR>
-
 " Vertical split
 map <leader>v :vsplit<CR>
 
@@ -250,7 +244,39 @@ au BufRead *.js set makeprg=jslint\ %
 " Try different completion methods depending on its context
 let g:SuperTabDefaultCompletionType = "context"
 
+
+" =========================================================
+" Rope stuff
+" =========================================================
+map <leader>d :RopeGotoDefinition<CR>
+map <leader>r :RopeRename<CR>
+map <leader>rev :RopeExtractVariable<CR>
+map <leader>rd :RopeShowDoc<CR>
+map <leader>rfo :RopeFindOccurances<CR>
+map <leader>rai :RopeAutoImport<CR>
+map <leader>rgac :RopeGenerateAutoimportCache<CR>
+
+
+" ==========================================================
+" Trailing Space Helpers
+" ==========================================================
+" Highlight Trailing Space
+highlight TrailingWhitespace ctermbg=darkgreen guibg=darkgreen
+match TrailingWhitespace /\s\+$/
+au TabEnter * :match TrailingWhitespace /\s\+$/
+
+" Trailing space removal on save
+function! StripTrailingSpaces()
+    let l = line(".")
+    let c = col(".")
+    silent! execute '%s/\s\+$//e'
+    call cursor(l, c)
+endfunction
+au BufWritePre * :call StripTrailingSpaces()
+
+" =========================================================
 " Add the virtualenv's site-packages to vim path
+" =========================================================
 py << EOF
 import os.path
 import sys
