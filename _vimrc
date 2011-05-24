@@ -10,7 +10,7 @@
 " Plugins included
 " ==========================================================
 " Pathogen
-"     Better Management of VIM plugins 
+"     Better Management of VIM plugins
 "
 " GunDo
 "     Visual Undo in vim with diff's to check the differences
@@ -40,14 +40,16 @@
 "    Allows you to surround text with open/close tags
 "
 " Py.test
-"    Run py.test test's from within vim 
+"    Run py.test test's from within vim
 "
 " MakeGreen
 "    Generic test runner that works with nose
 "
 " ==========================================================
-" Shortcuts 
+" Shortcuts
 " ==========================================================
+set pastetoggle=<F2>          "toggle between paste mode (and nopaste mode)
+
 set nocompatible              " Don't be compatible with vi
 let mapleader=","             " change the leader to be a comma vs slash
 
@@ -123,7 +125,7 @@ call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 
 " ==========================================================
-" Basic Settings 
+" Basic Settings
 " ==========================================================
 syntax on                     " syntax highlighing
 filetype on                   " try to detect filetypes
@@ -137,7 +139,7 @@ set wildmode=full             " <Tab> cycles between all matching choices.
 set wrap                      " wrap tells Vim to word wrap visually
 
 " Ignore these files when completing
-set wildignore+=*.o,*.obj,.git,*.pyc 
+set wildignore+=*.o,*.obj,.git,*.pyc
 set grepprg=ack-grep          " replace the default grep program with ack
 
 " Auto change the directory to the current file I'm working on
@@ -165,7 +167,7 @@ set matchtime=2             " (for only .2 seconds).
 set nowrap                  " don't wrap text
 set linebreak               " don't wrap textin the middle of a word
 set autoindent              " always set autoindenting on
-set tabstop=4               " <tab> inserts 4 spaces 
+set tabstop=4               " <tab> inserts 4 spaces
 set shiftwidth=4            " but an indent level is 2 spaces wide.
 set softtabstop=4           " <BS> over an autoindent deletes both spaces.
 set expandtab               " Use spaces, not tabs, for autoindent/tab key.
@@ -272,7 +274,7 @@ function! StripTrailingSpaces()
     silent! execute '%s/\s\+$//e'
     call cursor(l, c)
 endfunction
-au BufWritePre * :call StripTrailingSpaces()
+"au BufWritePre * :call StripTrailingSpaces()
 
 " =========================================================
 " Add the virtualenv's site-packages to vim path
