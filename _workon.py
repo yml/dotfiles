@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import os
 import sys
-from fabric.api import local
 
 PROJECT_ROOTS = {
         'webapp': os.path.abspath('/opt/webapps'),

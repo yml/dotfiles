@@ -23,7 +23,6 @@ if [ $? -eq 0 ]
         unset -f deactivate >/dev/null 2>&1
 fi
 
-echo "Looking for project $1"
 OUTPUT=`python ~/.workon.py $1`
 
 OIFS=$IFS
@@ -31,7 +30,7 @@ set -- $OUTPUT
 IFS=","; declare -a Array=($*)
 IFS=$OIFS
 
-echo "output $OUTPUT"
+#echo "output $OUTPUT"
 echo "${Array[@]}"
 
 PROJECT_DIR=${Array[0]}
