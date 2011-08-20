@@ -133,8 +133,8 @@ fi
   }
 } >/dev/null 2>/dev/null
 
-PYTHONSTARTUP=~/.pythonrc.py
-export PYTHONSTARTUP
+#PYTHONSTARTUP=~/.pythonrc.py
+#export PYTHONSTARTUP
 
 parse_git_branch ()
 {
