@@ -4,7 +4,6 @@
 " ==========================================================
 " Pep8 - http://pypi.python.org/pypi/pep8
 " Pyflakes
-" nose, django-nose
 
 " ==========================================================
 " Plugins included
@@ -62,17 +61,6 @@ map <leader>td <Plug>TaskList
 " Run pep8
 let g:pep8_map='<leader>8'
 
-" run py.test's
-nmap <silent><Leader>tf <Esc>:Pytest file<CR>
-nmap <silent><Leader>tc <Esc>:Pytest class<CR>
-nmap <silent><Leader>tm <Esc>:Pytest method<CR>
-nmap <silent><Leader>tn <Esc>:Pytest next<CR>
-nmap <silent><Leader>tp <Esc>:Pytest previous<CR>
-nmap <silent><Leader>te <Esc>:Pytest error<CR>
-
-" Run django tests
-map <leader>dt :set makeprg=python\ manage.py\ test\|:call MakeGreen()<CR>
-
 " ,v brings up my .vimrc
 " ,V reloads it -- making all changes active (have to save first)
 map <leader>vi :sp ~/.vimrc<CR><C-W>_
@@ -109,10 +97,10 @@ map <leader>b :TlistToggle<CR>
 map <leader>g :GundoToggle<CR>
 
 " Vertical split
-map <leader>v :vsplit<CR>
+map <leader>/ :vsplit<CR>
 
 " Horizontal split
-map <leader>h :split<CR>
+map <leader>- :split<CR>
 
 " Expand the current directory
 ab <expr> %% expand('%:p:h')
@@ -151,7 +139,7 @@ set completeopt=menuone,longest,preview
 set pumheight=6             " Keep a small completion window
 
 " show a line at column 79
- if exists("&colorcolumn")
+if exists("&colorcolumn")
     set colorcolumn=79
 endif
 
@@ -252,7 +240,6 @@ let g:SuperTabDefaultCompletionType = "context"
 " =========================================================
 map <leader>rop :RopeOpenProject<CR>
 map <leader>rcp :RopeCloseProject<CR>
-
 map <leader>rgd :RopeGotoDefinition<CR>
 map <leader>rr :RopeRename<CR>
 map <leader>rev :RopeExtractVariable<CR>
@@ -261,7 +248,6 @@ map <leader>rfo :RopeFindOccurances<CR>
 map <leader>rai :RopeAutoImport<CR>
 map <leader>rgac :RopeGenerateAutoimportCache<CR>
 map <leader>roi :RopeOrganizeImports<CR>
-
 
 " ==========================================================
 " Trailing Space Helpers
