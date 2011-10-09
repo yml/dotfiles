@@ -28,12 +28,6 @@
 [submodule "_vim/bundle/pep8"]
 	path = _vim/bundle/pep8
 	url = https://github.com/vim-scripts/pep8.git
-[submodule "_vim/bundle/pytest"]
-	path = _vim/bundle/pytest
-	url = https://github.com/alfredodeza/pytest.vim.git
-[submodule "_vim/bundle/makegreen"]
-	path = _vim/bundle/makegreen
-	url = https://github.com/reinh/vim-makegreen
 [submodule "_vim/bundle/tasklist"]
 	path = _vim/bundle/tasklist
 	url = https://github.com/vim-scripts/TaskList.vim.git
@@ -43,6 +37,3 @@
 [submodule "_vim/bundle/ropevim"]
 	path = _vim/bundle/ropevim
 	url = https://github.com/sontek/rope-vim.git
-[submodule "_vim/bundle/taglist"]
-	path = _vim/bundle/taglist
-	url = https://github.com/vim-scripts/taglist.vim.git
