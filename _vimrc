@@ -189,7 +189,7 @@ set statusline=%<%f\ (%{&ft})%=%-19(%3l,%02c%03V%)%{fugitive#statusline()}
 
 " displays tabs with :set list & displays when a line runs off-screen
 "set listchars=tab:>-,eol:$,trail:-,precedes:<,extends:>
-set listchars=trail:-,precedes:<,extends:>
+set listchars=tab:>-,trail:-,precedes:<,extends:>
 set list
 
 """ Searching and Patterns
