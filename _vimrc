@@ -201,6 +201,9 @@ set incsearch               " Incrementally search while typing a /regex
 """" Display
 colorscheme vividchalk
 
+""" Spellcheck
+set spell spelllang=en_us
+
 " ==========================================================
 " Python
 " ==========================================================
