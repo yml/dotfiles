@@ -1,4 +1,4 @@
-" https://github.com/sontek/dotfiles/
+" https://github.com/ym/dotfiles/
 " ==========================================================
 " Dependencies - Libraries/Applications outside of vim
 " ==========================================================
@@ -23,26 +23,27 @@
 " PyFlakes
 "     Underlines and displays errors with Python on-the-fly
 "
-" Fugitive
-"    Interface with git from vim
-"
-" Git
-"    Syntax highlighting for git config files
-"
 " Minibufexpl
 "    Visually display what buffers are currently opened
-"
-" Pydoc
-"    Opens up pydoc within vim
 "
 " Surround
 "    Allows you to surround text with open/close tags
 "
-" Py.test
-"    Run py.test test's from within vim
+" Supertab
+"    Supertab aims to provide tab completion to satisfy all your insert
+"    completion 
 "
-" MakeGreen
-"    Generic test runner that works with nose
+" Rope
+"    Ropevim is a plugin for performing python refactorings in vim. It uses
+"    rope library.
+"
+" NerdTree
+"    The NERD tree allows you to explore your filesystem and to open files and 
+"    directories.
+"
+" pep8
+"    It's a simple program that just checks if your python code is pep-8
+"    compliant.
 "
 " ==========================================================
 " Shortcuts
@@ -185,7 +186,6 @@ set report=0                " : commands always print changed line count.
 set shortmess+=a            " Use [+]/[RO]/[w] for modified/readonly/written.
 set ruler                   " Show some info, even without statuslines.
 set laststatus=2            " Always show statusline, even if only 1 window.
-set statusline=%<%f\ (%{&ft})%=%-19(%3l,%02c%03V%)%{fugitive#statusline()}
 
 " displays tabs with :set list & displays when a line runs off-screen
 "set listchars=tab:>-,eol:$,trail:-,precedes:<,extends:>
