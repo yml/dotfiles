@@ -116,7 +116,6 @@ call pathogen#helptags()
 " ==========================================================
 " Basic Settings
 " ==========================================================
-syntax on                     " syntax highlighing
 filetype on                   " try to detect filetypes
 filetype plugin indent on     " enable loading indent file for filetype
 set number                    " Display line numbers
@@ -199,6 +198,7 @@ set hlsearch                " Highlight searches by default.
 set incsearch               " Incrementally search while typing a /regex
 
 """" Display
+syntax on                   " Syntax highlighting
 colorscheme vividchalk
 
 """ Spellcheck
