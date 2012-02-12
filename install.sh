@@ -22,10 +22,16 @@ else
     done
 fi
 
-git submodule sync
-git submodule init
-git submodule update
-git submodule foreach git pull origin master
-git submodule foreach git submodule init
-git submodule foreach git submodule update
 
+cd _vim/bundle
+rm -rf *
+git clone https://github.com/msanders/snipmate.vim.git snipate
+git clone https://github.com/ervandew/supertab.git supertab
+git clone https://github.com/sontek/minibufexpl.vim.git minibufexpl
+git clone https://github.com/mitechie/pyflakes-pathogen.git pyflakes
+git clone https://github.com/sjl/gundo.vim.git gundo
+git clone https://github.com/vim-scripts/pep8.git pep8
+git clone https://github.com/sontek/rope-vim.git rope
+git clone https://github.com/vim-scripts/The-NERD-tree.git nerdtree
+
+cd ../..
