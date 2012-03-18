@@ -3,6 +3,7 @@ import os
 import sys
 
 PROJECT_ROOTS = {
+        'srv': os.path.abspath('/srv/webapps'),
         'webapp': os.path.abspath('/opt/webapps'),
         'sandbox': os.path.abspath('/home/yml/workdir/sandbox')
         }
