@@ -25,7 +25,7 @@ fi
 
 cd _vim/bundle
 rm -rf *
-git clone https://github.com/msanders/snipmate.vim.git snipate
+git clone https://github.com/msanders/snipmate.vim.git snipmate
 git clone https://github.com/ervandew/supertab.git supertab
 git clone https://github.com/sontek/minibufexpl.vim.git minibufexpl
 git clone https://github.com/mitechie/pyflakes-pathogen.git pyflakes
