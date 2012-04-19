@@ -241,16 +241,18 @@ let g:SuperTabDefaultCompletionType = "context"
 " =========================================================
 " Rope stuff
 " =========================================================
-map <leader>rop :RopeOpenProject<CR>
-map <leader>rcp :RopeCloseProject<CR>
-map <leader>rgd :RopeGotoDefinition<CR>
-map <leader>rr :RopeRename<CR>
-map <leader>rev :RopeExtractVariable<CR>
-map <leader>rsd :RopeShowDoc<CR>
+source /usr/local/ropevim.vim
+
+map <leader>o :RopeOpenProject<CR>
+map <leader>c :RopeCloseProject<CR>
+map <leader>d :RopeGotoDefinition<CR>
+map <leader>r :RopeRename<CR>
+map <leader>ev :RopeExtractVariable<CR>
+map <leader>sd :RopeShowDoc<CR>
 map <leader>rfo :RopeFindOccurances<CR>
-map <leader>rai :RopeAutoImport<CR>
-map <leader>rgac :RopeGenerateAutoimportCache<CR>
-map <leader>roi :RopeOrganizeImports<CR>
+map <leader>i :RopeAutoImport<CR>
+map <leader>gac :RopeGenerateAutoimportCache<CR>
+map <leader>oi :RopeOrganizeImports<CR>
 
 " ==========================================================
 " Trailing Space Helpers
