@@ -241,7 +241,8 @@ let g:SuperTabDefaultCompletionType = "context"
 " =========================================================
 " Rope stuff
 " =========================================================
-source /usr/local/ropevim.vim
+" source /usr/local/ropevim.vim
+source /usr/local/share/vim/plugin/ropevim.vim
 
 map <leader>o :RopeOpenProject<CR>
 map <leader>c :RopeCloseProject<CR>
