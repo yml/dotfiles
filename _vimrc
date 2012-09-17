@@ -14,9 +14,6 @@
 " GunDo
 "     Visual Undo in vim with diff's to check the differences
 "
-" Pytest
-"     Runs your Python tests in Vim.
-"
 " Snipmate
 "     Configurable snippets to avoid re-typing common comands
 "
@@ -25,9 +22,6 @@
 "
 " Minibufexpl
 "    Visually display what buffers are currently opened
-"
-" Surround
-"    Allows you to surround text with open/close tags
 "
 " Supertab
 "    Supertab aims to provide tab completion to satisfy all your insert
@@ -50,14 +44,14 @@
 " ==========================================================
 set pastetoggle=<F2>          "toggle between paste mode (and nopaste mode)
 
+" Search the current word in all the file recursively
+:map <F3> :execute "vimgrep /" . expand("<cword>") . "/j **"<Bar>cw<CR>
+
 set nocompatible              " Don't be compatible with vi
 let mapleader=","             " change the leader to be a comma vs slash
 
 " Seriously, guys. It's not like :W is bound to anything anyway.
 command! W :w
-
-" Toggle the tasklist
-map <leader>td <Plug>TaskList
 
 " Run pep8
 let g:pep8_map='<leader>8'
@@ -73,16 +67,6 @@ nmap <leader>cc :cclose<CR>
 
 " for when we forget to use sudo to open/edit a file
 cmap w!! w !sudo tee % >/dev/null
-
-" ctrl-jklm  changes to that split
-map <c-j> <c-w>j
-map <c-k> <c-w>k
-map <c-l> <c-w>l
-map <c-h> <c-w>h
-
-" and lets make these all work in insert mode too ( <C-O> makes next cmd
-"  happen as if in command mode )
-imap <C-W> <C-O><C-W>
 
 " Open NerdTree in a buffer on the left of the screen
 let NERDTreeShowBookmarks = 1
@@ -128,7 +112,6 @@ set wrap                      " wrap tells Vim to word wrap visually
 
 " Ignore these files when completing
 set wildignore+=*.o,*.obj,.git,*.pyc
-set grepprg=ack-grep          " replace the default grep program with ack
 
 " Auto change the directory to the current file I'm working on
 "autocmd BufEnter * lcd %:p:h
@@ -241,8 +224,6 @@ let g:SuperTabDefaultCompletionType = "context"
 " =========================================================
 " Rope stuff
 " =========================================================
-" source /usr/local/ropevim.vim
-" source /usr/local/share/vim/plugin/ropevim.vim
 
 map <leader>o :RopeOpenProject<CR>
 map <leader>c :RopeCloseProject<CR>

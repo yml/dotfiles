@@ -36,5 +36,6 @@ git clone https://github.com/vim-scripts/pep8.git pep8
 git clone https://github.com/vim-scripts/The-NERD-tree.git nerdtree
 git clone https://github.com/yml/go-vim.git go
 git clone https://github.com/sontek/rope-vim.git rope
+git clone https://github.com/kien/ctrlp.vim.git ctrlp
 
 cd ../..
