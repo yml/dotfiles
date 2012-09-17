@@ -182,7 +182,8 @@ set incsearch               " Incrementally search while typing a /regex
 
 """" Display
 syntax on                   " Syntax highlighting
-colorscheme vividchalk
+"colorscheme vividchalk
+colorscheme inkpot
 
 """ Spellcheck
 set spell spelllang=en_us
