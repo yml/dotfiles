@@ -2,3 +2,5 @@ snippet pdb
 	import pdb; pdb.set_trace()
 snippet ipdb
 	import ipdb; ipdb.set_trace()
+snippet djrollback
+	from django.db import connection; cursor = connection.cursor(); cursor.execute('rollback')
