@@ -74,10 +74,6 @@ let NERDChristmasTree = 1
 let NERDTreeWinPos = "left"
 map <leader>n :NERDTreeToggle<CR>
 
-"Open TagList Class Browser in a buffer on the right of the screen
-let Tlist_Use_Right_Window = 1
-map <leader>b :TlistToggle<CR>
-
 " Load the Gundo window
 map <leader>g :GundoToggle<CR>
 
