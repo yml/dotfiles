@@ -269,8 +269,11 @@ EOF
 " GO
 " ==========================================================
 autocmd BufWinEnter *.go set noexpandtab
+autocmd BufWritePre *.go :silent Fmt  
 
-" gvim configuration
+" ==========================================================
+" GVIM configuration
+" ==========================================================
 if has("gui_running")           " gvim
     set lines=65 columns=237    " Maximize
     set guioptions-=m           " Switch off menubar

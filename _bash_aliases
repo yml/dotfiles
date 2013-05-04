@@ -1,2 +1,2 @@
 alias workon="source ~/.workon.sh"
-alias chat="LANGUAGE=en:fr xchat"
+alias chat="LANGUAGE=en:fr xchat > /dev/null 2>&1"
