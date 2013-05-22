@@ -23,10 +23,6 @@
 " Minibufexpl
 "    Visually display what buffers are currently opened
 "
-" Supertab
-"    Supertab aims to provide tab completion to satisfy all your insert
-"    completion 
-"
 " Rope
 "    Ropevim is a plugin for performing python refactorings in vim. It uses
 "    rope library.
@@ -212,13 +208,6 @@ endfunction
 " Javascript
 " ==========================================================
 au BufRead *.js set makeprg=jslint\ %
-
-" ==========================================================
-" SuperTab - Allows us to get code completion with tab
-" ==========================================================
-" Try different completion methods depending on its context
-let g:SuperTabDefaultCompletionType = "context"
-
 
 " =========================================================
 " Rope stuff
