@@ -25,6 +25,7 @@ fi
 # Install rope, ropemode, ropevim globally
 # sudo pip install -U rope ropemode ropevim
 
+mkdir _vim/bundle
 cd _vim/bundle
 rm -rf *
 git clone https://github.com/msanders/snipmate.vim.git snipmate
