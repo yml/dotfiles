@@ -58,7 +58,7 @@ map <leader>vi :sp ~/.vimrc<CR><C-W>_
 map <silent> <leader>VI :source ~/.vimrc<CR>:filetype detect<CR>:exe ":echo 'vimrc reloaded'"<CR>
 
 " open/close the quickfix window
-nmap <leader>c :copen<CR>
+nmap <leader>co :copen<CR>
 nmap <leader>cc :cclose<CR>
 
 " for when we forget to use sudo to open/edit a file
@@ -158,13 +158,12 @@ set confirm                 " Y-N-C prompt if closing with unsaved changes.
 set showcmd                 " Show incomplete normal mode commands as I type.
 set report=0                " : commands always print changed line count.
 set shortmess+=a            " Use [+]/[RO]/[w] for modified/readonly/written.
-set ruler                   " Show some info, even without statuslines.
 set laststatus=2            " Always show statusline, even if only 1 window.
 
 " displays tabs with :set list & displays when a line runs off-screen
 "set listchars=tab:>-,eol:$,trail:-,precedes:<,extends:>
 set listchars=tab:>-,trail:-,precedes:<,extends:>
-set list
+set nolist
 
 """ Searching and Patterns
 set ignorecase              " Default to using case insensitive searches,
@@ -246,6 +245,13 @@ endfunction
 " ==========================================================
 autocmd BufWinEnter *.go set noexpandtab
 autocmd FileType go autocmd BufWritePre <buffer> Fmt
+au Filetype go set makeprg=go\ build\ ./...
+nmap <F5> :make<CR>:copen<CR>
+
+" ==========================================================
+" supertab 
+" ==========================================================
+let g:SuperTabDefaultCompletionType = "context" 
 
 " ==========================================================
 " GVIM configuration
