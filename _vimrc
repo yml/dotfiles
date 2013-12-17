@@ -114,8 +114,8 @@ set wildignore+=*.o,*.obj,.git,*.pyc
 
 """ Insert completion
 " don't select first item, follow typing in autocomplete
-set completeopt=menuone,longest,preview
-set pumheight=6             " Keep a small completion window
+" set completeopt=menuone,longest,preview
+" set pumheight=6             " Keep a small completion window
 
 " show a line at column 79
 if exists("&colorcolumn")
@@ -141,7 +141,7 @@ set expandtab               " Use spaces, not tabs, for autoindent/tab key.
 set shiftround              " rounds indent to a multiple of shiftwidth
 set matchpairs+=<:>         " show matching <> (html mainly) as well
 set foldmethod=indent       " allow us to fold on indents
-set foldlevel=2             " fold by default
+set foldlevel=99             " don't use fold by default
 
 " close preview window automatically when we move around
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
