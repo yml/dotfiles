@@ -2,8 +2,16 @@
 " ==========================================================
 " Dependencies - Libraries/Applications outside of vim
 " ==========================================================
+" Python 
+"
 " Pep8 - http://pypi.python.org/pypi/pep8
 " Pyflakes
+"
+" Go
+"
+" go get -u github.com/bradfitz/goimports
+" go get-u github.com/nsf/gocod
+" go get -u code.google.com/p/rog-go/exp/cmd/godef
 
 " ==========================================================
 " Plugins included
@@ -22,10 +30,6 @@
 "
 " Minibufexpl
 "    Visually display what buffers are currently opened
-"
-" Rope
-"    Ropevim is a plugin for performing python refactorings in vim. It uses
-"    rope library.
 "
 " NerdTree
 "    The NERD tree allows you to explore your filesystem and to open files and 
@@ -137,7 +141,7 @@ set expandtab               " Use spaces, not tabs, for autoindent/tab key.
 set shiftround              " rounds indent to a multiple of shiftwidth
 set matchpairs+=<:>         " show matching <> (html mainly) as well
 set foldmethod=indent       " allow us to fold on indents
-set foldlevel=99            " don't fold by default
+set foldlevel=2             " fold by default
 
 " close preview window automatically when we move around
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
@@ -184,9 +188,6 @@ set spell spelllang=en_us
 " ==========================================================
 " Python
 " ==========================================================
-"au BufRead *.py compiler nose
-au FileType python set omnifunc=pythoncomplete#Complete
-au BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
 
 " Don't let pyflakes use the quickfix window
 let g:pyflakes_use_quickfix = 0
@@ -208,21 +209,6 @@ endfunction
 " ==========================================================
 au BufRead *.js set makeprg=jslint\ %
 
-" =========================================================
-" Rope stuff
-" =========================================================
-
-map <leader>o :RopeOpenProject<CR>
-map <leader>c :RopeCloseProject<CR>
-map <leader>d :RopeGotoDefinition<CR>
-map <leader>r :RopeRename<CR>
-map <leader>ev :RopeExtractVariable<CR>
-map <leader>sd :RopeShowDoc<CR>
-map <leader>rfo :RopeFindOccurances<CR>
-map <leader>i :RopeAutoImport<CR>
-map <leader>gac :RopeGenerateAutoimportCache<CR>
-map <leader>oi :RopeOrganizeImports<CR>
-
 " ==========================================================
 " Trailing Space Helpers
 " ==========================================================
@@ -238,15 +224,42 @@ function! StripTrailingSpaces()
     silent! execute '%s/\s\+$//e'
     call cursor(l, c)
 endfunction
-"au BufWritePre * :call StripTrailingSpaces()
 
 " ==========================================================
 " GO
 " ==========================================================
+function! s:Goimports()
+    let view = winsaveview()
+    silent execute "%!" . "goimports"
+    if v:shell_error
+        let errors = []
+        for line in getline(1, line('$'))
+            let tokens = matchlist(line, '^\(.\{-}\):\(\d\+\):\(\d\+\)\s*\(.*\)')
+            if !empty(tokens)
+                call add(errors, {"filename": @%,
+                                 \"lnum":     tokens[2],
+                                 \"col":      tokens[3],
+                                 \"text":     tokens[4]})
+            endif
+        endfor
+        if empty(errors)
+            % | " Couldn't detect gofmt error format, output errors
+        endif
+        undo
+        if !empty(errors)
+            call setloclist(0, errors, 'r')
+        endif
+        echohl Error | echomsg "Goimports returned error" | echohl None
+    endif
+    call winrestview(view)
+endfunction
+command! -buffer Goimports call s:Goimports()
+
 autocmd BufWinEnter *.go set noexpandtab
-autocmd FileType go autocmd BufWritePre <buffer> Fmt
+autocmd FileType go autocmd BufWritePre <buffer> Goimports
 au Filetype go set makeprg=go\ build\ ./...
 nmap <F5> :make<CR>:copen<CR>
+
 
 " ==========================================================
 " supertab 
