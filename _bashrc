@@ -150,3 +150,6 @@ parse_svn_repository_root() {
 
 # Add git and svn branch names
 export PS1="$PS1\$(parse_git_branch)\$(parse_svn_branch) "
+
+# Add env variable to work with GO easier
+export PATH=~/go/bin:$PATH
