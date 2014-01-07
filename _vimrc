@@ -2,8 +2,16 @@
 " ==========================================================
 " Dependencies - Libraries/Applications outside of vim
 " ==========================================================
+" Python 
+"
 " Pep8 - http://pypi.python.org/pypi/pep8
 " Pyflakes
+"
+" Go
+"
+" go get -u github.com/bradfitz/goimports
+" go get-u github.com/nsf/gocod
+" go get -u code.google.com/p/rog-go/exp/cmd/godef
 
 " ==========================================================
 " Plugins included
@@ -22,14 +30,6 @@
 "
 " Minibufexpl
 "    Visually display what buffers are currently opened
-"
-" Supertab
-"    Supertab aims to provide tab completion to satisfy all your insert
-"    completion 
-"
-" Rope
-"    Ropevim is a plugin for performing python refactorings in vim. It uses
-"    rope library.
 "
 " NerdTree
 "    The NERD tree allows you to explore your filesystem and to open files and 
@@ -62,7 +62,7 @@ map <leader>vi :sp ~/.vimrc<CR><C-W>_
 map <silent> <leader>VI :source ~/.vimrc<CR>:filetype detect<CR>:exe ":echo 'vimrc reloaded'"<CR>
 
 " open/close the quickfix window
-nmap <leader>c :copen<CR>
+nmap <leader>co :copen<CR>
 nmap <leader>cc :cclose<CR>
 
 " for when we forget to use sudo to open/edit a file
@@ -73,10 +73,6 @@ let NERDTreeShowBookmarks = 1
 let NERDChristmasTree = 1
 let NERDTreeWinPos = "left"
 map <leader>n :NERDTreeToggle<CR>
-
-"Open TagList Class Browser in a buffer on the right of the screen
-let Tlist_Use_Right_Window = 1
-map <leader>b :TlistToggle<CR>
 
 " Load the Gundo window
 map <leader>g :GundoToggle<CR>
@@ -118,8 +114,8 @@ set wildignore+=*.o,*.obj,.git,*.pyc
 
 """ Insert completion
 " don't select first item, follow typing in autocomplete
-set completeopt=menuone,longest,preview
-set pumheight=6             " Keep a small completion window
+" set completeopt=menuone,longest,preview
+" set pumheight=6             " Keep a small completion window
 
 " show a line at column 79
 if exists("&colorcolumn")
@@ -145,7 +141,7 @@ set expandtab               " Use spaces, not tabs, for autoindent/tab key.
 set shiftround              " rounds indent to a multiple of shiftwidth
 set matchpairs+=<:>         " show matching <> (html mainly) as well
 set foldmethod=indent       " allow us to fold on indents
-set foldlevel=99            " don't fold by default
+set foldlevel=99             " don't use fold by default
 
 " close preview window automatically when we move around
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
@@ -166,13 +162,12 @@ set confirm                 " Y-N-C prompt if closing with unsaved changes.
 set showcmd                 " Show incomplete normal mode commands as I type.
 set report=0                " : commands always print changed line count.
 set shortmess+=a            " Use [+]/[RO]/[w] for modified/readonly/written.
-set ruler                   " Show some info, even without statuslines.
 set laststatus=2            " Always show statusline, even if only 1 window.
 
 " displays tabs with :set list & displays when a line runs off-screen
 "set listchars=tab:>-,eol:$,trail:-,precedes:<,extends:>
 set listchars=tab:>-,trail:-,precedes:<,extends:>
-set list
+set nolist
 
 """ Searching and Patterns
 set ignorecase              " Default to using case insensitive searches,
@@ -182,9 +177,9 @@ set incsearch               " Incrementally search while typing a /regex
 
 """" Display
 syntax on                   " Syntax highlighting
-"colorscheme vividchalk
+colorscheme vividchalk
 "colorscheme inkpot
-colorscheme corporation
+"colorscheme corporation
 
 
 """ Spellcheck
@@ -193,9 +188,6 @@ set spell spelllang=en_us
 " ==========================================================
 " Python
 " ==========================================================
-"au BufRead *.py compiler nose
-au FileType python set omnifunc=pythoncomplete#Complete
-au BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
 
 " Don't let pyflakes use the quickfix window
 let g:pyflakes_use_quickfix = 0
@@ -218,28 +210,6 @@ endfunction
 au BufRead *.js set makeprg=jslint\ %
 
 " ==========================================================
-" SuperTab - Allows us to get code completion with tab
-" ==========================================================
-" Try different completion methods depending on its context
-let g:SuperTabDefaultCompletionType = "context"
-
-
-" =========================================================
-" Rope stuff
-" =========================================================
-
-map <leader>o :RopeOpenProject<CR>
-map <leader>c :RopeCloseProject<CR>
-map <leader>d :RopeGotoDefinition<CR>
-map <leader>r :RopeRename<CR>
-map <leader>ev :RopeExtractVariable<CR>
-map <leader>sd :RopeShowDoc<CR>
-map <leader>rfo :RopeFindOccurances<CR>
-map <leader>i :RopeAutoImport<CR>
-map <leader>gac :RopeGenerateAutoimportCache<CR>
-map <leader>oi :RopeOrganizeImports<CR>
-
-" ==========================================================
 " Trailing Space Helpers
 " ==========================================================
 " Highlight Trailing Space
@@ -254,27 +224,51 @@ function! StripTrailingSpaces()
     silent! execute '%s/\s\+$//e'
     call cursor(l, c)
 endfunction
-"au BufWritePre * :call StripTrailingSpaces()
 
-" =========================================================
-" Add the virtualenv's site-packages to vim path
-" =========================================================
-py << EOF
-import os.path
-import sys
-import vim
-if 'VIRTUAL_ENV' in os.environ:
-    project_base_dir = os.environ['VIRTUAL_ENV']
-    sys.path.insert(0, project_base_dir)
-    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
-    execfile(activate_this, dict(__file__=activate_this))
-EOF
 " ==========================================================
 " GO
 " ==========================================================
-autocmd BufWinEnter *.go set noexpandtab
+function! s:Goimports()
+    let view = winsaveview()
+    silent execute "%!" . "goimports"
+    if v:shell_error
+        let errors = []
+        for line in getline(1, line('$'))
+            let tokens = matchlist(line, '^\(.\{-}\):\(\d\+\):\(\d\+\)\s*\(.*\)')
+            if !empty(tokens)
+                call add(errors, {"filename": @%,
+                                 \"lnum":     tokens[2],
+                                 \"col":      tokens[3],
+                                 \"text":     tokens[4]})
+            endif
+        endfor
+        if empty(errors)
+            % | " Couldn't detect gofmt error format, output errors
+        endif
+        undo
+        if !empty(errors)
+            call setloclist(0, errors, 'r')
+        endif
+        echohl Error | echomsg "Goimports returned error" | echohl None
+    endif
+    call winrestview(view)
+endfunction
+command! -buffer Goimports call s:Goimports()
 
-" gvim configuration
+autocmd BufWinEnter *.go set noexpandtab
+autocmd FileType go autocmd BufWritePre <buffer> Goimports
+au Filetype go set makeprg=go\ build\ ./...
+nmap <F5> :make<CR>:copen<CR>
+
+
+" ==========================================================
+" supertab 
+" ==========================================================
+let g:SuperTabDefaultCompletionType = "context" 
+
+" ==========================================================
+" GVIM configuration
+" ==========================================================
 if has("gui_running")           " gvim
     set lines=65 columns=237    " Maximize
     set guioptions-=m           " Switch off menubar
