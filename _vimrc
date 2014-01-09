@@ -9,8 +9,8 @@
 "
 " Go
 "
-" go get -u github.com/bradfitz/goimports
-" go get-u github.com/nsf/gocod
+" go get code.google.com/p/go.tools/cmd/...
+" go get-u github.com/nsf/gocode
 " go get -u code.google.com/p/rog-go/exp/cmd/godef
 
 " ==========================================================
@@ -264,7 +264,7 @@ nmap <F5> :make<CR>:copen<CR>
 " ==========================================================
 " supertab 
 " ==========================================================
-let g:SuperTabDefaultCompletionType = "context" 
+" let g:SuperTabDefaultCompletionType = "context" 
 
 " ==========================================================
 " GVIM configuration

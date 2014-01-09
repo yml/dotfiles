@@ -10,7 +10,7 @@
 [alias]
         st = status
         co = checkout
-        ci = comit
+        ci = commit
 [push]
     default = matching
 [core]

@@ -39,7 +39,6 @@ git clone https://github.com/vim-scripts/pep8.git pep8
 git clone https://github.com/vim-scripts/The-NERD-tree.git nerdtree
 git clone https://github.com/kien/ctrlp.vim.git ctrlp
 git clone https://github.com/uggedal/go-vim go-vim
-git clone git://github.com/Blackrush/vim-gocode.git gocode
 git clone https://github.com/dgryski/vim-godef godef
 git clone https://github.com/Raimondi/delimitMate.git delimitMate
 cd ../..
