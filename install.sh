@@ -41,4 +41,5 @@ git clone https://github.com/kien/ctrlp.vim.git ctrlp
 git clone https://github.com/uggedal/go-vim go-vim
 git clone https://github.com/dgryski/vim-godef godef
 git clone https://github.com/Raimondi/delimitMate.git delimitMate
+git clone https://github.com/scrooloose/syntastic.git syntastic
 cd ../..
