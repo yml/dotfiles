@@ -50,6 +50,9 @@ set pastetoggle=<F2>          "toggle between paste mode (and nopaste mode)
 set nocompatible              " Don't be compatible with vi
 let mapleader=","             " change the leader to be a comma vs slash
 
+"remap increment to Ctrl-I because ctrl+a clash with tmux
+:nnoremap <C-I> <C-A>
+
 " Seriously, guys. It's not like :W is bound to anything anyway.
 command! W :w
 
