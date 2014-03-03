@@ -47,5 +47,6 @@ git clone https://github.com/vim-scripts/pep8.git pep8
 # git clone https://github.com/uggedal/go-vim go-vim
 git clone https://github.com/Blackrush/vim-gocode gocode
 git clone https://github.com/dgryski/vim-godef godef
+git clone https://github.com/AndrewRadev/go-oracle.vim go-oracle
 
 cd ../..
