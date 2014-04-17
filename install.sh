@@ -44,6 +44,6 @@ git clone https://github.com/mitechie/pyflakes-pathogen.git pyflakes
 git clone https://github.com/vim-scripts/pep8.git pep8
 
 # GO plugins
-git clone https://github.com/fatih/vim-go.git
+git clone https://github.com/fatih/vim-go.git vim-go
 
 cd ../..
