@@ -38,6 +38,7 @@ git clone https://github.com/vim-scripts/The-NERD-tree.git nerdtree
 git clone https://github.com/kien/ctrlp.vim.git ctrlp
 git clone https://github.com/Raimondi/delimitMate.git delimitMate
 git clone https://github.com/scrooloose/syntastic.git syntastic
+git clone https://github.com/mileszs/ack.vim.git ack
 
 # Python plugins
 git clone https://github.com/mitechie/pyflakes-pathogen.git pyflakes
