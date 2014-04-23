@@ -180,8 +180,8 @@ set incsearch               " Incrementally search while typing a /regex
 
 """" Display
 syntax on                   " Syntax highlighting
-colorscheme vividchalk
-"colorscheme inkpot
+"colorscheme vividchalk
+colorscheme inkpot
 "colorscheme corporation
 
 
