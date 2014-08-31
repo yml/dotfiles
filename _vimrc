@@ -232,7 +232,7 @@ endfunction
 " ==========================================================
 " supertab 
 " ==========================================================
-" let g:SuperTabDefaultCompletionType = "context" 
+let g:SuperTabDefaultCompletionType = "context" 
 
 " ==========================================================
 " GVIM configuration
