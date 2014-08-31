@@ -43,6 +43,7 @@ git clone https://github.com/mileszs/ack.vim.git ack
 # Python plugins
 git clone https://github.com/mitechie/pyflakes-pathogen.git pyflakes
 git clone https://github.com/vim-scripts/pep8.git pep8
+git clone https://github.com/davidhalter/jedi-vim.git
 
 # GO plugins
 git clone https://github.com/fatih/vim-go.git vim-go

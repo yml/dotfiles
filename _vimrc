@@ -1,15 +1,3 @@
-" https://github.com/ym/dotfiles/
-" ==========================================================
-" Dependencies - Libraries/Applications outside of vim
-" ==========================================================
-" Python 
-"
-" Pep8 - http://pypi.python.org/pypi/pep8
-" Pyflakes
-"
-" Go
-"
-" go get code.google.com/p/go.tools/cmd/...
 " go get-u github.com/nsf/gocode
 " go get -u code.google.com/p/rog-go/exp/cmd/godef
 
@@ -206,6 +194,16 @@ function! PressedEnter()
         :PyflakesUpdate
     end
 endfunction
+
+" vim-jedi plugin
+let g:jedi#popup_on_dot = 0
+" set the following setting to 1 if you want python completion
+let g:jedi#auto_initialization = 0
+
+" ==========================================================
+" GO
+" ==========================================================
+let g:go_disable_autoinstall = 1
 
 " ==========================================================
 " Javascript
