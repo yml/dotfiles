@@ -155,3 +155,4 @@ export PS1="$PS1\$(parse_git_branch)\$(parse_svn_branch) "
 export PATH=~/go/bin:$PATH
 
 export EDITOR=vim
+export VISUAL=vim
