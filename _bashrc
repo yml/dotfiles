@@ -153,7 +153,7 @@ alias tm="tmux attach -t "
 alias tl="tmux ls"
 # Complete active sessions by tm <tab>
 function _tmux_completion() {
-    tmux ls | grep -o '[^:]*'
+    tmux ls | grep -oE '^([a-z])+'
 }
 complete -W "$(_tmux_completion)" tm
 
