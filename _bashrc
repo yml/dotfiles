@@ -148,6 +148,15 @@ parse_svn_repository_root() {
   svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'
 }
 
+# tmux
+alias tm="tmux attach -t "
+alias tl="tmux ls"
+# Complete active sessions by tm <tab>
+function _tmux_completion() {
+    tmux ls | grep -o '[^:]*'
+}
+complete -W "$(_tmux_completion)" tm
+
 # Add git and svn branch names
 export PS1="$PS1\$(parse_git_branch)\$(parse_svn_branch) "
 
