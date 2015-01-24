@@ -1,6 +1,3 @@
-" go get-u github.com/nsf/gocode
-" go get -u code.google.com/p/rog-go/exp/cmd/godef
-
 " ==========================================================
 " Plugins included
 " ==========================================================
@@ -44,9 +41,6 @@ let mapleader=","             " change the leader to be a comma vs slash
 " Seriously, guys. It's not like :W is bound to anything anyway.
 command! W :w
 
-" Run pep8
-let g:pep8_map='<leader>8'
-
 " ,v brings up my .vimrc
 " ,V reloads it -- making all changes active (have to save first)
 map <leader>vi :sp ~/.vimrc<CR><C-W>_
@@ -63,7 +57,7 @@ cmap w!! w !sudo tee % >/dev/null
 let NERDTreeShowBookmarks = 1
 let NERDChristmasTree = 1
 let NERDTreeWinPos = "left"
-map <leader>n :NERDTreeToggle<CR>
+map <leader>t :NERDTreeToggle<CR>
 
 " Load the Gundo window
 map <leader>g :GundoToggle<CR>
@@ -99,14 +93,6 @@ set wrap                      " wrap tells Vim to word wrap visually
 
 " Ignore these files when completing
 set wildignore+=*.o,*.obj,.git,*.pyc
-
-" Auto change the directory to the current file I'm working on
-"autocmd BufEnter * lcd %:p:h
-
-""" Insert completion
-" don't select first item, follow typing in autocomplete
-" set completeopt=menuone,longest,preview
-" set pumheight=6             " Keep a small completion window
 
 " show a line at column 79
 if exists("&colorcolumn")
@@ -179,6 +165,8 @@ set spell spelllang=en_us
 " ==========================================================
 " Python
 " ==========================================================
+" Run pep8
+let g:pep8_map='<leader>8'
 
 " Don't let pyflakes use the quickfix window
 let g:pyflakes_use_quickfix = 0
@@ -195,10 +183,12 @@ function! PressedEnter()
     end
 endfunction
 
-" vim-jedi plugin
+" jedi-vim plugin
+let g:jedi#show_call_signatures = 0
 let g:jedi#popup_on_dot = 0
+let g:jedi#popup_select_first = 1
 " set the following setting to 1 if you want python completion
-let g:jedi#auto_initialization = 0
+let g:jedi#auto_initialization = 1
 
 " ==========================================================
 " GO
@@ -226,17 +216,7 @@ function! StripTrailingSpaces()
     call cursor(l, c)
 endfunction
 
-
 " ==========================================================
 " supertab 
 " ==========================================================
 let g:SuperTabDefaultCompletionType = "context" 
-
-" ==========================================================
-" GVIM configuration
-" ==========================================================
-if has("gui_running")           " gvim
-    set lines=65 columns=237    " Maximize
-    set guioptions-=m           " Switch off menubar
-    set guioptions-=T           " Switch off toolbar
-endif
