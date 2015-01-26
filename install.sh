@@ -22,16 +22,11 @@ else
     done
 fi
 
-# Install rope, ropemode, ropevim globally
-# sudo pip install -U rope ropemode ropevim
-
 mkdir _vim/bundle
 cd _vim/bundle
 rm -rf *
+# git clone https://github.com/vim-scripts/UltiSnips
 git clone https://github.com/ervandew/supertab.git supertab
-git clone https://github.com/MarcWeber/vim-addon-mw-utils.git vim-addon-mw-utils  # required by snipmate
-git clone https://github.com/tomtom/tlib_vim.git tlib  # required by snipmate
-git clone https://github.com/garbas/vim-snipmate.git snipmate
 git clone https://github.com/fholgado/minibufexpl.vim.git
 git clone https://github.com/sjl/gundo.vim.git gundo
 git clone https://github.com/vim-scripts/The-NERD-tree.git nerdtree
