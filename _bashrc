@@ -138,15 +138,6 @@ parse_git_branch ()
 {
   git branch 2>/dev/null | grep "* " | sed 's/^\*\s\(.*\)$/(git: \1)/'
 }
-parse_svn_branch() {
-  parse_svn_url | sed -e 's#^'"$(parse_svn_repository_root)"'##g' | awk -F / '{print "(svn::"$1 "/" $2 ")"}'
-}
-parse_svn_url() {
-  svn info 2>/dev/null | sed -ne 's#^URL: ##p'
-}
-parse_svn_repository_root() {
-  svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'
-}
 
 # tmux
 alias tm="tmux attach -t "
@@ -158,16 +149,16 @@ function _tmux_completion() {
 complete -W "$(_tmux_completion)" tm
 
 # Add git and svn branch names
-export PS1="$PS1\$(parse_git_branch)\$(parse_svn_branch) "
+export PS1="$PS1\$(parse_git_branch)"
 
 # Add env variable to work with GO easier
-export PATH=~/go/bin:$PATH
+export PATH=~/gopath/bin:~/go/bin:$PATH
+export GOPATH=~/gopath
+export CDPATH=.:$HOME:$GOROOT/src:$GOPATH/src/golang.org:$GOPATH/src/github.com
 
 export EDITOR=vim
 export VISUAL=vim
 
-# The next line setup aws env
-source '/home/yml/aws/credential.sh'
 # The next line updates PATH for the Google Cloud SDK.
 source '/home/yml/google-cloud-sdk/path.bash.inc'
 
