@@ -25,6 +25,11 @@
 "    compliant.
 "
 " ==========================================================
+" Performance optimization on large file
+" ==========================================================
+set nocursorcolumn
+syntax sync minlines=256
+" ==========================================================
 " Shortcuts
 " ==========================================================
 set pastetoggle=<F2>          "toggle between paste mode (and nopaste mode)
@@ -237,3 +242,38 @@ endfunction
 " supertab 
 " ==========================================================
 let g:SuperTabDefaultCompletionType = "context" 
+let g:xptemplate_key = '<Tab>'
+
+" Prevent supertab from mapping <tab> to anything.
+let g:SuperTabMappingForward = '<Plug>xpt_void'
+
+" Tell XPTemplate what to fall back to, if nothing matches.
+" Original SuperTab() yields nothing if g:SuperTabMappingForward was set to
+" something it does not know.
+let g:xptemplate_fallback = '<C-r>=XPTwrapSuperTab("n")<CR>'
+
+fun! XPTwrapSuperTab(command) "{{{
+    let v = SuperTab(a:command)
+    if v == ''
+        " Change \<Tab> to whatever you want, when neither XPTemplate or
+        " supertab needs to do anything.
+        return "\<Tab>"
+    else
+        return v
+    end
+endfunction "}}}
+
+
+" ==========================================================
+" spell checking
+" ==========================================================
+function! ToggleSpellLang()
+    " toggle between en and fr
+    if &spelllang =~# 'en'
+        :set spelllang=fr
+    else
+        :set spelllang=en
+    endif
+endfunction
+nnoremap <F3> :setlocal spell!<CR> " toggle spell on or off
+nnoremap <F4> :call ToggleSpellLang()<CR> " toggle language
