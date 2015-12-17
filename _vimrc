@@ -7,9 +7,6 @@
 " GunDo
 "     Visual Undo in vim with diff's to check the differences
 "
-" Snipmate
-"     Configurable snippets to avoid re-typing common comands
-"
 " PyFlakes
 "     Underlines and displays errors with Python on-the-fly
 "
@@ -29,6 +26,7 @@
 " ==========================================================
 set nocursorcolumn
 syntax sync minlines=256
+set re=1
 " ==========================================================
 " Shortcuts
 " ==========================================================
@@ -65,7 +63,7 @@ let NERDTreeWinPos = "left"
 map <leader>t :NERDTreeToggle<CR>
 
 " Load the Gundo window
-map <leader>g :GundoToggle<CR>
+map <leader>z :GundoToggle<CR>
 
 " Vertical split
 map <leader>/ :vsplit<CR>
@@ -164,9 +162,6 @@ colorscheme inkpot
 "colorscheme corporation
 
 
-""" Spellcheck
-set spell spelllang=en_us
-
 " ==========================================================
 " Python
 " ==========================================================
@@ -201,7 +196,7 @@ let g:jedi#auto_initialization = 1
 let g:go_disable_autoinstall = 1
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
-let g:go_highlight_structs = 1
+let g:go_highlight_structs = 0
 
 let g:go_fmt_command = "goimports"
 let g:go_bin_path = expand("~/gopath")
@@ -267,13 +262,15 @@ endfunction "}}}
 " ==========================================================
 " spell checking
 " ==========================================================
+set spell spelllang=en_us
+
 function! ToggleSpellLang()
     " toggle between en and fr
     if &spelllang =~# 'en'
-        :set spelllang=fr
-    else
+
         :set spelllang=en
     endif
 endfunction
 nnoremap <F3> :setlocal spell!<CR> " toggle spell on or off
 nnoremap <F4> :call ToggleSpellLang()<CR> " toggle language
+

@@ -25,8 +25,11 @@ fi
 mkdir _vim/bundle
 cd _vim/bundle
 rm -rf *
+
 # git clone https://github.com/vim-scripts/UltiSnips
 git clone https://github.com/drmingdrmer/xptemplate
+# symlink local bundle xpt-personal
+ln -sf ../xpt-personal xpt-personal
 git clone https://github.com/ervandew/supertab.git supertab
 git clone https://github.com/fholgado/minibufexpl.vim.git
 git clone https://github.com/sjl/gundo.vim.git gundo
