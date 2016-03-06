@@ -4,20 +4,6 @@
 " Pathogen
 "     Better Management of VIM plugins
 "
-" GunDo
-"     Visual Undo in vim with diff's to check the differences
-"
-" PyFlakes
-"     Underlines and displays errors with Python on-the-fly
-"
-" NerdTree
-"    The NERD tree allows you to explore your filesystem and to open files and 
-"    directories.
-"
-" pep8
-"    It's a simple program that just checks if your python code is pep-8
-"    compliant.
-"
 " ==========================================================
 " Performance optimization on large file
 " ==========================================================
@@ -52,12 +38,6 @@ nmap <leader>cc :cclose<CR>
 
 " for when we forget to use sudo to open/edit a file
 cmap w!! w !sudo tee % >/dev/null
-
-" Open NerdTree in a buffer on the left of the screen
-let NERDTreeShowBookmarks = 1
-let NERDChristmasTree = 1
-let NERDTreeWinPos = "left"
-map <leader>t :NERDTreeToggle<CR>
 
 " Load the Gundo window
 map <leader>z :GundoToggle<CR>

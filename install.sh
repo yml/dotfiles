@@ -24,6 +24,7 @@ fi
 
 mkdir _vim/bundle
 cd _vim/bundle
+BUNDLEDIR=`pwd`
 rm -rf *
 
 git clone https://github.com/drmingdrmer/xptemplate
@@ -31,14 +32,13 @@ git clone https://github.com/drmingdrmer/xptemplate
 ln -sf ../xpt-personal xpt-personal
 git clone https://github.com/gabrielelana/vim-markdown.git
 git clone https://github.com/Shougo/vimproc.vim.git
-cd bundle/vimproc.vim
+cd vimproc.vim
 make
-cd ../..
+cd $BUNDLEDIR
 git clone https://github.com/Shougo/unite.vim.git
 git clone https://github.com/Shougo/neomru.vim.git
 git clone https://github.com/ervandew/supertab.git supertab
 git clone https://github.com/sjl/gundo.vim.git gundo
-git clone https://github.com/vim-scripts/The-NERD-tree.git nerdtree
 git clone https://github.com/scrooloose/syntastic.git syntastic
 
 # Python plugins
