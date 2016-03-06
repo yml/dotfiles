@@ -156,8 +156,11 @@ export PATH=~/gopath/bin:~/go/bin:$PATH
 export GOPATH=~/gopath
 export CDPATH=.:$HOME:$GOROOT/src:$GOPATH/src/golang.org:$GOPATH/src/github.com
 
+# vim
 export EDITOR=vim
 export VISUAL=vim
+# remap caps lock to escape
+setxkbmap -option caps:escape
 
 # The next line updates PATH for the Google Cloud SDK.
 source '/home/yml/google-cloud-sdk/path.bash.inc'

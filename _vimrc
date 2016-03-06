@@ -10,9 +10,6 @@
 " PyFlakes
 "     Underlines and displays errors with Python on-the-fly
 "
-" Minibufexpl
-"    Visually display what buffers are currently opened
-"
 " NerdTree
 "    The NERD tree allows you to explore your filesystem and to open files and 
 "    directories.
@@ -202,14 +199,14 @@ let g:go_fmt_command = "goimports"
 let g:go_bin_path = expand("~/gopath")
 
 
-au FileType go nmap <Leader>s <Plug>(go-implements)
-au FileType go nmap <Leader>i <Plug>(go-info)
+au FileType go nmap <Leader>gs <Plug>(go-implements)
+au FileType go nmap <Leader>gi <Plug>(go-info)
 au FileType go nmap <Leader>gd <Plug>(go-doc)
-au FileType go nmap <leader>r <Plug>(go-run)
-au FileType go nmap <leader>b <Plug>(go-build)
-au FileType go nmap <leader>t <Plug>(go-test)
-au FileType go nmap <leader>c <Plug>(go-coverage)
-au FileType go nmap <Leader>d <Plug>(go-def-split)
+au FileType go nmap <leader>gr <Plug>(go-run)
+au FileType go nmap <leader>gb <Plug>(go-build)
+au FileType go nmap <leader>gt <Plug>(go-test)
+au FileType go nmap <leader>gc <Plug>(go-coverage)
+au FileType go nmap <Leader>gd <Plug>(go-def-split)
 
 
 " ==========================================================
@@ -267,7 +264,8 @@ set spell spelllang=en_us
 function! ToggleSpellLang()
     " toggle between en and fr
     if &spelllang =~# 'en'
-
+        :set spelllang=fr
+    else
         :set spelllang=en
     endif
 endfunction
@@ -284,6 +282,9 @@ nnoremap <leader>t :<C-u>Unite -no-split -buffer-name=files -start-insert file_r
 nnoremap <leader>r :<C-u>Unite -no-split -quick-match -buffer-name=mru -start-insert file_mru<cr>
 nnoremap <leader>b :<C-u>Unite -no-split -quick-match -buffer-name=buffer buffer<cr>
 nnoremap <leader>f :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
+
+" pt is go program that is comparable to grep but faster
+" go get https://github.com/monochromegane/the_platinum_searcher
 if executable('pt')
   let g:unite_source_grep_command = 'pt'
   let g:unite_source_grep_default_opts = '--nogroup --nocolor'
