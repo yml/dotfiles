@@ -63,8 +63,12 @@ call pathogen#helptags()
 " ==========================================================
 filetype on                   " try to detect filetypes
 filetype plugin indent on     " enable loading indent file for filetype
+filetype plugin on
+set hidden                    " hide buffers instead of closing them
+set mouse=a                   " enable mouse
 set number                    " Display line numbers
 set numberwidth=1             " using only 1 column (and 1 space) while possible
+set relativenumber            " Display the relative number
 set background=dark           " We are using dark background in vim
 set title                     " show title in console title bar
 set wildmenu                  " Menu completion in command mode on <Tab>
@@ -80,15 +84,12 @@ if exists("&colorcolumn")
 endif
 
 """ Moving Around/Editing
-set cursorline              " have a line indicate the cursor location
-set ruler                   " show the cursor position all the time
-set nostartofline           " Avoid moving cursor to BOL when jumping around
+set nocursorline            " have a line indicate the cursor location
 set virtualedit=block       " Let cursor move past the last char in <C-v> mode
 set scrolloff=3             " Keep 3 context lines above and below the cursor
 set backspace=2             " Allow backspacing over autoindent, EOL, and BOL
 set showmatch               " Briefly jump to a paren once it's balanced
-set matchtime=2             " (for only .2 seconds).
-set nowrap                  " don't wrap text
+set matchtime=10             " (for only .2 seconds).
 set linebreak               " don't wrap textin the middle of a word
 set autoindent              " always set autoindenting on
 set tabstop=4               " <tab> inserts 4 spaces
@@ -98,11 +99,11 @@ set expandtab               " Use spaces, not tabs, for autoindent/tab key.
 set shiftround              " rounds indent to a multiple of shiftwidth
 set matchpairs+=<:>         " show matching <> (html mainly) as well
 set foldmethod=indent       " allow us to fold on indents
-set foldlevel=99             " don't use fold by default
+set foldlevel=9             " don't use fold by default
 
 " close preview window automatically when we move around
-autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
-autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+" autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+" autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 
 """" Reading/Writing
 set noautowrite             " Never write a file unless I request it.
@@ -122,7 +123,6 @@ set shortmess+=a            " Use [+]/[RO]/[w] for modified/readonly/written.
 set laststatus=2            " Always show statusline, even if only 1 window.
 
 " displays tabs with :set list & displays when a line runs off-screen
-"set listchars=tab:>-,eol:$,trail:-,precedes:<,extends:>
 set listchars=tab:>-,trail:-,precedes:<,extends:>
 set nolist
 
@@ -137,7 +137,6 @@ syntax on                   " Syntax highlighting
 "colorscheme vividchalk
 colorscheme inkpot
 "colorscheme corporation
-
 
 " ==========================================================
 " Python
@@ -178,17 +177,17 @@ let g:go_highlight_structs = 0
 let g:go_fmt_command = "goimports"
 let g:go_bin_path = expand("~/gopath")
 
-
 au FileType go nmap <Leader>gs <Plug>(go-implements)
+au FileType go nmap <Leader>gd <Plug>(go-def)
 au FileType go nmap <Leader>gi <Plug>(go-info)
-au FileType go nmap <Leader>gd <Plug>(go-doc)
+au FileType go nmap <Leader>gh <Plug>(go-doc)
 au FileType go nmap <leader>gr <Plug>(go-run)
 au FileType go nmap <leader>gb <Plug>(go-build)
 au FileType go nmap <leader>gt <Plug>(go-test)
 au FileType go nmap <leader>gc <Plug>(go-coverage)
-au FileType go nmap <Leader>gd <Plug>(go-def-split)
 
-
+let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 " ==========================================================
 " Javascript
 " ==========================================================
@@ -211,35 +210,14 @@ function! StripTrailingSpaces()
 endfunction
 
 " ==========================================================
-" supertab 
+" supertab
 " ==========================================================
-let g:SuperTabDefaultCompletionType = "context" 
-let g:xptemplate_key = '<Tab>'
-
-" Prevent supertab from mapping <tab> to anything.
-let g:SuperTabMappingForward = '<Plug>xpt_void'
-
-" Tell XPTemplate what to fall back to, if nothing matches.
-" Original SuperTab() yields nothing if g:SuperTabMappingForward was set to
-" something it does not know.
-let g:xptemplate_fallback = '<C-r>=XPTwrapSuperTab("n")<CR>'
-
-fun! XPTwrapSuperTab(command) "{{{
-    let v = SuperTab(a:command)
-    if v == ''
-        " Change \<Tab> to whatever you want, when neither XPTemplate or
-        " supertab needs to do anything.
-        return "\<Tab>"
-    else
-        return v
-    end
-endfunction "}}}
-
+let g:SuperTabDefaultCompletionType = "context"
 
 " ==========================================================
 " spell checking
 " ==========================================================
-set spell spelllang=en_us
+" set spell spelllang=en_us
 
 function! ToggleSpellLang()
     " toggle between en and fr
@@ -251,17 +229,16 @@ function! ToggleSpellLang()
 endfunction
 nnoremap <F3> :setlocal spell!<CR> " toggle spell on or off
 nnoremap <F4> :call ToggleSpellLang()<CR> " toggle language
-
-
 " ==========================================================
 " Unite
 " ==========================================================
 let g:unite_source_history_yank_enable = 1
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 nnoremap <leader>t :<C-u>Unite -no-split -buffer-name=files -start-insert file_rec/async:!<cr>
-nnoremap <leader>r :<C-u>Unite -no-split -quick-match -buffer-name=mru -start-insert file_mru<cr>
+nnoremap <leader>r :<C-u>Unite -no-split -buffer-name=mru -start-insert file_mru<cr>
 nnoremap <leader>b :<C-u>Unite -no-split -quick-match -buffer-name=buffer buffer<cr>
 nnoremap <leader>f :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
+nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank history/yank<cr>
 
 " pt is go program that is comparable to grep but faster
 " go get https://github.com/monochromegane/the_platinum_searcher
@@ -282,4 +259,7 @@ function! s:unite_settings()
   imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
 endfunction
 
-
+" ==========================================================
+" neocomplete
+" ==========================================================
+let g:neocomplete#enable_at_startup = 1

@@ -27,19 +27,26 @@ cd _vim/bundle
 BUNDLEDIR=`pwd`
 rm -rf *
 
-git clone https://github.com/drmingdrmer/xptemplate
-# symlink local bundle xpt-personal
-ln -sf ../xpt-personal xpt-personal
 git clone https://github.com/gabrielelana/vim-markdown.git
+
 git clone https://github.com/Shougo/vimproc.vim.git
 cd vimproc.vim
 make
 cd $BUNDLEDIR
 git clone https://github.com/Shougo/unite.vim.git
 git clone https://github.com/Shougo/neomru.vim.git
+git clone https://github.com/Shougo/neocomplete.vim.git neocomplete
+git clone https://github.com/Shougo/neosnippet.vim.git neosnippet
+git clone https://github.com/Shougo/neosnippet-snippets.git neosnippet-snippets
+git clone https://github.com/Shougo/neoyank.vim.git neoyank
+
 git clone https://github.com/ervandew/supertab.git supertab
 git clone https://github.com/sjl/gundo.vim.git gundo
 git clone https://github.com/scrooloose/syntastic.git syntastic
+git clone https://github.com/tpope/vim-fugitive.git vim-fugitive
+
+# YAML
+git clone https://github.com/stephpy/vim-yaml.git
 
 # Python plugins
 git clone https://github.com/mitechie/pyflakes-pathogen.git pyflakes
@@ -50,6 +57,9 @@ git clone https://github.com/davidhalter/jedi-vim.git
 git clone https://github.com/fatih/vim-go.git vim-go
 
 # typescript
-git clone https://github.com/leafgarland/typescript-vim.git typescript-vim
+# git clone https://github.com/leafgarland/typescript-vim.git typescript-vim
+
+#databases
+# git clone https://github.com/vim-scripts/dbext.vim dbext
 
 cd ../..
