@@ -232,10 +232,12 @@ nnoremap <F4> :call ToggleSpellLang()<CR> " toggle language
 " ==========================================================
 " Unite
 " ==========================================================
+call unite#custom#source('file_mru,file_rec,file_rec/async,grepocate',
+            \ 'max_candidates', 0)
 let g:unite_source_history_yank_enable = 1
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
-nnoremap <leader>t :<C-u>Unite -no-split -buffer-name=files -start-insert file_rec/async:!<cr>
-nnoremap <leader>r :<C-u>Unite -no-split -buffer-name=mru -start-insert file_mru<cr>
+nnoremap <leader>t :<C-u>Unite -no-split -buffer-name=filesrec-start-insert file_rec/async:!<cr>
+nnoremap <leader>r :<C-u>Unite -no-split -buffer-name=files -start-insert file/async:!<cr>
 nnoremap <leader>b :<C-u>Unite -no-split -quick-match -buffer-name=buffer buffer<cr>
 nnoremap <leader>f :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
 nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank history/yank<cr>
@@ -293,9 +295,9 @@ inoremap <expr><C-l>     neocomplete#complete_common_string()
 " <CR>: close popup and save indent.
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function()
-  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+  "return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
   " For no inserting <CR> key.
-  "return pumvisible() ? "\<C-y>" : "\<CR>"
+  return pumvisible() ? "\<C-y>" : "\<CR>"
 endfunction
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
