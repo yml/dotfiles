@@ -175,7 +175,6 @@ let g:go_highlight_methods = 1
 let g:go_highlight_structs = 0
 
 let g:go_fmt_command = "goimports"
-let g:go_bin_path = expand("~/gopath")
 
 au FileType go nmap <Leader>gs <Plug>(go-implements)
 au FileType go nmap <Leader>gd <Plug>(go-def)
