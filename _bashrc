@@ -25,7 +25,6 @@ xterm*|rxvt*)
     ;;
 esac
 
-
 # Set up TERM variables.
 # vt100 and xterm have no color in vim (at least on unixs), but if we call them xterm-color, they will.
 # (vt100 for F-Secure SSH.)
@@ -135,7 +134,6 @@ export PS1="$PS1\$(parse_git_branch)"
 # Add env variable to work with GO easier
 export PATH=~/gopath/bin:~/go/bin:$PATH
 export GOPATH=~/gopath
-export CDPATH=.:$HOME:$GOROOT/src:$GOPATH/src/golang.org:$GOPATH/src/github.com
 
 # vim
 export EDITOR=vim
@@ -157,4 +155,4 @@ setxkbmap -option caps:escape
    ls -c ~/Notes/ | egrep -i "$*"
  }
 
-
+ export GPGKEY=2F74DA04
