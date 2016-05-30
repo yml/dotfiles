@@ -125,15 +125,16 @@ fi
 
 parse_git_branch ()
 {
-  git branch 2>/dev/null | grep "* " | sed 's/^\*\s\(.*\)$/(git: \1)/'
+  git branch 2>/dev/null | grep "* " | sed 's/^\*\s\(.*\)$/(git: \1) /'
 }
 
 # Add git and svn branch names
 export PS1="$PS1\$(parse_git_branch)"
 
 # Add env variable to work with GO easier
-export PATH=~/gopath/bin:~/go/bin:$PATH
-export GOPATH=~/gopath
+export GOROOT=$HOME/go
+export GOPATH=$HOME/gopath
+export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
 # vim
 export EDITOR=vim
