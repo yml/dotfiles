@@ -144,7 +144,9 @@ export VISUAL=vim
 export  XDG_CONFIG_HOME=~/.config
 
 # remap caps lock to escape
-setxkbmap -option caps:escape
+if setxkbmap -version >/dev/null 2>&1; then
+    setxkbmap -option caps:escape
+fi
 
  # Opens a note
  notescd() {
