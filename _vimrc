@@ -141,6 +141,7 @@ colorscheme inkpot
 " ==========================================================
 " Python
 " ==========================================================
+autocmd FileType javascript setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4
 " Add the virtualenv's site-packages to vim path
 if has('python')
 py << EOF
@@ -194,8 +195,8 @@ let g:go_highlight_structs = 0
 
 let g:go_fmt_command = "goimports"
 
+au FileType go nmap <Leader>d <Plug>(go-def)
 au FileType go nmap <Leader>gs <Plug>(go-implements)
-au FileType go nmap <Leader>gd <Plug>(go-def)
 au FileType go nmap <Leader>gi <Plug>(go-info)
 au FileType go nmap <Leader>gh <Plug>(go-doc)
 au FileType go nmap <leader>gr <Plug>(go-run)
@@ -208,7 +209,13 @@ let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 " ==========================================================
 " Javascript
 " ==========================================================
+autocmd FileType javascript setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 au BufRead *.js set makeprg=jslint\ %
+
+" ==========================================================
+" HTML
+" ==========================================================
+autocmd FileType xml,html,htmljinja,htmldjango setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 
 " ==========================================================
 " Trailing Space Helpers
