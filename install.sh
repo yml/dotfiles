@@ -45,7 +45,8 @@ git clone https://github.com/scrooloose/syntastic.git syntastic
 git clone https://github.com/tpope/vim-fugitive.git vim-fugitive
 
 # YAML
-# git clone https://github.com/stephpy/vim-yaml.git
+#git clone https://github.com/stephpy/vim-yaml.git
+git clone git@github.com:saltstack/salt-vim.git
 
 # Python plugins
 git clone https://github.com/mitechie/pyflakes-pathogen.git pyflakes
