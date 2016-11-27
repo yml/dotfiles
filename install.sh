@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 function link_file {
     source="${PWD}/$1"
     target="${HOME}/${1/_/.}"
@@ -10,17 +11,10 @@ function link_file {
     ln -sf ${source} ${target}
 }
 
-if [ "$1" = "vim" ]; then
-    for i in _vim*
-    do
-       link_file $i
-    done
-else
-    for i in _*
-    do
-        link_file $i
-    done
-fi
+for i in _*
+do
+    link_file $i
+done
 
 mkdir _vim/bundle
 cd _vim/bundle
