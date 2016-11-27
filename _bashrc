@@ -13,8 +13,183 @@ shopt -s histappend
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
+#############################################################################
+# GIT prompt in PS1
+#############################################################################
 
-PS1='\[\033[01;31m\]\w\[\033[00m\]\n${debian_chroot:+($debian_chroot)}\[\033[01;34m\]\u\[\033[01;32m\]@\[\033[01;34m\]\h\[\033[00m\]\$ '
+# Set up symbols
+git_prompt_synced_symbol=""
+git_prompt_dirty_synced_symbol="*"
+git_prompt_unpushed_symbol="△"
+git_prompt_dirty_unpushed_symbol="▲"
+git_prompt_unpulled_symbol="▽"
+git_prompt_dirty_unpulled_symbol="▼"
+git_prompt_unpushed_unpulled_symbol="⬡"
+git_prompt_dirty_unpushed_unpulled_symbol="⬢"
+
+function git_prompt_get_git_progress() {
+  # Detect in-progress actions (e.g. merge, rebase)
+  # https://github.com/git/git/blob/v1.9-rc2/wt-status.c#L1199-L1241
+  git_dir="$(git rev-parse --git-dir)"
+
+  # git merge
+  if [[ -f "$git_dir/MERGE_HEAD" ]]; then
+    echo " [merge]"
+  elif [[ -d "$git_dir/rebase-apply" ]]; then
+    # git am
+    if [[ -f "$git_dir/rebase-apply/applying" ]]; then
+      echo " [am]"
+    # git rebase
+    else
+      echo " [rebase]"
+    fi
+  elif [[ -d "$git_dir/rebase-merge" ]]; then
+    # git rebase --interactive/--merge
+    echo " [rebase]"
+  elif [[ -f "$git_dir/CHERRY_PICK_HEAD" ]]; then
+    # git cherry-pick
+    echo " [cherry-pick]"
+  fi
+  if [[ -f "$git_dir/BISECT_LOG" ]]; then
+    # git bisect
+    echo " [bisect]"
+  fi
+  if [[ -f "$git_dir/REVERT_HEAD" ]]; then
+    # git revert --no-commit
+    echo " [revert]"
+  fi
+}
+
+git_prompt_is_branch1_behind_branch2 () {
+  # $ git log origin/master..master -1
+  # commit 4a633f715caf26f6e9495198f89bba20f3402a32
+  # Author: Todd Wolfson <todd@twolfson.com>
+  # Date:   Sun Jul 7 22:12:17 2013 -0700
+  #
+  #     Unsynced commit
+
+  # Find the first log (if any) that is in branch1 but not branch2
+  first_log="$(git log $1..$2 -1 2> /dev/null)"
+
+  # Exit with 0 if there is a first log, 1 if there is not
+  [[ -n "$first_log" ]]
+}
+
+git_prompt_branch_exists () {
+  # List remote branches           | # Find our branch and exit with 0 or 1 if found/not found
+  git branch --remote 2> /dev/null | grep --quiet "$1"
+}
+
+git_prompt_parse_git_ahead () {
+  # Grab the local and remote branch
+  branch="$(git_prompt_get_git_branch)"
+  remote_branch="origin/$branch"
+
+  # $ git log origin/master..master
+  # commit 4a633f715caf26f6e9495198f89bba20f3402a32
+  # Author: Todd Wolfson <todd@twolfson.com>
+  # Date:   Sun Jul 7 22:12:17 2013 -0700
+  #
+  #     Unsynced commit
+
+  # If the remote branch is behind the local branch
+  # or it has not been merged into origin (remote branch doesn't exist)
+  if (git_prompt_is_branch1_behind_branch2 "$remote_branch" "$branch" ||
+      ! git_prompt_branch_exists "$remote_branch"); then
+    # echo our character
+    echo 1
+  fi
+}
+
+git_prompt_parse_git_behind () {
+  # Grab the branch
+  branch="$(git_prompt_get_git_branch)"
+  remote_branch="origin/$branch"
+
+  # $ git log master..origin/master
+  # commit 4a633f715caf26f6e9495198f89bba20f3402a32
+  # Author: Todd Wolfson <todd@twolfson.com>
+  # Date:   Sun Jul 7 22:12:17 2013 -0700
+  #
+  #     Unsynced commit
+
+  # If the local branch is behind the remote branch
+  if git_prompt_is_branch1_behind_branch2 "$branch" "$remote_branch"; then
+    # echo our character
+    echo 1
+  fi
+}
+
+function git_prompt_get_git_branch() {
+  # On branches, this will return the branch name
+  # On non-branches, (no branch)
+  ref="$(git symbolic-ref HEAD 2> /dev/null | sed -e 's/refs\/heads\///')"
+  if [[ "$ref" != "" ]]; then
+    echo "$ref"
+  else
+    echo "(no branch)"
+  fi
+}
+
+function git_prompt_parse_git_dirty() {
+  # If the git status has *any* changes (e.g. dirty), echo our character
+  if [[ -n "$(git status --porcelain 2> /dev/null)" ]]; then
+    echo 1
+  fi
+}
+
+function git_prompt_is_on_git() {
+  git rev-parse 2> /dev/null
+}
+
+function git_prompt_get_git_status() {
+  # Grab the git dirty and git behind
+  dirty_branch="$(git_prompt_parse_git_dirty)"
+  branch_ahead="$(git_prompt_parse_git_ahead)"
+  branch_behind="$(git_prompt_parse_git_behind)"
+
+  # Iterate through all the cases and if it matches, then echo
+  if [[ "$dirty_branch" == 1 && "$branch_ahead" == 1 && "$branch_behind" == 1 ]]; then
+    echo "$git_prompt_dirty_unpushed_unpulled_symbol"
+  elif [[ "$branch_ahead" == 1 && "$branch_behind" == 1 ]]; then
+    echo "$git_prompt_unpushed_unpulled_symbol"
+  elif [[ "$dirty_branch" == 1 && "$branch_ahead" == 1 ]]; then
+    echo "$git_prompt_dirty_unpushed_symbol"
+  elif [[ "$branch_ahead" == 1 ]]; then
+    echo "$git_prompt_unpushed_symbol"
+  elif [[ "$dirty_branch" == 1 && "$branch_behind" == 1 ]]; then
+    echo "$git_prompt_dirty_unpulled_symbol"
+  elif [[ "$branch_behind" == 1 ]]; then
+    echo "$git_prompt_unpulled_symbol"
+  elif [[ "$dirty_branch" == 1 ]]; then
+    echo "$git_prompt_dirty_synced_symbol"
+  else # clean
+    echo "$git_prompt_synced_symbol"
+  fi
+}
+
+git_prompt_get_git_info () {
+  # Grab the branch
+  branch="$(git_prompt_get_git_branch)"
+
+  # If there are any branches
+  if [[ "$branch" != "" ]]; then
+    # Echo the branch
+    output="$branch"
+
+    # Add on the git status
+    output="$output$(git_prompt_get_git_status)"
+
+    # Echo our output
+    echo "$output"
+  fi
+}
+
+#############################################################################
+# PS1 prompt
+#############################################################################
+
+PS1='\[\033[01;31m\]\w\[\033[00m\] $(git_prompt_get_git_info)\n${debian_chroot:+($debian_chroot)}\[\033[01;34m\]\u\[\033[01;32m\]@\[\033[01;34m\]\h\[\033[00m\]\$ '
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
@@ -24,77 +199,6 @@ xterm*|rxvt*)
 *)
     ;;
 esac
-
-# Set up TERM variables.
-# vt100 and xterm have no color in vim (at least on unixs), but if we call them xterm-color, they will.
-# (vt100 for F-Secure SSH.)
-# This may well be the case for some other terms, so I'm putting them here.
-# Also set up a variable to indicate whether to set up the title functions.
-# TODO gnome-terminal, or however it reports itself
-case $TERM in
-
-  screen)
-    TERM_IS_COLOR=true
-    TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=false
-    TERM_NOT_RECOGNIZED_BY_SUN_UTILS=false
-    TERM_CAN_TITLE=true
-  ;;
-
-  xterm-color|color_xterm|rxvt|Eterm|screen*) # screen.linux|screen-w
-    TERM_IS_COLOR=true
-    TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=false
-    TERM_NOT_RECOGNIZED_BY_SUN_UTILS=true
-    TERM_CAN_TITLE=true
-  ;;
-
-  linux)
-    TERM_IS_COLOR=true
-    TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=false
-    TERM_NOT_RECOGNIZED_BY_SUN_UTILS=true
-    TERM_CAN_TITLE=false
-  ;;
-
-  xterm|vt100)
-    TERM_IS_COLOR=true
-    TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=true
-    TERM_NOT_RECOGNIZED_BY_SUN_UTILS=false
-    TERM_CAN_TITLE=true
-  ;;
-
-  *xterm*|eterm|rxvt*)
-    TERM_IS_COLOR=true
-    TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=true
-    TERM_NOT_RECOGNIZED_BY_SUN_UTILS=true
-    TERM_CAN_TITLE=true
-  ;;
-
-  *)
-    TERM_IS_COLOR=false
-    TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=false
-    TERM_NOT_RECOGNIZED_BY_SUN_UTILS=false
-    TERM_CAN_TITLE=false
-  ;;
-
-esac
-
-# dircolors... make sure that we have a color terminal, dircolors exists, and ls supports it.
-if $TERM_IS_COLOR && ( dircolors --help && ls --color ) &> /dev/null; then
-  # For some reason, the unixs machines need me to use $HOME instead of ~
-  # List files from highest priority to lowest.  As soon as the loop finds one that works, it will exit.
-  for POSSIBLE_DIR_COLORS in "$HOME/.dir_colors" "/etc/DIR_COLORS"; do
-    [[ -f "$POSSIBLE_DIR_COLORS" ]] && [[ -r "$POSSIBLE_DIR_COLORS" ]] && eval `dircolors -b "$POSSIBLE_DIR_COLORS"` && break
-  done
-
-  alias ls="ls --color=auto"
-  alias ll="ls --color=auto -l"
-  alias grep='grep --color=auto'
-  alias fgrep='fgrep --color=auto'
-  alias egrep='egrep --color=auto'
-else
-  # No color, so put a slash at the end of directory names, etc. to differentiate.
-  alias ls="ls -F"
-  alias ll="ls -lF"
-fi
 
 # Alias definitions.
 if [ -f ~/.bash_aliases ]; then
@@ -107,29 +211,7 @@ fi
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
-# Set $TERM for libvte terminals that set $TERM wrong (like gnome-terminal)
-{
-  [ "_$TERM" = "_xterm" ] && type ldd && type grep && type tput && [ -L "/proc/$PPID/exe" ] && {
-    if ldd /proc/$PPID/exe | grep libvte; then
-      if [ "`tput -Txterm-256color colors`" = "256" ]; then
-        TERM=xterm-256color
-      elif [ "`tput -Txterm-256color colors`" = "256" ]; then
-        TERM=xterm-256color
-      elif tput -T xterm; then
-        TERM=xterm
-      fi
-    fi
-  }
-} >/dev/null 2>/dev/null
 
-
-parse_git_branch ()
-{
-  git branch 2>/dev/null | grep "* " | sed 's/^\*\s\(.*\)$/(git: \1) /'
-}
-
-# Add git and svn branch names
-export PS1="$PS1\$(parse_git_branch)"
 
 # Add env variable to work with GO easier
 export GOROOT=$HOME/go
@@ -158,4 +240,4 @@ fi
    ls -c ~/Notes/ | egrep -i "$*"
  }
 
- export GPGKEY=2F74DA04
+export GPGKEY=2F74DA04
