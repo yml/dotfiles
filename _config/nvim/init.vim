@@ -142,6 +142,8 @@ set fileformats=unix,dos,mac
 set showcmd
 set shell=/bin/sh
 
+" Activate the incremental (live) substitution
+set inccommand=split
 "*****************************************************************************
 "" Visual Settings
 "*****************************************************************************
