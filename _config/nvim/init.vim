@@ -307,6 +307,9 @@ augroup vimrc-make-cmake
   autocmd BufNewFile,BufRead CMakeLists.txt setlocal filetype=cmake
 augroup END
 
+" Set the filetype to yaml for salt's `.sls` extension
+au BufRead,BufNewFile *.sls set filetype=yaml
+
 set autoread
 
 "*****************************************************************************
