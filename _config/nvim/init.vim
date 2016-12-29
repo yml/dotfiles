@@ -26,7 +26,6 @@ call plug#begin(expand('~/.config/nvim/plugged'))
 "" Plug install packages
 "*****************************************************************************
 Plug 'scrooloose/nerdtree'
-Plug 'jistr/vim-nerdtree-tabs'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -35,12 +34,13 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'sheerun/vim-polyglot'
 Plug 'vim-scripts/grep.vim'
-Plug 'vim-scripts/CSApprox'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'Raimondi/delimitMate'
 Plug 'scrooloose/syntastic'
 Plug 'Yggdroot/indentLine'
-Plug 'avelino/vim-bootstrap-updater'
+Plug 'lifepillar/vim-mucomplete'
+Plug 'tomasr/molokai'  " Color
+Plug 'honza/vim-snippets'
 
 let g:make = 'gmake'
 if system('uname -o') =~ '^GNU/'
@@ -48,9 +48,6 @@ if system('uname -o') =~ '^GNU/'
 endif
 Plug 'Shougo/vimproc.vim', {'do': g:make}
 
-if v:version >= 703
-  Plug 'Shougo/vimshell.vim'
-endif
 
 if v:version >= 704
   "" Snippets
@@ -58,13 +55,10 @@ if v:version >= 704
   Plug 'FelikZ/ctrlp-py-matcher'
 endif
 
-Plug 'honza/vim-snippets'
-
-"" Color
-Plug 'tomasr/molokai'
-
 "" Completion
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+set completeopt+=menu,menuone,noinsert
+set shortmess+=c
+let g:mucomplete#enable_auto_at_startup = 1
 "*****************************************************************************
 "" Custom bundles
 "*****************************************************************************
@@ -73,7 +67,6 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 "" Go Lang Bundle
 if executable("go")
     Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
-    Plug 'zchee/deoplete-go', { 'do': 'make'}
 endif
 
 
@@ -160,23 +153,11 @@ set t_Co=256
 set guioptions=egmrti
 set gfn=Monospace\ 10
 
-if has("gui_running")
-  if has("gui_mac") || has("gui_macvim")
-    set guifont=Menlo:h12
-    set transparency=7
-  endif
-else
-  let g:CSApprox_loaded = 1
-
-  " IndentLine
-  let g:indentLine_enabled = 1
-  let g:indentLine_concealcursor = 0
-  let g:indentLine_char = '┆'
-  let g:indentLine_faster = 1
-
-
-endif
-
+" IndentLine
+let g:indentLine_enabled = 1
+let g:indentLine_concealcursor = 0
+let g:indentLine_char = '┆'
+let g:indentLine_faster = 1
 
 
 "" Disable the blinking cursor.
@@ -242,17 +223,6 @@ nnoremap <silent> <leader>f :Rgrep<CR>
 let Grep_Default_Options = '-IR'
 let Grep_Skip_Files = '*.log *.db'
 let Grep_Skip_Dirs = '.git node_modules'
-
-" vimshell.vim
-let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
-let g:vimshell_prompt =  '$ '
-
-" terminal emulation
-if g:vim_bootstrap_editor == 'nvim'
-  nnoremap <silent> <leader>sh :terminal<CR>
-else
-  nnoremap <silent> <leader>sh :VimShellCreate<CR>
-endif
 
 " spell checking
 function! ToggleSpellLang()
@@ -329,19 +299,8 @@ noremap <Leader>gb :Gblame<CR>
 noremap <Leader>gd :Gvdiff<CR>
 noremap <Leader>gr :Gremove<CR>
 
-"" Tabs
-nnoremap <Tab> gt
-nnoremap <S-Tab> gT
-nnoremap <silent> <S-t> :tabnew<CR>
-
 "" Set working directory
 nnoremap <leader>. :lcd %:p:h<CR>
-
-"" Opens an edit command with the path of the currently edited file filled in
-noremap <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
-
-"" Opens a tab edit command with the path of the currently edited file filled
-noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
 
 "" ctrlp.vim
 set wildmode=list:longest,list:full
@@ -426,14 +385,15 @@ vmap > >gv
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 
-"" Completion
-let g:deoplete#enable_at_startup = 1
-
 "*****************************************************************************
 "" Custom configs
 "*****************************************************************************
 
 " vim-go
+let g:go_fmt_command = "goimports"
+let g:go_list_type = "quickfix"
+let g:go_metalinter_autosave = 1
+
 if executable("go")
     augroup FileType go
       au!
@@ -485,14 +445,6 @@ let g:syntastic_python_checkers=['python', 'flake8']
 " vim-airline
 let g:airline#extensions#virtualenv#enabled = 1
 
-
-"*****************************************************************************
-"*****************************************************************************
-
-"" Include user's local vim config
-if filereadable(expand("~/.config/nvimrc.local"))
-  source ~/.config/nvimrc.local
-endif
 
 "*****************************************************************************
 "" Convenience variables
