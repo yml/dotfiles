@@ -7,9 +7,6 @@ endif
 
 let vimplug_exists=expand('~/.config/nvim/autoload/plug.vim')
 
-let g:vim_bootstrap_langs = "go,javascript,python"
-let g:vim_bootstrap_editor = "nvim"				" nvim or vim
-
 if !filereadable(vimplug_exists)
   echo "Installing Vim-Plug..."
   echo ""
@@ -30,6 +27,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'FelikZ/ctrlp-py-matcher'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'sheerun/vim-polyglot'
@@ -40,45 +38,25 @@ Plug 'scrooloose/syntastic'
 Plug 'Yggdroot/indentLine'
 Plug 'lifepillar/vim-mucomplete'
 Plug 'tomasr/molokai'  " Color
+Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-
-let g:make = 'gmake'
-if system('uname -o') =~ '^GNU/'
-        let g:make = 'make'
-endif
-Plug 'Shougo/vimproc.vim', {'do': g:make}
-
-
-if v:version >= 704
-  "" Snippets
-  Plug 'SirVer/ultisnips'
-  Plug 'FelikZ/ctrlp-py-matcher'
-endif
-
-"" Completion
-set completeopt+=menu,menuone,noinsert
-set shortmess+=c
-let g:mucomplete#enable_auto_at_startup = 1
-"*****************************************************************************
-"" Custom bundles
-"*****************************************************************************
-
-" go
+Plug 'jelera/vim-javascript-syntax'
+Plug 'davidhalter/jedi-vim'
 "" Go Lang Bundle
 if executable("go")
     Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 endif
 
+let g:make = 'gmake'
+if system('uname -o') =~ '^GNU/'
+        let g:make = 'make'
+endif
 
-" javascript
-"" Javascript Bundle
-Plug 'jelera/vim-javascript-syntax'
 
-
-" python
-"" Python Bundle
-Plug 'davidhalter/jedi-vim'
-
+"" Completion
+set completeopt+=menu,menuone,noinsert
+set shortmess+=c
+let g:mucomplete#enable_auto_at_startup = 1
 
 "*****************************************************************************
 "*****************************************************************************
@@ -219,7 +197,7 @@ nnoremap <silent> <F2> :NERDTreeFind<CR>
 noremap <F3> :NERDTreeToggle<CR>
 
 " grep.vim
-nnoremap <silent> <leader>f :Rgrep<CR>
+nnoremap <silent> <leader>f :Regrep<CR>
 let Grep_Default_Options = '-IR'
 let Grep_Skip_Files = '*.log *.db'
 let Grep_Skip_Dirs = '.git node_modules'
@@ -353,17 +331,13 @@ noremap YY "+y<CR>
 noremap <leader>p "+gP<CR>
 noremap XX "+x<CR>
 
-if has('macunix')
-  " pbcopy for OSX copy/paste
-  vmap <C-x> :!pbcopy<CR>
-  vmap <C-c> :w !pbcopy<CR><CR>
+if executable('xclip')
+  " xclip for linux copy/paste
+  vmap <C-x> :!xclip<CR>
+  vmap <C-c> :w !xclip<CR><CR>
 endif
 
 "" Buffer nav
-noremap <leader>z :bp<CR>
-noremap <leader>q :bp<CR>
-noremap <leader>x :bn<CR>
-noremap <leader>w :bn<CR>
 
 "" Close buffer
 noremap <leader>c :bd<CR>
