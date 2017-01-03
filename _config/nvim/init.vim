@@ -41,6 +41,7 @@ Plug 'tomasr/molokai'  " Color
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'jelera/vim-javascript-syntax'
+"Plug 'hashivim/vim-terraform'
 Plug 'davidhalter/jedi-vim'
 "" Go Lang Bundle
 if executable("go")
@@ -327,14 +328,13 @@ if has('unnamedplus')
   set clipboard=unnamed,unnamedplus
 endif
 
-noremap YY "+y<CR>
+noremap <leader>y "+y<CR>
 noremap <leader>p "+gP<CR>
-noremap XX "+x<CR>
 
 if executable('xclip')
   " xclip for linux copy/paste
   vmap <C-x> :!xclip<CR>
-  vmap <C-c> :w !xclip<CR><CR>
+  vmap <C-c> :'<,'>w !xclip<CR><CR>
 endif
 
 "" Buffer nav
@@ -372,6 +372,7 @@ if executable("go")
     augroup FileType go
       au!
       au FileType go nmap <Leader>d <Plug>(go-def)
+      au FileType go nmap <Leader>k <Plug>(go-doc)
       au FileType go nmap <Leader>dd <Plug>(go-def-vertical)
       au FileType go nmap <Leader>dv <Plug>(go-doc-vertical)
       au FileType go nmap <Leader>db <Plug>(go-doc-browser)
