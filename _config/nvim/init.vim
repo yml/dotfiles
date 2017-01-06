@@ -264,6 +264,9 @@ set autoread
 "*****************************************************************************
 "" Mappings
 "*****************************************************************************
+" sudo before saving the file
+cmap w!! w !sudo tee > /dev/null %<CR><CR>
+
 "" Split
 noremap <Leader>h :<C-u>split<CR>
 noremap <Leader>v :<C-u>vsplit<CR>
