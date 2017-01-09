@@ -125,6 +125,7 @@ set inccommand=split
 syntax on
 set ruler
 set number
+set mouse=v
 
 let no_buffers_menu=1
 if !exists('g:not_finish_vimplug')
@@ -176,7 +177,6 @@ let g:airline_skip_empty_sections = 1
 "*****************************************************************************
 " Terminal settings
 tnoremap <Leader><ESC> <C-\><C-n>
-
 "" no one is really happy until you have this shortcuts
 cnoreabbrev W! w!
 cnoreabbrev Q! q!
