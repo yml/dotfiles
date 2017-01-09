@@ -42,7 +42,6 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'jelera/vim-javascript-syntax'
 Plug 'mbbill/undotree'
-"Plug 'sjl/gundo.vim'
 "Plug 'hashivim/vim-terraform'
 Plug 'davidhalter/jedi-vim'
 "" Go Lang Bundle
@@ -177,17 +176,6 @@ let g:airline_skip_empty_sections = 1
 "*****************************************************************************
 " Terminal settings
 tnoremap <Leader><ESC> <C-\><C-n>
-"" no one is really happy until you have this shortcuts
-cnoreabbrev W! w!
-cnoreabbrev Q! q!
-cnoreabbrev Qall! qall!
-cnoreabbrev Wq wq
-cnoreabbrev Wa wa
-cnoreabbrev wQ wq
-cnoreabbrev WQ wq
-cnoreabbrev W w
-cnoreabbrev Q q
-cnoreabbrev Qall qall
 
 " Expand the current directory
 ab <expr> %% expand('%:p:h')
@@ -207,7 +195,7 @@ noremap <F3> :NERDTreeToggle<CR>
 "" UndoTree toggle 
 noremap <leader>z :UndotreeToggle<CR>
 if has("persistent_undo")
-    set undodir=~/.undodir/
+    "set undodir=~/.undodir/
     set undofile
 endif
 
@@ -227,9 +215,9 @@ function! ToggleSpellLang()
     endif
 endfunction
 " toggle spell on or off
-nnoremap <F5> :setlocal spell!<CR>
+nnoremap <F4> :setlocal spell!<CR>
 " toggle language
-nnoremap <F6> :call ToggleSpellLang()<CR>
+nnoremap <F5> :call ToggleSpellLang()<CR>
 
 "*****************************************************************************
 "" Functions
@@ -310,6 +298,11 @@ if executable('ag')
   set grepprg=ag\ --nogroup\ --nocolor
   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
   let g:ctrlp_use_caching = 0
+elseif executable('pt')
+  set grepprg=pt\ --nogroup\ --nocolor\ -S
+  let g:ctrlp_user_command = 'pt %s -l --nocolor -g ""'
+  let g:ctrlp_use_caching = 0
+  command -nargs=+ -complete=file -bar Pt silent! grep! <args>|cwindow|redraw!
 endif
 
 cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
