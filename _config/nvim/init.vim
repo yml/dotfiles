@@ -41,6 +41,8 @@ Plug 'tomasr/molokai'  " Color
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'jelera/vim-javascript-syntax'
+Plug 'mbbill/undotree'
+"Plug 'sjl/gundo.vim'
 "Plug 'hashivim/vim-terraform'
 Plug 'davidhalter/jedi-vim'
 "" Go Lang Bundle
@@ -55,7 +57,8 @@ endif
 
 
 "" Completion
-set completeopt+=menu,menuone,noinsert
+set completeopt-=preview
+set completeopt+=menuone,noinsert
 set shortmess+=c
 let g:mucomplete#enable_auto_at_startup = 1
 
@@ -107,7 +110,8 @@ set smartcase
 
 "" Directories for swp files
 set nobackup
-set noswapfile
+set swapfile
+set undofile
 
 set fileformats=unix,dos,mac
 set showcmd
@@ -170,6 +174,9 @@ let g:airline_skip_empty_sections = 1
 "*****************************************************************************
 "" Abbreviations
 "*****************************************************************************
+" Terminal settings
+tnoremap <Leader><ESC> <C-\><C-n>
+
 "" no one is really happy until you have this shortcuts
 cnoreabbrev W! w!
 cnoreabbrev Q! q!
@@ -196,6 +203,13 @@ let g:NERDTreeWinSize = 50
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
 nnoremap <silent> <F2> :NERDTreeFind<CR>
 noremap <F3> :NERDTreeToggle<CR>
+
+"" UndoTree toggle 
+noremap <leader>z :UndotreeToggle<CR>
+if has("persistent_undo")
+    set undodir=~/.undodir/
+    set undofile
+endif
 
 " grep.vim
 nnoremap <silent> <leader>f :Regrep<CR>
@@ -347,12 +361,6 @@ noremap <leader>c :bd<CR>
 
 "" Clean search (highlight)
 nnoremap <silent> <leader><space> :noh<cr>
-
-"" Switching windows
-noremap <C-j> <C-w>j
-noremap <C-k> <C-w>k
-noremap <C-l> <C-w>l
-noremap <C-h> <C-w>h
 
 "" Vmap for maintain Visual Mode after shifting > and <
 vmap < <gv
