@@ -43,10 +43,10 @@ cmap w!! w !sudo tee % >/dev/null
 map <leader>z :GundoToggle<CR>
 
 " Vertical split
-map <leader>/ :vsplit<CR>
+map <leader>v :vsplit<CR>
 
 " Horizontal split
-map <leader>- :split<CR>
+map <leader>h :split<CR>
 
 " Expand the current directory
 ab <expr> %% expand('%:p:h')
@@ -64,6 +64,7 @@ call pathogen#helptags()
 filetype on                   " try to detect filetypes
 filetype plugin indent on     " enable loading indent file for filetype
 filetype plugin on
+set path+=**
 set hidden                    " hide buffers instead of closing them
 "set mouse=a                   " enable mouse
 set number                    " Display line numbers
@@ -137,6 +138,14 @@ syntax on                   " Syntax highlighting
 "colorscheme vividchalk
 colorscheme inkpot
 "colorscheme corporation
+
+" ==========================================================
+" netrw
+" ==========================================================
+let g:netrw_banner=0        " disable annoying banner
+let g:netrw_browse_split=4  " Open in prior window
+let g:netrw_altv=1          " Open split to the right
+let g:netrw_liststyle=3     " tree view
 
 " ==========================================================
 " Python
@@ -234,11 +243,6 @@ function! StripTrailingSpaces()
 endfunction
 
 " ==========================================================
-" supertab
-" ==========================================================
-let g:SuperTabDefaultCompletionType = "context"
-
-" ==========================================================
 " spell checking
 " ==========================================================
 " set spell spelllang=en_us
@@ -253,115 +257,6 @@ function! ToggleSpellLang()
 endfunction
 nnoremap <F3> :setlocal spell!<CR> " toggle spell on or off
 nnoremap <F4> :call ToggleSpellLang()<CR> " toggle language
-" ==========================================================
-" Unite
-" ==========================================================
-call unite#custom#source('file_mru,file_rec,file_rec/async,grepocate',
-            \ 'max_candidates', 0)
-let g:unite_source_history_yank_enable = 1
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-nnoremap <leader>t :<C-u>Unite -no-split -buffer-name=filesrec-start-insert file_rec/async:!<cr>
-nnoremap <leader>r :<C-u>Unite -no-split -buffer-name=files -start-insert file/async:!<cr>
-nnoremap <leader>b :<C-u>Unite -no-split -quick-match -buffer-name=buffer buffer<cr>
-nnoremap <leader>f :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
-nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank history/yank<cr>
-
-" pt is go program that is comparable to grep but faster
-" go get https://github.com/monochromegane/the_platinum_searcher
-if executable('pt')
-  let g:unite_source_grep_command = 'pt'
-  let g:unite_source_grep_default_opts = '--nogroup --nocolor'
-  let g:unite_source_grep_recursive_opt = ''
-  let g:unite_source_grep_encoding = 'utf-8'
-endif
-
-" Custom mappings for the unite buffer
-autocmd FileType unite call s:unite_settings()
-function! s:unite_settings()
-  " Play nice with supertab
-  let b:SuperTabDisabled=1
-  " Enable navigation with control-j and control-k in insert mode
-  imap <buffer> <C-j>   <Plug>(unite_select_next_line)
-  imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
-endfunction
-
-" ==========================================================
-" neocomplete
-" ==========================================================
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-
-" Define dictionary.
-" let g:neocomplete#sources#dictionary#dictionaries = {
-"     \ 'default' : '',
-"     \ 'vimshell' : $HOME.'/.vimshell_hist',
-"     \ 'scheme' : $HOME.'/.gosh_completions'
-"     \ }
-
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-
-
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  "return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-  " For no inserting <CR> key.
-  return pumvisible() ? "\<C-y>" : "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-" Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
-
-" AutoComplPop like behavior.
-"let g:neocomplete#enable_auto_select = 1
-
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplete#enable_auto_select = 1
-"let g:neocomplete#disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd FileType go setlocal omnifunc=go#complete#Complete
-" autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType python setlocal omnifunc=jedi#completions
-
-
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-let g:neocomplete#sources#omni#input_patterns.python = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
-" let g:neocomplete#sources#omni#input_patterns.python = '\h\w*\|[^. \t]\.\w*'
-
 " ==========================================================
 " dbext
 " ==========================================================
