@@ -3,6 +3,10 @@ alias chat="LANGUAGE=en:fr xchat > /dev/null 2>&1"
 # Reapeat the previous command with command under sudo
 alias !!!="sudo !!"
 
+# Work around an LXC limitation
+# https://github.com/lxc/lxd/issues/936
+alias lxc-tmux="script -qfc tmux /dev/null"
+
 # dircolors... make sure that we have a color terminal, dircolors exists, and ls supports it.
 if $TERM_IS_COLOR && ( dircolors --help && ls --color ) &> /dev/null; then
   # For some reason, the unixs machines need me to use $HOME instead of ~
