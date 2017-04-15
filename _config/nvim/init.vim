@@ -22,7 +22,6 @@ call plug#begin(expand('~/.config/nvim/plugged'))
 "*****************************************************************************
 "" Plug install packages
 "*****************************************************************************
-Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -33,7 +32,6 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'sheerun/vim-polyglot'
 Plug 'vim-scripts/grep.vim'
 Plug 'bronson/vim-trailing-whitespace'
-Plug 'Raimondi/delimitMate'
 Plug 'scrooloose/syntastic'
 Plug 'Yggdroot/indentLine'
 Plug 'lifepillar/vim-mucomplete'
@@ -42,6 +40,8 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'jelera/vim-javascript-syntax'
 Plug 'mbbill/undotree'
+"Plug 'Raimondi/delimitMate'
+"Plug 'scrooloose/nerdtree'
 "Plug 'hashivim/vim-terraform'
 Plug 'davidhalter/jedi-vim'
 "" Go Lang Bundle
@@ -99,6 +99,7 @@ set expandtab
 
 "" Map leader to ,
 let mapleader=','
+let maplocalleader=';'
 
 "" Enable hidden buffers
 set hidden
@@ -120,6 +121,13 @@ set shell=/bin/sh
 
 " Activate the incremental (live) substitution
 set inccommand=split
+
+" Deactivate the arrow keys
+noremap <left> <nop>
+noremap <right> <nop>
+noremap <up> <nop>
+noremap <down> <nop>
+
 "*****************************************************************************
 "" Visual Settings
 "*****************************************************************************
@@ -176,6 +184,11 @@ let g:airline_skip_empty_sections = 1
 "*****************************************************************************
 "" Abbreviations
 "*****************************************************************************
+" Edit my nvim configuration
+nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+" Reload nvim configuration
+nnoremap <leader>sv :source $MYVIMRC<cr>
+
 " Terminal settings
 tnoremap <Leader><ESC> <C-\><C-n>
 
@@ -183,18 +196,20 @@ tnoremap <Leader><ESC> <C-\><C-n>
 ab <expr> %% expand('%:p:h')
 
 "" NERDTree configuration
-let g:NERDTreeChDirMode=2
-let g:NERDTreeIgnore=['\.rbc$', '\~$', '\.pyc$', '\.db$', '\.sqlite$', '__pycache__']
-let g:NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$', '\.bak$', '\~$']
-let g:NERDTreeShowBookmarks=1
-let g:nerdtree_tabs_focus_on_files=1
-let g:NERDTreeMapOpenInTabSilent = '<RightMouse>'
-let g:NERDTreeWinSize = 50
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
-nnoremap <silent> <F2> :NERDTreeFind<CR>
-noremap <F3> :NERDTreeToggle<CR>
+" let g:NERDTreeChDirMode=2
+" let g:NERDTreeIgnore=['\.rbc$', '\~$', '\.pyc$', '\.db$', '\.sqlite$', '__pycache__']
+" let g:NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$', '\.bak$', '\~$']
+" let g:NERDTreeShowBookmarks=1
+" let g:nerdtree_tabs_focus_on_files=1
+" let g:NERDTreeMapOpenInTabSilent = '<RightMouse>'
+" let g:NERDTreeWinSize = 50
+" set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
+" nnoremap <silent> <F2> :NERDTreeFind<CR>
+" noremap <F3> :NERDTreeToggle<CR>
+nnoremap <F2> :Vexplore<CR>
+nnoremap <F3> :Vexplore .<CR>
 
-"" UndoTree toggle 
+"" UndoTree toggle
 noremap <leader>z :UndotreeToggle<CR>
 if has("persistent_undo")
     "set undodir=~/.undodir/
@@ -272,18 +287,8 @@ set autoread
 cmap w!! w !sudo tee > /dev/null %<CR><CR>
 
 "" Split
-noremap <Leader>h :<C-u>split<CR>
-noremap <Leader>v :<C-u>vsplit<CR>
-
-"" Git
-noremap <Leader>ga :Gwrite<CR>
-noremap <Leader>gc :Gcommit<CR>
-noremap <Leader>gsh :Gpush<CR>
-noremap <Leader>gll :Gpull<CR>
-noremap <Leader>gs :Gstatus<CR>
-noremap <Leader>gb :Gblame<CR>
-noremap <Leader>gd :Gvdiff<CR>
-noremap <Leader>gr :Gremove<CR>
+noremap <leader>h :<C-u>split<CR>
+noremap <leader>v :<C-u>vsplit<CR>
 
 "" Set working directory
 nnoremap <leader>. :lcd %:p:h<CR>
@@ -304,7 +309,6 @@ elseif executable('pt')
   set grepprg=pt\ --nogroup\ --nocolor\ -S
   let g:ctrlp_user_command = 'pt %s -l --nocolor -g ""'
   let g:ctrlp_use_caching = 0
-  command -nargs=+ -complete=file -bar Pt silent! grep! <args>|cwindow|redraw!
 endif
 
 cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
@@ -376,16 +380,16 @@ let g:go_metalinter_autosave = 1
 
 if executable("go")
     augroup FileType go
-      au!
-      au FileType go nmap <Leader>d <Plug>(go-def)
-      au FileType go nmap <Leader>k <Plug>(go-doc)
-      au FileType go nmap <Leader>dd <Plug>(go-def-vertical)
-      au FileType go nmap <Leader>dv <Plug>(go-doc-vertical)
-      au FileType go nmap <Leader>db <Plug>(go-doc-browser)
-      au FileType go nmap <Leader>gi <Plug>(go-info)
-      au FileType go nmap <leader>gr <Plug>(go-run)
-      au FileType go nmap <leader>rb <Plug>(go-build)
-      au FileType go nmap <leader>gt <Plug>(go-test)
+      autocmd!
+      autocmd FileType go nmap <localleader>d <Plug>(go-def)
+      autocmd FileType go nmap <localleader>k <Plug>(go-doc)
+      autocmd FileType go nmap <localleader>dv <Plug>(go-def-vertical)
+      autocmd FileType go nmap <localleader>kv <Plug>(go-doc-vertical)
+      autocmd FileType go nmap <localleader>kb <Plug>(go-doc-browser)
+      autocmd FileType go nmap <localleader>i <Plug>(go-info)
+      autocmd FileType go nmap <localleader>r <Plug>(go-run)
+      autocmd FileType go nmap <localleader>b <Plug>(go-build)
+      autocmd FileType go nmap <localleader>t <Plug>(go-test)
     augroup END
 endif
 
@@ -401,7 +405,6 @@ augroup END
 
 
 " python
-" vim-python
 augroup vimrc-python
   autocmd!
   autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 colorcolumn=79
@@ -411,14 +414,14 @@ augroup END
 
 " jedi-vim
 let g:jedi#popup_on_dot = 0
-let g:jedi#goto_assignments_command = "<leader>g"
-let g:jedi#goto_definitions_command = "<leader>d"
-let g:jedi#documentation_command = "K"
-let g:jedi#usages_command = "<leader>n"
-let g:jedi#rename_command = "<leader>r"
-let g:jedi#show_call_signatures = "0"
-let g:jedi#completions_command = "<C-Space>"
+let g:jedi#show_call_signatures = "1"
 let g:jedi#smart_auto_mappings = 0
+let g:jedi#goto_definitions_command = "<localleader>d"
+let g:jedi#goto_assignments_command = "<localleader>g"
+let g:jedi#documentation_command = "<localleader>k"
+let g:jedi#usages_command = "<localleader>n"
+let g:jedi#rename_command = "<localleader>r"
+let g:jedi#completions_command = "<C-Space>"
 
 " syntastic
 let g:syntastic_python_checkers=['python', 'flake8']
@@ -466,4 +469,3 @@ else
   let g:airline_symbols.readonly = ''
   let g:airline_symbols.linenr = ''
 endif
-
