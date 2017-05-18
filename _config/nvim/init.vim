@@ -385,6 +385,9 @@ augroup vimrc-python
       \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 augroup END
 
+" markdown
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+
 " jedi-vim
 let g:jedi#popup_on_dot = 0
 let g:jedi#show_call_signatures = "1"
@@ -398,4 +401,11 @@ let g:jedi#completions_command = "<C-Space>"
 
 " syntastic
 let g:syntastic_python_checkers=['python', 'flake8']
+
+" *******************************************
+" vimwiki
+" *******************************************
+let g:vimwiki_list = [{'path': '~/vimwiki/',  'syntax': 'markdown', 'ext': '.md'}]
+let g:vimwiki_ext2syntax = {'.md': 'markdown', '.mkd': 'markdown', '.wiki': 'media'}
+
 
