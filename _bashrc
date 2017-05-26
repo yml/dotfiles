@@ -279,7 +279,7 @@ export  XDG_CONFIG_HOME=~/.config
 
 # remap caps lock to escape
 if setxkbmap -version >/dev/null 2>&1; then
-    setxkbmap -option caps:escape
+    setxkbmap -option "caps:swapescape"
 fi
 
  # Opens a note
