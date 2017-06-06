@@ -390,7 +390,7 @@ autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 
 " jedi-vim
 let g:jedi#popup_on_dot = 0
-let g:jedi#show_call_signatures = "1"
+let g:jedi#show_call_signatures = 0
 let g:jedi#smart_auto_mappings = 0
 let g:jedi#goto_definitions_command = "<localleader>d"
 let g:jedi#goto_assignments_command = "<localleader>g"
@@ -401,6 +401,10 @@ let g:jedi#completions_command = "<C-Space>"
 
 " syntastic
 let g:syntastic_python_checkers=['python', 'flake8']
+    let g:syntastic_mode_map = {
+        \ "mode": "passive",
+        \ "active_filetypes": [],
+        \ "passive_filetypes": [] }
 
 " *******************************************
 " vimwiki
