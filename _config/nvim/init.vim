@@ -400,6 +400,7 @@ let g:jedi#rename_command = "<localleader>r"
 let g:jedi#completions_command = "<C-Space>"
 
 " syntastic
+let g:syntastic_auto_loc_list = 2
 let g:syntastic_python_checkers=['python', 'flake8']
     let g:syntastic_mode_map = {
         \ "mode": "passive",
