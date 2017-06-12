@@ -39,6 +39,7 @@ Plug 'honza/vim-snippets'
 Plug 'jelera/vim-javascript-syntax'
 Plug 'mbbill/undotree'
 Plug 'vimwiki/vimwiki'
+Plug 'skywind3000/asyncrun.vim'
 "Plug 'hashivim/vim-terraform'
 Plug 'davidhalter/jedi-vim'
 "" Go Lang Bundle
@@ -73,6 +74,9 @@ filetype plugin indent on
 "*****************************************************************************
 "" Basic Setup
 "*****************************************************************************"
+"" Every wrapped line will continue visually indented (same amount of
+set breakindent
+
 "" Path
 set path+=**
 "" Encoding
@@ -127,9 +131,9 @@ noremap <down> <nop>
 "" Visual Settings
 "*****************************************************************************
 syntax on
-set cursorline
+set synmaxcol=200
 set number
-set mouse=a
+set mouse=v
 
 let no_buffers_menu=1
 if !exists('g:not_finish_vimplug')
