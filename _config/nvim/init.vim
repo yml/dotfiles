@@ -39,6 +39,7 @@ Plug 'honza/vim-snippets'
 Plug 'jelera/vim-javascript-syntax'
 Plug 'mbbill/undotree'
 Plug 'vimwiki/vimwiki'
+Plug 'skywind3000/asyncrun.vim'
 "Plug 'hashivim/vim-terraform'
 Plug 'davidhalter/jedi-vim'
 "" Go Lang Bundle
@@ -59,7 +60,6 @@ set shortmess+=c
 let g:mucomplete#enable_auto_at_startup = 1
 
 "*****************************************************************************
-"*****************************************************************************
 
 "" Include user's extra bundle
 if filereadable(expand("~/.config/nvimrc.local.bundles"))
@@ -71,10 +71,12 @@ call plug#end()
 " Required:
 filetype plugin indent on
 
-
 "*****************************************************************************
 "" Basic Setup
 "*****************************************************************************"
+"" Every wrapped line will continue visually indented (same amount of
+set breakindent
+
 "" Path
 set path+=**
 "" Encoding
@@ -129,13 +131,15 @@ noremap <down> <nop>
 "" Visual Settings
 "*****************************************************************************
 syntax on
-set cursorline
+set synmaxcol=200
 set number
 set mouse=v
 
 let no_buffers_menu=1
 if !exists('g:not_finish_vimplug')
-  colorscheme molokai
+    let g:molokai_original = 1
+    let g:rehash256 = 1
+    colorscheme molokai
 endif
 
 " IndentLine
@@ -145,11 +149,7 @@ let g:indentLine_char = '┆'
 let g:indentLine_faster = 1
 
 "" Disable the blinking cursor.
-set gcr=a:blinkon0
 set scrolloff=3
-
-"" Status bar
-set laststatus=2
 
 "" Use modeline overrides
 set modeline
@@ -308,17 +308,12 @@ let g:syntastic_aggregate_errors = 1
 
 " Disable visualbell
 set noerrorbells visualbell t_vb=
-if has('autocmd')
-  autocmd GUIEnter * set visualbell t_vb=
-endif
 
 "" Copy/Paste/Cut
 if has('unnamedplus')
-  set clipboard=unnamed,unnamedplus
+  set clipboard+=unnamedplus
 endif
 
-noremap <leader>y "+y<CR>
-noremap <leader>p "+gP<CR>
 
 if executable('xclip')
   " xclip for linux copy/paste
@@ -366,7 +361,6 @@ if executable("go")
     augroup END
 endif
 
-
 " javascript
 let g:javascript_enable_domhtmlcss = 1
 
@@ -375,7 +369,6 @@ augroup vimrc-javascript
   autocmd!
   autocmd FileType javascript set tabstop=4|set shiftwidth=4|set expandtab softtabstop=4 smartindent
 augroup END
-
 
 " python
 augroup vimrc-python
@@ -390,7 +383,7 @@ autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 
 " jedi-vim
 let g:jedi#popup_on_dot = 0
-let g:jedi#show_call_signatures = "1"
+let g:jedi#show_call_signatures = 0
 let g:jedi#smart_auto_mappings = 0
 let g:jedi#goto_definitions_command = "<localleader>d"
 let g:jedi#goto_assignments_command = "<localleader>g"
@@ -400,7 +393,12 @@ let g:jedi#rename_command = "<localleader>r"
 let g:jedi#completions_command = "<C-Space>"
 
 " syntastic
+let g:syntastic_auto_loc_list = 2
 let g:syntastic_python_checkers=['python', 'flake8']
+    let g:syntastic_mode_map = {
+        \ "mode": "passive",
+        \ "active_filetypes": [],
+        \ "passive_filetypes": [] }
 
 " *******************************************
 " vimwiki
