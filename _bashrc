@@ -266,9 +266,12 @@ fi
 
 
 # Add env variable to work with GO easier
-export GOROOT=$HOME/go
 export GOPATH=$HOME/gopath
-export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+export PATH=$PATH:$GOPATH/bin
+if [ -d $HOME/go ]; then
+    export GOROOT=$HOME/go
+    export PATH=$GOROOT/bin:$PATH
+fi
 
 # vim
 export EDITOR=vim
