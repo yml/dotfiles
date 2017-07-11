@@ -25,10 +25,9 @@ call plug#begin(expand('~/.config/nvim/plugged'))
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'FelikZ/ctrlp-py-matcher'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 Plug 'sheerun/vim-polyglot'
-Plug 'vim-scripts/grep.vim'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'scrooloose/syntastic'
 Plug 'Yggdroot/indentLine'
@@ -85,7 +84,7 @@ set fileencoding=utf-8
 set fileencodings=utf-8
 set bomb
 set binary
-
+set wildignore=*.swp,*.bak,*.pyc,*.class
 
 "" Fix backspace indent
 set backspace=indent,eol,start
@@ -264,31 +263,17 @@ noremap <leader>h :<C-u>split<CR>
 noremap <leader>v :<C-u>vsplit<CR>
 
 "" Set working directory
-nnoremap <leader>. :lcd %:p:h<CR>
+noremap <leader>. :lcd %:p:h<CR>
 
-"" ctrlp.vim
-set wildmode=list:longest,list:full
-set wildignore+=*.o,*.obj,.git,*.rbc,*.pyc,__pycache__
-let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|tox|ico|git|hg|svn))$'
-let g:ctrlp_user_command = "find %s -type f | grep -Ev '"+ g:ctrlp_custom_ignore +"'"
-let g:ctrlp_use_caching = 1
+"" fzf shortcut
+noremap <Leader>h :History<CR>
+noremap <leader>b :Buffers<CR>
+noremap <leader>l :Lines<CR>
+noremap <leader>e :Files<CR>
+noremap <Leader>f :Ag<CR>
+noremap <Leader>d :exe ':Ag ' . expand('<cword>')<CR>
+nnoremap <leader><leader> :Commands<CR>
 
-" The Silver Searcher
-if executable('ag')
-  set grepprg=ag\ --nogroup\ --nocolor
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-  let g:ctrlp_use_caching = 0
-elseif executable('pt')
-  set grepprg=pt\ --nogroup\ --nocolor\ -S
-  let g:ctrlp_user_command = 'pt %s -l --nocolor -g ""'
-  let g:ctrlp_use_caching = 0
-endif
-
-cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
-noremap <leader>b :CtrlPBuffer<CR>
-let g:ctrlp_map = '<leader>e'
-let g:ctrlp_open_new_file = 'r'
-let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 
 " snippets
 let g:UltiSnipsExpandTrigger="<tab>"
@@ -305,6 +290,12 @@ let g:syntastic_style_warning_symbol = '⚠'
 let g:syntastic_auto_loc_list=1
 let g:syntastic_aggregate_errors = 1
 
+let g:syntastic_auto_loc_list = 2
+let g:syntastic_python_checkers=['python', 'flake8']
+    let g:syntastic_mode_map = {
+        \ "mode": "passive",
+        \ "active_filetypes": [],
+        \ "passive_filetypes": [] }
 
 " Disable visualbell
 set noerrorbells visualbell t_vb=
@@ -320,8 +311,6 @@ if executable('xclip')
   vmap <C-x> :!xclip<CR>
   vmap <C-c> :'<,'>w !xclip<CR><CR>
 endif
-
-"" Buffer nav
 
 "" Close buffer
 noremap <leader>c :bd<CR>
@@ -391,14 +380,6 @@ let g:jedi#documentation_command = "<localleader>k"
 let g:jedi#usages_command = "<localleader>n"
 let g:jedi#rename_command = "<localleader>r"
 let g:jedi#completions_command = "<C-Space>"
-
-" syntastic
-let g:syntastic_auto_loc_list = 2
-let g:syntastic_python_checkers=['python', 'flake8']
-    let g:syntastic_mode_map = {
-        \ "mode": "passive",
-        \ "active_filetypes": [],
-        \ "passive_filetypes": [] }
 
 " *******************************************
 " vimwiki

@@ -270,6 +270,10 @@ export GOROOT=$HOME/go
 export GOPATH=$HOME/gopath
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
+# Dart / Android / flutter
+
+export PATH=/usr/lib/dart/bin:/usr/local/android-studio/bin/:/usr/local/flutter/bin/:$PATH
+
 # vim
 export EDITOR=vim
 export VISUAL=vim
@@ -293,3 +297,5 @@ fi
  }
 
 export GPGKEY=2F74DA04
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
