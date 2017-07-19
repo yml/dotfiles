@@ -271,7 +271,7 @@ noremap <leader>b :Buffers<CR>
 noremap <leader>l :Lines<CR>
 noremap <leader>e :Files<CR>
 noremap <Leader>f :Ag<CR>
-noremap <Leader>d :exe ':Ag ' . expand('<cword>')<CR>
+noremap <Leader>ff :exe ':Ag ' . expand('<cword>')<CR>
 nnoremap <leader><leader> :Commands<CR>
 
 
