@@ -38,6 +38,7 @@ Plug 'jelera/vim-javascript-syntax'
 Plug 'mbbill/undotree'
 Plug 'vimwiki/vimwiki'
 Plug 'skywind3000/asyncrun.vim'
+Plug 'davidhalter/jedi-vim'
 "Plug 'hashivim/vim-terraform'
 "" Go Lang Bundle
 if executable("go")
@@ -51,10 +52,6 @@ if has("python3")
     let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'mistune')
     let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'psutil')
     let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'setproctitle')
-    let g:python_support_python2_requirements = add(get(g:,'python_support_python2_requirements',[]),'jedi')
-    let g:python_support_python2_requirements = add(get(g:,'python_support_python2_requirements',[]),'mistune')
-    let g:python_support_python2_requirements = add(get(g:,'python_support_python2_requirements',[]),'psutil')
-    let g:python_support_python2_requirements = add(get(g:,'python_support_python2_requirements',[]),'setproctitle')
 endif
 
 let g:make = 'gmake'
@@ -68,11 +65,11 @@ set shortmess+=c
 inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
 if executable("npm")
     " (optional) javascript completion
     Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
 endif
+
 "*****************************************************************************
 
 "" Include user's extra bundle
