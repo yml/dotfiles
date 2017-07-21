@@ -26,3 +26,5 @@ else
   alias ll="ls -lF"
 fi
 
+# pwdgen provides some random strings that could be used for password
+alias pwdgen="head -c 1000 /dev/urandom | tr -dc 'a-zA-Z0-9~,;!@#$%^&*_-' | fold -w20 | head -10"
