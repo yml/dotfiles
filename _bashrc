@@ -5,7 +5,8 @@
 # don't overwrite GNU Midnight Commander's setting of `ignorespace'.
 HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
 # ... or force ignoredups and ignorespace
-HISTCONTROL=ignoreboth
+#HISTCONTROL=ignoreboth
+HISTCONTROL=ignoreboth:erasedups
 
 # append to the history file, don't overwrite it
 shopt -s histappend
@@ -184,12 +185,20 @@ git_prompt_get_git_info () {
     echo "$output"
   fi
 }
-
+#############################################################################
+# history 
+#############################################################################
+function dedup_bash_history () {
+    rm -f  ~./.unduped_bash_history && \
+    nl ~/.bash_history | sort -k 2  -k 1,1nr| uniq -f 1 | sort -n | cut -f 2 > ~/.unduped_bash_history && \
+    cp  ~/.unduped_bash_history ~/.bash_history
+}
 #############################################################################
 # PS1 prompt
 #############################################################################
-
+PROMPT_COMMAND='history -a'
 PS1='\[\033[01;31m\]\w\[\033[00m\] $(git_prompt_get_git_info)\n${debian_chroot:+($debian_chroot)}\[\033[01;34m\]\u\[\033[01;32m\]@\[\033[01;34m\]\h\[\033[00m\]\$ '
+
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
@@ -288,16 +297,6 @@ export  XDG_CONFIG_HOME=~/.config
 if setxkbmap -version >/dev/null 2>&1; then
     setxkbmap -option "caps:swapescape"
 fi
-
- # Opens a note
- notescd() {
-    cd ~/Notes
- }
-
- # Searches Notes
- notesls() {
-   ls -c ~/Notes/ | egrep -i "$*"
- }
 
 export GPGKEY=2F74DA04
 
