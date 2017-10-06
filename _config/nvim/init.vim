@@ -31,13 +31,12 @@ Plug 'sheerun/vim-polyglot'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'scrooloose/syntastic'
 Plug 'Yggdroot/indentLine'
-Plug 'tomasr/molokai'  " Color
+Plug 'tomasiser/vim-code-dark'  " Color
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'jelera/vim-javascript-syntax'
 Plug 'mbbill/undotree'
 Plug 'vimwiki/vimwiki'
-Plug 'skywind3000/asyncrun.vim'
 Plug 'davidhalter/jedi-vim'
 "Plug 'hashivim/vim-terraform'
 "" Go Lang Bundle
@@ -148,9 +147,9 @@ set mouse=v
 
 let no_buffers_menu=1
 if !exists('g:not_finish_vimplug')
-    let g:molokai_original = 1
-    let g:rehash256 = 1
-    colorscheme molokai
+    set t_Co=256
+    set t_ut=
+    colorscheme codedark
 endif
 
 " IndentLine
@@ -159,8 +158,7 @@ let g:indentLine_concealcursor = 0
 let g:indentLine_char = '┆'
 let g:indentLine_faster = 1
 
-"" Disable the blinking cursor.
-set scrolloff=3
+set scrolloff=5
 
 "" Use modeline overrides
 set modeline
@@ -171,10 +169,6 @@ set titleold="Terminal"
 set titlestring=%F
 
 set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
-
-if exists("*fugitive#statusline")
-  set statusline+=%{fugitive#statusline()}
-endif
 
 "*****************************************************************************
 "" Abbreviations
@@ -271,11 +265,7 @@ set autoread
 cmap w!! w !sudo tee > /dev/null %<CR><CR>
 
 "" Split
-noremap <leader>h :<C-u>split<CR>
 noremap <leader>v :<C-u>vsplit<CR>
-
-"" Set working directory
-noremap <leader>. :lcd %:p:h<CR>
 
 "" fzf shortcut
 noremap <Leader>h :History<CR>
@@ -308,9 +298,6 @@ let g:syntastic_python_checkers=['python', 'flake8']
         \ "mode": "passive",
         \ "active_filetypes": [],
         \ "passive_filetypes": [] }
-
-" Disable visualbell
-set noerrorbells visualbell t_vb=
 
 "" Copy/Paste/Cut
 if has('unnamedplus')
