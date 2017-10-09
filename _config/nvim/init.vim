@@ -69,7 +69,7 @@ filetype plugin indent on
 "*****************************************************************************
 "" Basic Setup
 "*****************************************************************************"
-"" Every wrapped line will continue visually indented 
+"" Every wrapped line will continue visually indented
 set breakindent
 
 "" Path
@@ -333,4 +333,3 @@ endif
 
 " Reload the file if it has been changed outside vim
 set autoread
-
