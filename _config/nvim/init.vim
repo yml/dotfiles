@@ -1,10 +1,6 @@
 "*****************************************************************************
 "" Vim-PLug core
 "*****************************************************************************
-if has('vim_starting')
-  set nocompatible               " Be iMproved
-endif
-
 let vimplug_exists=expand('~/.config/nvim/autoload/plug.vim')
 
 if !filereadable(vimplug_exists)
@@ -34,7 +30,6 @@ Plug 'Yggdroot/indentLine'
 Plug 'tomasiser/vim-code-dark'  " Color
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-Plug 'jelera/vim-javascript-syntax'
 Plug 'mbbill/undotree'
 Plug 'vimwiki/vimwiki'
 Plug 'davidhalter/jedi-vim'
@@ -53,29 +48,19 @@ if has("python3")
     let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'setproctitle')
 endif
 
-let g:make = 'gmake'
-if system('uname -o') =~ '^GNU/'
-        let g:make = 'make'
-endif
-
 
 "" Completion
 set shortmess+=c
 inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
 if executable("npm")
     " (optional) javascript completion
     Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
 endif
 
 "*****************************************************************************
-
-"" Include user's extra bundle
-if filereadable(expand("~/.config/nvimrc.local.bundles"))
-  source ~/.config/nvimrc.local.bundles
-endif
-
 call plug#end()
 
 " Required:
@@ -84,7 +69,7 @@ filetype plugin indent on
 "*****************************************************************************
 "" Basic Setup
 "*****************************************************************************"
-"" Every wrapped line will continue visually indented (same amount of
+"" Every wrapped line will continue visually indented 
 set breakindent
 
 "" Path
@@ -93,8 +78,6 @@ set path+=**
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
-set bomb
-set binary
 set wildignore=*.swp,*.bak,*.pyc,*.class
 
 "" Fix backspace indent
@@ -118,6 +101,8 @@ set hlsearch
 set incsearch
 set ignorecase
 set smartcase
+" Activate the incremental (live) substitution
+set inccommand=split
 
 "" Directories for swp files
 set nobackup
@@ -128,22 +113,12 @@ set fileformats=unix,dos,mac
 set showcmd
 set shell=/bin/bash
 
-" Activate the incremental (live) substitution
-set inccommand=split
-
-" Deactivate the arrow keys
-noremap <left> <nop>
-noremap <right> <nop>
-noremap <up> <nop>
-noremap <down> <nop>
-
 "*****************************************************************************
 "" Visual Settings
 "*****************************************************************************
 syntax on
-set synmaxcol=200
 set number
-set mouse=v
+set mouse=a
 
 let no_buffers_menu=1
 if !exists('g:not_finish_vimplug')
@@ -159,10 +134,6 @@ let g:indentLine_char = '┆'
 let g:indentLine_faster = 1
 
 set scrolloff=5
-
-"" Use modeline overrides
-set modeline
-set modelines=10
 
 set title
 set titleold="Terminal"
@@ -194,12 +165,6 @@ if has("persistent_undo")
     set undofile
 endif
 
-" grep.vim
-nnoremap <silent> <leader>f :Regrep<CR>
-let Grep_Default_Options = '-IR'
-let Grep_Skip_Files = '*.log *.db'
-let Grep_Skip_Dirs = '.git node_modules'
-
 " spell checking
 function! ToggleSpellLang()
     " toggle between en and fr
@@ -226,39 +191,6 @@ if !exists('*s:setupWrapping')
 endif
 
 "*****************************************************************************
-"" Autocmd Rules
-"*****************************************************************************
-"" The PC is fast enough, do syntax highlight syncing from start
-augroup vimrc-sync-fromstart
-  autocmd!
-  autocmd BufEnter * :syntax sync fromstart
-augroup END
-
-"" Remember cursor position
-augroup vimrc-remember-cursor-position
-  autocmd!
-  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
-augroup END
-
-"" txt
-augroup vimrc-wrapping
-  autocmd!
-  autocmd BufRead,BufNewFile *.txt call s:setupWrapping()
-augroup END
-
-"" make/cmake
-augroup vimrc-make-cmake
-  autocmd!
-  autocmd FileType make setlocal noexpandtab
-  autocmd BufNewFile,BufRead CMakeLists.txt setlocal filetype=cmake
-augroup END
-
-" Set the filetype to yaml for salt's `.sls` extension
-au BufRead,BufNewFile *.sls set filetype=yaml
-
-set autoread
-
-"*****************************************************************************
 "" Mappings
 "*****************************************************************************
 " sudo before saving the file
@@ -276,7 +208,6 @@ noremap <Leader>f :Ag<CR>
 noremap <Leader>ff :exe ':Ag ' . expand('<cword>')<CR>
 nnoremap <leader><leader> :Commands<CR>
 
-
 " snippets
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
@@ -291,7 +222,6 @@ let g:syntastic_style_error_symbol = '✗'
 let g:syntastic_style_warning_symbol = '⚠'
 let g:syntastic_auto_loc_list=1
 let g:syntastic_aggregate_errors = 1
-
 let g:syntastic_auto_loc_list = 2
 let g:syntastic_python_checkers=['python', 'flake8']
     let g:syntastic_mode_map = {
@@ -302,13 +232,6 @@ let g:syntastic_python_checkers=['python', 'flake8']
 "" Copy/Paste/Cut
 if has('unnamedplus')
   set clipboard+=unnamedplus
-endif
-
-
-if executable('xclip')
-  " xclip for linux copy/paste
-  vmap <C-x> :!xclip<CR>
-  vmap <C-c> :'<,'>w !xclip<CR><CR>
 endif
 
 "" Close buffer
@@ -333,24 +256,6 @@ vnoremap K :m '<-2<CR>gv=gv
 let g:go_fmt_command = "goimports"
 let g:go_list_type = "quickfix"
 let g:go_metalinter_autosave = 1
-
-if executable("go")
-    augroup FileType go
-      autocmd!
-      autocmd FileType go nmap <localleader>d <Plug>(go-def)
-      autocmd FileType go nmap <localleader>k <Plug>(go-doc)
-      autocmd FileType go nmap <localleader>dv <Plug>(go-def-vertical)
-      autocmd FileType go nmap <localleader>kv <Plug>(go-doc-vertical)
-      autocmd FileType go nmap <localleader>kb <Plug>(go-doc-browser)
-      autocmd FileType go nmap <localleader>i <Plug>(go-info)
-      autocmd FileType go nmap <localleader>r <Plug>(go-run)
-      autocmd FileType go nmap <localleader>b <Plug>(go-build)
-      autocmd FileType go nmap <localleader>t <Plug>(go-test)
-    augroup END
-endif
-
-" javascript
-let g:javascript_enable_domhtmlcss = 1
 
 " vim-javascript
 augroup vimrc-javascript
@@ -386,4 +291,46 @@ let g:jedi#completions_command = "<C-Space>"
 let g:vimwiki_list = [{'path': '~/vimwiki/',  'syntax': 'markdown', 'ext': '.md'}]
 let g:vimwiki_ext2syntax = {'.md': 'markdown', '.mkd': 'markdown', '.wiki': 'media'}
 
+"*****************************************************************************
+"" Autocmd Rules
+"*****************************************************************************
+"" Remember cursor position
+augroup vimrc-remember-cursor-position
+  autocmd!
+  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+augroup END
+
+"" txt
+augroup vimrc-wrapping
+  autocmd!
+  autocmd BufRead,BufNewFile *.txt call s:setupWrapping()
+augroup END
+
+"" make/cmake
+augroup vimrc-make-cmake
+  autocmd!
+  autocmd FileType make setlocal noexpandtab
+  autocmd BufNewFile,BufRead CMakeLists.txt setlocal filetype=cmake
+augroup END
+
+" Set the filetype to yaml for salt's `.sls` extension
+au BufRead,BufNewFile *.sls set filetype=yaml
+
+if executable("go")
+    augroup FileType go
+      autocmd!
+      autocmd FileType go nmap <localleader>d <Plug>(go-def)
+      autocmd FileType go nmap <localleader>k <Plug>(go-doc)
+      autocmd FileType go nmap <localleader>dv <Plug>(go-def-vertical)
+      autocmd FileType go nmap <localleader>kv <Plug>(go-doc-vertical)
+      autocmd FileType go nmap <localleader>kb <Plug>(go-doc-browser)
+      autocmd FileType go nmap <localleader>i <Plug>(go-info)
+      autocmd FileType go nmap <localleader>r <Plug>(go-run)
+      autocmd FileType go nmap <localleader>b <Plug>(go-build)
+      autocmd FileType go nmap <localleader>t <Plug>(go-test)
+    augroup END
+endif
+
+" Reload the file if it has been changed outside vim
+set autoread
 
