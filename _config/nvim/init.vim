@@ -25,7 +25,6 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'bronson/vim-trailing-whitespace'
-Plug 'scrooloose/syntastic'
 Plug 'Yggdroot/indentLine'
 Plug 'tomasiser/vim-code-dark'  " Color
 Plug 'SirVer/ultisnips'
@@ -38,6 +37,14 @@ Plug 'davidhalter/jedi-vim'
 if executable("go")
     Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 endif
+Plug 'neomake/neomake'
+
+if executable("flake8") && executable("pep8")
+    let g:neomake_python_enabled_makers = ['flake8', 'pep8',]
+    let g:neomake_python_flake8_maker = { 'args': ['--ignore=E115,E266,E501'], }
+    let g:neomake_python_pep8_maker = { 'args': ['--max-line-length=100', '--ignore=E115,E266'], }
+endif
+autocmd! BufWritePost * Neomake
 
 if has("python3")
     Plug 'roxma/nvim-completion-manager'
@@ -213,21 +220,6 @@ let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<c-b>"
 let g:UltiSnipsEditSplit="vertical"
-
-" syntastic
-let g:syntastic_always_populate_loc_list=1
-let g:syntastic_error_symbol='✗'
-let g:syntastic_warning_symbol='⚠'
-let g:syntastic_style_error_symbol = '✗'
-let g:syntastic_style_warning_symbol = '⚠'
-let g:syntastic_auto_loc_list=1
-let g:syntastic_aggregate_errors = 1
-let g:syntastic_auto_loc_list = 2
-let g:syntastic_python_checkers=['python', 'flake8']
-    let g:syntastic_mode_map = {
-        \ "mode": "passive",
-        \ "active_filetypes": [],
-        \ "passive_filetypes": [] }
 
 "" Copy/Paste/Cut
 if has('unnamedplus')
