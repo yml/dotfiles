@@ -277,6 +277,11 @@ fi
 # Add env variable to work with GO easier
 export GOPATH=$HOME/gopath
 export PATH=$PATH:$GOPATH/bin
+
+if [ -d $HOME/.local/bin ]; then
+    export PATH=$PATH:$HOME/.local/bin
+fi
+
 if [ -d $HOME/go ]; then
     export GOROOT=$HOME/go
     export PATH=$GOROOT/bin:$PATH
@@ -286,12 +291,17 @@ fi
 
 export PATH=/usr/lib/dart/bin:/usr/local/android-studio/bin/:/usr/local/flutter/bin/:$PATH
 
-# vim
-export EDITOR=vim
-export VISUAL=vim
+if hash nvim 2>/dev/null; then
+    # nvim
+    export EDITOR=nvim
+    export VISUAL=nvim
+    export  XDG_CONFIG_HOME=~/.config
+else
+    # vim
+    export EDITOR=vim
+    export VISUAL=vim
+fi
 
-# nvim
-export  XDG_CONFIG_HOME=~/.config
 
 # remap caps lock to escape
 if setxkbmap -version >/dev/null 2>&1; then
