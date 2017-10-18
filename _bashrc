@@ -1,5 +1,5 @@
 # If not running interactively, don't do anything
-[ -z "$PS1" ] && return
+[[ -z $PS1 ]] && return
 
 # don't put duplicate lines in the history. See bash(1) for more options
 # don't overwrite GNU Midnight Commander's setting of `ignorespace'.
@@ -261,54 +261,56 @@ case $TERM in
 
 esac
 
-# Alias definitions.
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
-
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-    . /etc/bash_completion
-fi
-
 
 # Add env variable to work with GO easier
-export GOPATH=$HOME/gopath
-export PATH=$PATH:$GOPATH/bin
+if [[ -d $HOME/gopath ]]; then
+    export GOPATH=$HOME/gopath
+    export PATH=$PATH:$GOPATH/bin
+fi
 
-if [ -d $HOME/.local/bin ]; then
+if [[ -d $HOME/.local/bin ]]; then
     export PATH=$PATH:$HOME/.local/bin
 fi
 
-if [ -d $HOME/go ]; then
+if [[ -d $HOME/go ]]; then
     export GOROOT=$HOME/go
     export PATH=$GOROOT/bin:$PATH
 fi
 
-# Dart / Android / flutter
-
-export PATH=/usr/lib/dart/bin:/usr/local/android-studio/bin/:/usr/local/flutter/bin/:$PATH
 
 if hash nvim 2>/dev/null; then
     # nvim
     export EDITOR=nvim
     export VISUAL=nvim
     export  XDG_CONFIG_HOME=~/.config
+    export GIT_EDITOR=nvim
 else
     # vim
     export EDITOR=vim
     export VISUAL=vim
 fi
 
-
 # remap caps lock to escape
 if setxkbmap -version >/dev/null 2>&1; then
     setxkbmap -option "caps:swapescape"
 fi
 
+# Set my GPG key
 export GPGKEY=2F74DA04
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-source <(kubectl completion bash)
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if [[ -f /etc/bash_completion ]] && ! shopt -oq posix; then
+    . /etc/bash_completion
+fi
+
+[[ -f ~/.fzf.bash ]] && source ~/.fzf.bash
+
+# Alias definitions.
+[[ -f ~/.bash_aliases ]] && source ~/.bash_aliases
+
+
+# Local override
+[[ -f ~/.bash_local ]] && source ~/.bash_local
+
