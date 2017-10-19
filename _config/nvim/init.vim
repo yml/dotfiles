@@ -125,7 +125,7 @@ set shell=/bin/bash
 "*****************************************************************************
 syntax on
 set number
-set mouse=a
+set mouse=v
 
 let no_buffers_menu=1
 if !exists('g:not_finish_vimplug')
