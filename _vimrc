@@ -1,252 +1,194 @@
-" ==========================================================
-" Plugins included
-" ==========================================================
-" Pathogen
-"     Better Management of VIM plugins
-"
-" ==========================================================
-" Performance optimization on large file
-" ==========================================================
-set nocursorcolumn
-syntax sync minlines=256
-set re=1
-" ==========================================================
-" Shortcuts
-" ==========================================================
-set pastetoggle=<F2>          "toggle between paste mode (and nopaste mode)
+"*****************************************************************************
+"" Vim-PLug core
+"*****************************************************************************
+if has('nvim')
+    let vimplug_exists=expand('~/.config/nvim/autoload/plug.vim')
 
-" Search the current word in all the file recursively
-:map <F3> :execute "vimgrep /" . expand("<cword>") . "/j **"<Bar>cw<CR>
+    if !filereadable(vimplug_exists)
+        echo "Installing Vim-Plug..."
+        echo ""
+        silent !\curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        let g:not_finish_vimplug = "yes"
 
-set nocompatible              " Don't be compatible with vi
-let mapleader=","             " change the leader to be a comma vs slash
+        autocmd VimEnter * PlugInstall
+    endif
 
-"remap increment to Ctrl-I because ctrl+a clash with tmux
-:nnoremap <C-I> <C-A>
+    " Required:
+    call plug#begin(expand('~/.config/nvim/plugged'))
+else
+    let vimplug_exists=expand('~/.vim/autoload/plug.vim')
 
-" Seriously, guys. It's not like :W is bound to anything anyway.
-command! W :w
+    if !filereadable(vimplug_exists)
+        echo "Installing Vim-Plug..."
+        echo ""
+        silent !\curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        let g:not_finish_vimplug = "yes"
 
-" ,v brings up my .vimrc
-" ,V reloads it -- making all changes active (have to save first)
-map <leader>vi :sp ~/.vimrc<CR><C-W>_
-map <silent> <leader>VI :source ~/.vimrc<CR>:filetype detect<CR>:exe ":echo 'vimrc reloaded'"<CR>
+        autocmd VimEnter * PlugInstall
+    endif
 
-" open/close the quickfix window
-nmap <leader>co :copen<CR>
-nmap <leader>cc :cclose<CR>
+    " Required:
+    call plug#begin(expand('~/.vim/plugged'))
+endif
 
-" for when we forget to use sudo to open/edit a file
-cmap w!! w !sudo tee % >/dev/null
+"*****************************************************************************
+"" Plug install packages
+"*****************************************************************************
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+" Plug 'airblade/vim-gitgutter'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'sheerun/vim-polyglot'
+Plug 'bronson/vim-trailing-whitespace'
+Plug 'Yggdroot/indentLine'
+Plug 'tomasiser/vim-code-dark'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'vimwiki/vimwiki'
+Plug 'davidhalter/jedi-vim'
+" Go Lang Bundle
+if executable('go')
+    Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
+endif
 
-" Load the Gundo window
-map <leader>z :GundoToggle<CR>
+if has('nvim')
+    Plug 'neomake/neomake'
 
-" Vertical split
-map <leader>v :vsplit<CR>
+    if executable("flake8") && executable("pep8")
+        let g:neomake_python_enabled_makers = ['flake8', 'pep8',]
+        let g:neomake_python_flake8_maker = { 'args': ['--ignore=E115,E266,E501'], }
+        let g:neomake_python_pep8_maker = { 'args': ['--max-line-length=100', '--ignore=E115,E266'], }
+    endif
+    autocmd! BufWritePost * Neomake
 
-" Horizontal split
-map <leader>h :split<CR>
+    if has("python3")
+        Plug 'roxma/nvim-completion-manager'
+        Plug 'roxma/python-support.nvim'
+        let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'jedi')
+        let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'mistune')
+        let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'psutil')
+        let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'setproctitle')
+    endif
+if executable("npm")
+    " (optional) javascript completion
+    Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
+endif
+endif
+
+
+"" Completion
+set shortmess+=c
+inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+
+"*****************************************************************************
+call plug#end()
+
+"" Required:
+filetype plugin indent on
+
+"*****************************************************************************
+"" Basic Setup
+"*****************************************************************************"
+"" Every wrapped line will continue visually indented
+set breakindent
+
+"" Path
+set path+=**
+"" Encoding
+set encoding=utf-8
+set fileencoding=utf-8
+set fileencodings=utf-8
+set wildignore=*.swp,*.bak,*.pyc,*.class
+
+"" Fix backspace indent
+set backspace=indent,eol,start
+
+"" Tabs. May be overriten by autocmd rules
+set tabstop=4
+set softtabstop=0
+set shiftwidth=4
+set expandtab
+
+"" Map leader to ,
+let mapleader=','
+let maplocalleader=';'
+
+"" Enable hidden buffers
+set hidden
+
+"" Searching
+set hlsearch
+set ignorecase
+set smartcase
+
+"" Directories for swp files
+set nobackup
+set swapfile
+set undofile
+
+set fileformats=unix,dos,mac
+set showcmd
+set shell=/bin/bash
+
+"*****************************************************************************
+"" Nvim specific
+"*****************************************************************************
+if has('nvim')
+    " Activate the incremental (live) substitution
+    set inccommand=split
+    set incsearch
+    " Terminal settings
+    tnoremap <Leader><ESC> <C-\><C-n>
+endif
+
+
+"*****************************************************************************
+"" Visual Settings
+"*****************************************************************************
+syntax on
+set number
+set mouse=v
+
+let no_buffers_menu=1
+if !exists('g:not_finish_vimplug')
+    set t_Co=256
+    set t_ut=
+    colorscheme codedark
+endif
+
+" IndentLine
+let g:indentLine_enabled = 1
+let g:indentLine_concealcursor = 0
+let g:indentLine_char = '┆'
+let g:indentLine_faster = 1
+
+set scrolloff=5
+
+set title
+set titleold="Terminal"
+set titlestring=%F
+
+set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
+
+"*****************************************************************************
+"" Abbreviations
+"*****************************************************************************
+" Edit my nvim configuration
+nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+" Reload nvim configuration
+nnoremap <leader>sv :source $MYVIMRC<cr>
 
 " Expand the current directory
 ab <expr> %% expand('%:p:h')
-" ==========================================================
-" Pathogen - Allows us to organize our vim plugins
-" ==========================================================
-" Load pathogen with docs for all plugins
-filetype off
-call pathogen#runtime_append_all_bundles()
-call pathogen#helptags()
 
-" ==========================================================
-" Basic Settings
-" ==========================================================
-filetype on                   " try to detect filetypes
-filetype plugin indent on     " enable loading indent file for filetype
-filetype plugin on
-set path+=**
-set hidden                    " hide buffers instead of closing them
-"set mouse=a                   " enable mouse
-set number                    " Display line numbers
-set numberwidth=1             " using only 1 column (and 1 space) while possible
-set relativenumber            " Display the relative number
-set background=dark           " We are using dark background in vim
-set title                     " show title in console title bar
-set wildmenu                  " Menu completion in command mode on <Tab>
-set wildmode=full             " <Tab> cycles between all matching choices.
-set wrap                      " wrap tells Vim to word wrap visually
+nnoremap <F2> :Vexplore<CR>
+nnoremap <F3> :Vexplore .<CR>
 
-" Ignore these files when completing
-set wildignore+=*.o,*.obj,.git,*.pyc
-
-" show a line at column 79
-if exists("&colorcolumn")
-    set colorcolumn=79
-endif
-
-""" Moving Around/Editing
-set nocursorline            " have a line indicate the cursor location
-set virtualedit=block       " Let cursor move past the last char in <C-v> mode
-set scrolloff=3             " Keep 3 context lines above and below the cursor
-set backspace=2             " Allow backspacing over autoindent, EOL, and BOL
-set showmatch               " Briefly jump to a paren once it's balanced
-set matchtime=10             " (for only .2 seconds).
-set linebreak               " don't wrap textin the middle of a word
-set autoindent              " always set autoindenting on
-set tabstop=4               " <tab> inserts 4 spaces
-set shiftwidth=4            " but an indent level is 2 spaces wide.
-set softtabstop=4           " <BS> over an autoindent deletes both spaces.
-set expandtab               " Use spaces, not tabs, for autoindent/tab key.
-set shiftround              " rounds indent to a multiple of shiftwidth
-set matchpairs+=<:>         " show matching <> (html mainly) as well
-set foldmethod=indent       " allow us to fold on indents
-set foldlevel=9             " don't use fold by default
-
-" close preview window automatically when we move around
-" autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
-" autocmd InsertLeave * if pumvisible() == 0|pclose|endif
-
-"""" Reading/Writing
-set noautowrite             " Never write a file unless I request it.
-set noautowriteall          " NEVER.
-set noautoread              " Don't automatically re-read changed files.
-set modeline                " Allow vim options to be embedded in files;
-set modelines=5             " they must be within the first or last 5 lines.
-set ffs=unix,dos,mac        " Try recognizing dos, unix, and mac line endings.
-
-"""" Messages, Info, Status
-set ls=2                    " allways show status line
-set vb t_vb=                " Disable all bells.  I hate ringing/flashing.
-set confirm                 " Y-N-C prompt if closing with unsaved changes.
-set showcmd                 " Show incomplete normal mode commands as I type.
-set report=0                " : commands always print changed line count.
-set shortmess+=a            " Use [+]/[RO]/[w] for modified/readonly/written.
-set laststatus=2            " Always show statusline, even if only 1 window.
-
-" displays tabs with :set list & displays when a line runs off-screen
-set listchars=tab:>-,trail:-,precedes:<,extends:>
-set nolist
-
-""" Searching and Patterns
-set ignorecase              " Default to using case insensitive searches,
-set smartcase               " unless uppercase letters are used in the regex.
-set hlsearch                " Highlight searches by default.
-set incsearch               " Incrementally search while typing a /regex
-
-"""" Display
-syntax on                   " Syntax highlighting
-"colorscheme vividchalk
-colorscheme inkpot
-"colorscheme corporation
-
-" ==========================================================
-" netrw
-" ==========================================================
-let g:netrw_banner=0        " disable annoying banner
-let g:netrw_browse_split=4  " Open in prior window
-let g:netrw_altv=1          " Open split to the right
-let g:netrw_liststyle=3     " tree view
-
-" ==========================================================
-" Python
-" ==========================================================
-autocmd FileType javascript setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4
-" Add the virtualenv's site-packages to vim path
-if has('python')
-py << EOF
-import os.path
-import sys
-import vim
-if 'VIRTUAL_ENV' in os.environ:
-    project_base_dir = os.environ['VIRTUAL_ENV']
-    sys.path.insert(0, project_base_dir)
-    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
-    execfile(activate_this, dict(__file__=activate_this))
-EOF
-endif
-
-" Run pep8
-let g:pep8_map='<leader>8'
-
-" Don't let pyflakes use the quickfix window
-let g:pyflakes_use_quickfix = 0
-
-" turn of hlsearch and update pyflakes on enter
-au BufRead,BufNewFile *.py nnoremap <buffer><CR> :nohlsearch\|:call PressedEnter()<cr>
-nnoremap <buffer><CR> :nohlsearch\|:call PressedEnter()<cr>
-
-" clear the search buffer when hitting return and update pyflakes checks
-function! PressedEnter()
-    :nohlsearch
-    if &filetype == 'python'
-        :PyflakesUpdate
-    end
-endfunction
-
-" jedi-vim plugin
-let g:jedi#completions_enabled = 0
-let g:jedi#auto_vim_configuration = 0
-let g:jedi#smart_auto_mappings = 0
-
-let g:jedi#show_call_signatures = 0
-let g:jedi#popup_on_dot = 0
-let g:jedi#popup_select_first = 1
-" set the following setting to 1 if you want python completion
-let g:jedi#auto_initialization = 1
-
-" ==========================================================
-" GO
-" ==========================================================
-let g:go_disable_autoinstall = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_structs = 0
-
-let g:go_fmt_command = "goimports"
-
-au FileType go nmap <Leader>d <Plug>(go-def)
-au FileType go nmap <Leader>gs <Plug>(go-implements)
-au FileType go nmap <Leader>gi <Plug>(go-info)
-au FileType go nmap <Leader>gh <Plug>(go-doc)
-au FileType go nmap <leader>gr <Plug>(go-run)
-au FileType go nmap <leader>gb <Plug>(go-build)
-au FileType go nmap <leader>gt <Plug>(go-test)
-au FileType go nmap <leader>gc <Plug>(go-coverage)
-
-let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
-let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
-" ==========================================================
-" Javascript
-" ==========================================================
-autocmd FileType javascript setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-au BufRead *.js set makeprg=jslint\ %
-
-" ==========================================================
-" HTML
-" ==========================================================
-autocmd FileType xml,html,htmljinja,htmldjango setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-
-" ==========================================================
-" Trailing Space Helpers
-" ==========================================================
-" Highlight Trailing Space
-highlight TrailingWhitespace ctermbg=darkgreen guibg=darkgreen
-match TrailingWhitespace /\s\+$/
-au TabEnter * :match TrailingWhitespace /\s\+$/
-
-" Trailing space removal on save
-function! StripTrailingSpaces()
-    let l = line(".")
-    let c = col(".")
-    silent! execute '%s/\s\+$//e'
-    call cursor(l, c)
-endfunction
-
-" ==========================================================
 " spell checking
-" ==========================================================
-" set spell spelllang=en_us
-
 function! ToggleSpellLang()
     " toggle between en and fr
     if &spelllang =~# 'en'
@@ -255,11 +197,148 @@ function! ToggleSpellLang()
         :set spelllang=en
     endif
 endfunction
-nnoremap <F3> :setlocal spell!<CR> " toggle spell on or off
-nnoremap <F4> :call ToggleSpellLang()<CR> " toggle language
-" ==========================================================
-" dbext
-" ==========================================================
-let g:dbext_default_type = 'PGSQL'
-let g:dbext_default_user   = ''
-let g:dbext_default_passwd = ''
+" toggle spell on or off
+nnoremap <F4> :setlocal spell!<CR>
+" toggle language
+nnoremap <F5> :call ToggleSpellLang()<CR>
+
+"*****************************************************************************
+"" Functions
+"*****************************************************************************
+if !exists('*s:setupWrapping')
+    function s:setupWrapping()
+        set wrap
+        set wm=2
+        set textwidth=79
+    endfunction
+endif
+
+"*****************************************************************************
+"" Mappings
+"*****************************************************************************
+" sudo before saving the file
+cmap w!! w !sudo tee > /dev/null %<CR><CR>
+
+"" Split
+noremap <leader>v :<C-u>vsplit<CR>
+noremap <leader>s :<C-u>split<CR>
+
+"" fzf shortcut
+noremap <Leader>h :History<CR>
+noremap <leader>b :Buffers<CR>
+noremap <leader>l :Lines<CR>
+noremap <leader>e :Files<CR>
+noremap <Leader>f :Ag<CR>
+noremap <Leader>ff :exe ':Ag ' . expand('<cword>')<CR>
+nnoremap <leader><leader> :Commands<CR>
+
+" snippets
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<c-b>"
+let g:UltiSnipsEditSplit="vertical"
+
+"" Copy/Paste/Cut
+if has('unnamedplus')
+    set clipboard+=unnamedplus
+endif
+
+"" Close buffer
+noremap <leader>c :bd<CR>
+
+"" Clean search (highlight)
+nnoremap <silent> <leader><space> :noh<cr>
+
+"" Vmap for maintain Visual Mode after shifting > and <
+vnoremap < <gv
+vnoremap > >gv
+
+"" Move visual block
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
+"*****************************************************************************
+"" Custom configs
+"*****************************************************************************
+
+" vim-go
+let g:go_fmt_command = "goimports"
+let g:go_list_type = "quickfix"
+let g:go_metalinter_autosave = 1
+
+" vim-javascript
+augroup vimrc-javascript
+    autocmd!
+    autocmd FileType javascript set tabstop=4|set shiftwidth=4|set expandtab softtabstop=4 smartindent
+augroup END
+
+" python
+augroup vimrc-python
+    autocmd!
+    autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 colorcolumn=79
+    autocmd FileType python setlocal formatoptions+=croq softtabstop=4 smartindent
+    autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+augroup END
+
+" markdown
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+
+" jedi-vim
+let g:jedi#popup_on_dot = 0
+let g:jedi#show_call_signatures = 0
+let g:jedi#smart_auto_mappings = 0
+let g:jedi#goto_definitions_command = "<localleader>d"
+let g:jedi#goto_assignments_command = "<localleader>g"
+let g:jedi#documentation_command = "<localleader>k"
+let g:jedi#usages_command = "<localleader>n"
+let g:jedi#rename_command = "<localleader>r"
+let g:jedi#completions_command = "<C-Space>"
+
+" *******************************************
+" vimwiki
+" *******************************************
+let g:vimwiki_list = [{'path': '~/vimwiki/',  'syntax': 'markdown', 'ext': '.md'}]
+let g:vimwiki_ext2syntax = {'.md': 'markdown', '.mkd': 'markdown', '.wiki': 'media'}
+
+"*****************************************************************************
+"" Autocmd Rules
+"*****************************************************************************
+"" Remember cursor position
+augroup vimrc-remember-cursor-position
+    autocmd!
+    autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+augroup END
+
+"" txt
+augroup vimrc-wrapping
+    autocmd!
+    autocmd BufRead,BufNewFile *.txt call s:setupWrapping()
+augroup END
+
+"" make/cmake
+augroup vimrc-make-cmake
+    autocmd!
+    autocmd FileType make setlocal noexpandtab
+    autocmd BufNewFile,BufRead CMakeLists.txt setlocal filetype=cmake
+augroup END
+
+" Set the filetype to yaml for salt's `.sls` extension
+au BufRead,BufNewFile *.sls set filetype=yaml
+
+if executable("go")
+    augroup FileType go
+        autocmd!
+        autocmd FileType go nmap <localleader>d <Plug>(go-def)
+        autocmd FileType go nmap <localleader>k <Plug>(go-doc)
+        autocmd FileType go nmap <localleader>dv <Plug>(go-def-vertical)
+        autocmd FileType go nmap <localleader>kv <Plug>(go-doc-vertical)
+        autocmd FileType go nmap <localleader>kb <Plug>(go-doc-browser)
+        autocmd FileType go nmap <localleader>i <Plug>(go-info)
+        autocmd FileType go nmap <localleader>r <Plug>(go-run)
+        autocmd FileType go nmap <localleader>b <Plug>(go-build)
+        autocmd FileType go nmap <localleader>t <Plug>(go-test)
+    augroup END
+endif
+
+" Reload the file if it has been changed outside vim
+set autoread
