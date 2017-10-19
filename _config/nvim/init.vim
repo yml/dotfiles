@@ -205,6 +205,7 @@ cmap w!! w !sudo tee > /dev/null %<CR><CR>
 
 "" Split
 noremap <leader>v :<C-u>vsplit<CR>
+noremap <leader>s :<C-u>split<CR>
 
 "" fzf shortcut
 noremap <Leader>h :History<CR>
