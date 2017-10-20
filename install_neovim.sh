@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+
+
 sudo apt-get install software-properties-common
 sudo apt-get install python-software-properties
 

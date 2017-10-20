@@ -177,14 +177,21 @@ set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
 "*****************************************************************************
 "" Abbreviations
 "*****************************************************************************
+" Expand the current directory
+ab <expr> %% expand('%:p:h')
+
+iab #! #!/usr/bin/env
+iab @@ yann.malet@gmail.com
+
+"*****************************************************************************
+"" Mappings
+"*****************************************************************************
 " Edit my nvim configuration
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 " Reload nvim configuration
 nnoremap <leader>sv :source $MYVIMRC<cr>
 
-" Expand the current directory
-ab <expr> %% expand('%:p:h')
-
+" File explorer
 nnoremap <F2> :Vexplore<CR>
 nnoremap <F3> :Vexplore .<CR>
 
@@ -202,20 +209,7 @@ nnoremap <F4> :setlocal spell!<CR>
 " toggle language
 nnoremap <F5> :call ToggleSpellLang()<CR>
 
-"*****************************************************************************
-"" Functions
-"*****************************************************************************
-if !exists('*s:setupWrapping')
-    function s:setupWrapping()
-        set wrap
-        set wm=2
-        set textwidth=79
-    endfunction
-endif
 
-"*****************************************************************************
-"" Mappings
-"*****************************************************************************
 " sudo before saving the file
 cmap w!! w !sudo tee > /dev/null %<CR><CR>
 
@@ -266,23 +260,6 @@ let g:go_fmt_command = "goimports"
 let g:go_list_type = "quickfix"
 let g:go_metalinter_autosave = 1
 
-" vim-javascript
-augroup vimrc-javascript
-    autocmd!
-    autocmd FileType javascript set tabstop=4|set shiftwidth=4|set expandtab softtabstop=4 smartindent
-augroup END
-
-" python
-augroup vimrc-python
-    autocmd!
-    autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 colorcolumn=79
-    autocmd FileType python setlocal formatoptions+=croq softtabstop=4 smartindent
-    autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class,with
-augroup END
-
-" markdown
-autocmd BufNewFile,BufReadPost *.md set filetype=markdown
-
 " jedi-vim
 let g:jedi#popup_on_dot = 0
 let g:jedi#show_call_signatures = 0
@@ -312,7 +289,28 @@ augroup END
 "" txt
 augroup vimrc-wrapping
     autocmd!
-    autocmd BufRead,BufNewFile *.txt call s:setupWrapping()
+    autocmd BufRead,BufNewFile *.txt setlocal filetype=markdown wrap textwidth=100 wrapmargin=4
+
+augroup END
+
+" vim-javascript
+augroup vimrc-javascript
+    autocmd!
+    autocmd FileType javascript setlocal tabstop=4 shiftwidth=4 expandtab softtabstop=4 smartindent
+augroup END
+
+" python
+augroup vimrc-python
+    autocmd!
+    autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 colorcolumn=79
+    autocmd FileType python setlocal formatoptions+=croq softtabstop=4 smartindent
+    autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+augroup END
+
+" markdown
+augroup vimrc-markdown
+    autocmd!
+    autocmd BufNewFile,BufReadPost *.md setlocal filetype=markdown wrap textwidth=100 wrapmargin=4
 augroup END
 
 "" make/cmake
