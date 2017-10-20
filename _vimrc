@@ -308,10 +308,18 @@ augroup vimrc-python
     autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 augroup END
 
+"" GITCOMMIT
+augroup vimrc-gitcommit
+    autocmd!
+    autocmd FileType gitcommit call setpos('.', [0, 1, 1, 0])
+    autocmd FileType gitcommit setlocal spell
+augroup END
+
+
 "" markdown
 augroup vimrc-markdown
     autocmd!
-    autocmd BufNewFile,BufReadPost *.md setlocal filetype=markdown wrap textwidth=100 wrapmargin=4
+    autocmd BufNewFile,BufReadPost *.md setlocal spell filetype=markdown wrap textwidth=100 wrapmargin=4
 augroup END
 
 "" make/cmake
