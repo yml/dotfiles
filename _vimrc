@@ -129,6 +129,11 @@ set smartcase
 set nobackup
 set swapfile
 set undofile
+if !isdirectory($HOME."/.undodir")
+    call mkdir($HOME."/.undodir", "", 0700)
+endif
+set undodir=~/.undodir/
+
 
 set fileformats=unix,dos,mac
 set showcmd
