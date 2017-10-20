@@ -52,7 +52,7 @@ if executable('go')
 endif
 
 if has('nvim')
-    " Plug 'davidhalter/jedi-vim'
+    Plug 'davidhalter/jedi-vim'
     Plug 'neomake/neomake'
 
     if executable("flake8") && executable("pep8")
@@ -76,17 +76,15 @@ if executable("npm")
 endif
 endif
 
-
-"" Completion
+" Completion
 set shortmess+=c
 inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-
-"*****************************************************************************
 call plug#end()
 
+"*****************************************************************************
 "" Required:
 filetype plugin indent on
 
@@ -149,7 +147,6 @@ if has('nvim')
     " Terminal settings
     tnoremap <Leader><ESC> <C-\><C-n>
 endif
-
 
 "*****************************************************************************
 "" Visual Settings
@@ -214,7 +211,6 @@ nnoremap <F4> :setlocal spell!<CR>
 " toggle language
 nnoremap <F5> :call ToggleSpellLang()<CR>
 
-
 " sudo before saving the file
 cmap w!! w !sudo tee > /dev/null %<CR><CR>
 
@@ -231,7 +227,7 @@ noremap <Leader>f :Ag<CR>
 noremap <Leader>ff :exe ':Ag ' . expand('<cword>')<CR>
 nnoremap <leader><leader> :Commands<CR>
 
-" snippets
+"" snippets
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<c-b>"
@@ -260,12 +256,12 @@ vnoremap K :m '<-2<CR>gv=gv
 "" Custom configs
 "*****************************************************************************
 
-" vim-go
+"" vim-go
 let g:go_fmt_command = "goimports"
 let g:go_list_type = "quickfix"
 let g:go_metalinter_autosave = 1
 
-" jedi-vim
+"" jedi-vim
 let g:jedi#popup_on_dot = 0
 let g:jedi#show_call_signatures = 0
 let g:jedi#smart_auto_mappings = 0
@@ -298,13 +294,13 @@ augroup vimrc-wrapping
 
 augroup END
 
-" vim-javascript
+"" vim-javascript
 augroup vimrc-javascript
     autocmd!
     autocmd FileType javascript setlocal tabstop=4 shiftwidth=4 expandtab softtabstop=4 smartindent
 augroup END
 
-" python
+"" python
 augroup vimrc-python
     autocmd!
     autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 colorcolumn=79
@@ -312,7 +308,7 @@ augroup vimrc-python
     autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 augroup END
 
-" markdown
+"" markdown
 augroup vimrc-markdown
     autocmd!
     autocmd BufNewFile,BufReadPost *.md setlocal filetype=markdown wrap textwidth=100 wrapmargin=4
@@ -325,7 +321,7 @@ augroup vimrc-make-cmake
     autocmd BufNewFile,BufRead CMakeLists.txt setlocal filetype=cmake
 augroup END
 
-" Set the filetype to yaml for salt's `.sls` extension
+"" Set the filetype to yaml for salt's `.sls` extension
 au BufRead,BufNewFile *.sls set filetype=yaml
 
 if executable("go")
@@ -343,5 +339,5 @@ if executable("go")
     augroup END
 endif
 
-" Reload the file if it has been changed outside vim
+"" Reload the file if it has been changed outside vim
 set autoread
