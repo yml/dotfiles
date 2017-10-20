@@ -46,13 +46,13 @@ Plug 'tomasiser/vim-code-dark'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'vimwiki/vimwiki'
-Plug 'davidhalter/jedi-vim'
 " Go Lang Bundle
 if executable('go')
     Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 endif
 
 if has('nvim')
+    " Plug 'davidhalter/jedi-vim'
     Plug 'neomake/neomake'
 
     if executable("flake8") && executable("pep8")
