@@ -119,6 +119,7 @@ let maplocalleader=';'
 set hidden
 
 "" Searching
+set incsearch
 set hlsearch
 set ignorecase
 set smartcase
@@ -143,7 +144,6 @@ set shell=/bin/bash
 if has('nvim')
     " Activate the incremental (live) substitution
     set inccommand=split
-    set incsearch
     " Terminal settings
     tnoremap <Leader><ESC> <C-\><C-n>
 endif
