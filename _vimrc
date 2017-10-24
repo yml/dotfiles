@@ -1,5 +1,5 @@
 "*****************************************************************************
-"" Vim-PLug core
+" Vim-PLug core
 "*****************************************************************************
 if has('nvim')
     let vimplug_exists=expand('~/.config/nvim/autoload/plug.vim')
@@ -32,11 +32,11 @@ else
 endif
 
 "*****************************************************************************
-"" Plug install packages
+" Plug install packages
 "*****************************************************************************
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
-" Plug 'airblade/vim-gitgutter'
+Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'sheerun/vim-polyglot'
@@ -46,85 +46,109 @@ Plug 'tomasiser/vim-code-dark'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'vimwiki/vimwiki'
+Plug 'davidhalter/jedi-vim'
+Plug 'prabirshrestha/asyncomplete.vim'
+"*****************************************************************************
+" Experimental LSP completion
+"*****************************************************************************"
+" Plug 'prabirshrestha/async.vim'
+" Plug 'prabirshrestha/vim-lsp'
+" Plug 'prabirshrestha/asyncomplete-lsp.vim'
+" let g:lsp_async_completion = 1
+" if executable('pyls')
+"     " pip install python-language-server
+"     au User lsp_setup call lsp#register_server({
+"         \ 'name': 'pyls',
+"         \ 'cmd': {server_info->['pyls']},
+"         \ 'whitelist': ['python'],
+"         \ })
+" endif
+"*****************************************************************************"
+
 " Go Lang Bundle
 if executable('go')
     Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 endif
 
 if has('nvim')
-    Plug 'davidhalter/jedi-vim'
     Plug 'neomake/neomake'
 
+    autocmd! BufWritePost * Neomake
     if executable("flake8") && executable("pep8")
         let g:neomake_python_enabled_makers = ['flake8', 'pep8',]
         let g:neomake_python_flake8_maker = { 'args': ['--ignore=E115,E266,E501'], }
         let g:neomake_python_pep8_maker = { 'args': ['--max-line-length=100', '--ignore=E115,E266'], }
     endif
-    autocmd! BufWritePost * Neomake
-
-    if has("python3")
-        Plug 'roxma/nvim-completion-manager'
-        Plug 'roxma/python-support.nvim'
-        let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'jedi')
-        let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'mistune')
-        let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'psutil')
-        let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'setproctitle')
+    if executable("npm")
+        " (optional) javascript completion
+        Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
     endif
-if executable("npm")
-    " (optional) javascript completion
-    Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
-endif
 endif
 
-" Completion
-set shortmess+=c
-inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 call plug#end()
 
 "*****************************************************************************
-"" Required:
-filetype plugin indent on
+" Completion
+"*****************************************************************************"
+
+set completeopt-=preview
+set shortmess+=co
+" Tab completion
+let g:asyncomplete_auto_popup = 0
+let g:asyncomplete_remove_duplicates = 1
+
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <TAB>
+  \ pumvisible() ? "\<C-n>" :
+  \ <SID>check_back_space() ? "\<TAB>" :
+  \ asyncomplete#force_refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" Force refresh completion
+imap <c-space> <Plug>(asyncomplete_force_refresh)
 
 "*****************************************************************************
-"" Basic Setup
+" Basic Setup
 "*****************************************************************************"
-"" Every wrapped line will continue visually indented
+filetype plugin indent on
+" Every wrapped line will continue visually indented
 set breakindent
 
-"" Path
+" Path
 set path+=**
-"" Encoding
+" Encoding
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
 set wildignore=*.swp,*.bak,*.pyc,*.class
 
-"" Fix backspace indent
+" Fix backspace indent
 set backspace=indent,eol,start
 
-"" Tabs. May be overriten by autocmd rules
+" Tabs. May be overriten by autocmd rules
 set tabstop=4
 set softtabstop=0
 set shiftwidth=4
 set expandtab
 
-"" Map leader to ,
+" Map leader to ,
 let mapleader=','
 let maplocalleader=';'
 
-"" Enable hidden buffers
+" Enable hidden buffers
 set hidden
 
-"" Searching
+" Searching
 set incsearch
 set hlsearch
 set ignorecase
 set smartcase
 
-"" Directories for swp files
+" Directories for swp files
 set nobackup
 set swapfile
 set undofile
@@ -139,7 +163,7 @@ set showcmd
 set shell=/bin/bash
 
 "*****************************************************************************
-"" Nvim specific
+" Nvim specific
 "*****************************************************************************
 if has('nvim')
     " Activate the incremental (live) substitution
@@ -149,7 +173,7 @@ if has('nvim')
 endif
 
 "*****************************************************************************
-"" Visual Settings
+" Visual Settings
 "*****************************************************************************
 syntax on
 set number
@@ -177,7 +201,7 @@ set titlestring=%F
 set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
 
 "*****************************************************************************
-"" Abbreviations
+" Abbreviations
 "*****************************************************************************
 " Expand the current directory
 ab <expr> %% expand('%:p:h')
@@ -186,7 +210,7 @@ iab #! #!/usr/bin/env
 iab @@ yann.malet@gmail.com
 
 "*****************************************************************************
-"" Mappings
+" Mappings
 "*****************************************************************************
 " Edit my nvim configuration
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
@@ -214,11 +238,11 @@ nnoremap <F5> :call ToggleSpellLang()<CR>
 " sudo before saving the file
 cmap w!! w !sudo tee > /dev/null %<CR><CR>
 
-"" Split
+" Split
 noremap <leader>v :<C-u>vsplit<CR>
 noremap <leader>s :<C-u>split<CR>
 
-"" fzf shortcut
+" fzf shortcut
 noremap <Leader>h :History<CR>
 noremap <leader>b :Buffers<CR>
 noremap <leader>l :Lines<CR>
@@ -227,41 +251,41 @@ noremap <Leader>f :Ag<CR>
 noremap <Leader>ff :exe ':Ag ' . expand('<cword>')<CR>
 nnoremap <leader><leader> :Commands<CR>
 
-"" snippets
+" snippets
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<c-b>"
 let g:UltiSnipsEditSplit="vertical"
 
-"" Copy/Paste/Cut
+" Copy/Paste/Cut
 if has('unnamedplus')
     set clipboard+=unnamedplus
 endif
 
-"" Close buffer
+" Close buffer
 noremap <leader>c :bd<CR>
 
-"" Clean search (highlight)
+" Clean search (highlight)
 nnoremap <silent> <leader><space> :noh<cr>
 
-"" Vmap for maintain Visual Mode after shifting > and <
+" Vmap for maintain Visual Mode after shifting > and <
 vnoremap < <gv
 vnoremap > >gv
 
-"" Move visual block
+" Move visual block
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 
 "*****************************************************************************
-"" Custom configs
+" Custom configs
 "*****************************************************************************
 
-"" vim-go
+" vim-go
 let g:go_fmt_command = "goimports"
 let g:go_list_type = "quickfix"
 let g:go_metalinter_autosave = 1
 
-"" jedi-vim
+" jedi-vim
 let g:jedi#popup_on_dot = 0
 let g:jedi#show_call_signatures = 0
 let g:jedi#smart_auto_mappings = 0
@@ -279,28 +303,26 @@ let g:vimwiki_list = [{'path': '~/vimwiki/',  'syntax': 'markdown', 'ext': '.md'
 let g:vimwiki_ext2syntax = {'.md': 'markdown', '.mkd': 'markdown', '.wiki': 'media'}
 
 "*****************************************************************************
-"" Autocmd Rules
+" Autocmd Rules
 "*****************************************************************************
-"" Remember cursor position
-augroup vimrc-remember-cursor-position
+augroup vimrc-jump-last-position
     autocmd!
-    autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+	autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 augroup END
-
-"" txt
+" txt
 augroup vimrc-wrapping
     autocmd!
     autocmd BufRead,BufNewFile *.txt setlocal filetype=markdown wrap textwidth=100 wrapmargin=4
 
 augroup END
 
-"" vim-javascript
+" vim-javascript
 augroup vimrc-javascript
     autocmd!
     autocmd FileType javascript setlocal tabstop=4 shiftwidth=4 expandtab softtabstop=4 smartindent
 augroup END
 
-"" python
+" python
 augroup vimrc-python
     autocmd!
     autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 colorcolumn=79
@@ -308,7 +330,7 @@ augroup vimrc-python
     autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 augroup END
 
-"" GITCOMMIT
+" GITCOMMIT
 augroup vimrc-gitcommit
     autocmd!
     autocmd FileType gitcommit call setpos('.', [0, 1, 1, 0])
@@ -316,20 +338,20 @@ augroup vimrc-gitcommit
 augroup END
 
 
-"" markdown
+" markdown
 augroup vimrc-markdown
     autocmd!
     autocmd BufNewFile,BufReadPost *.md setlocal spell filetype=markdown wrap textwidth=100 wrapmargin=4
 augroup END
 
-"" make/cmake
+" make/cmake
 augroup vimrc-make-cmake
     autocmd!
     autocmd FileType make setlocal noexpandtab
     autocmd BufNewFile,BufRead CMakeLists.txt setlocal filetype=cmake
 augroup END
 
-"" Set the filetype to yaml for salt's `.sls` extension
+" Set the filetype to yaml for salt's `.sls` extension
 au BufRead,BufNewFile *.sls set filetype=yaml
 
 if executable("go")
@@ -347,5 +369,5 @@ if executable("go")
     augroup END
 endif
 
-"" Reload the file if it has been changed outside vim
+" Reload the file if it has been changed outside vim
 set autoread
