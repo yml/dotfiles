@@ -40,7 +40,6 @@ Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'sheerun/vim-polyglot'
-Plug 'bronson/vim-trailing-whitespace'
 Plug 'Yggdroot/indentLine'
 Plug 'tomasiser/vim-code-dark'
 Plug 'SirVer/ultisnips'
@@ -210,6 +209,34 @@ iab #! #!/usr/bin/env
 iab @@ yann.malet@gmail.com
 
 "*****************************************************************************
+" functions
+"*****************************************************************************
+function! s:FixWhitespace(line1,line2)
+    let l:save_cursor = getpos(".")
+    silent! execute ':' . a:line1 . ',' . a:line2 . 's/\\\@<!\s\+$//'
+    call setpos('.', l:save_cursor)
+endfunction
+
+" Toggle spell checking
+function! s:ToggleSpellLang()
+    " toggle between en and fr
+    if &spelllang =~# 'en'
+        :set spelllang=fr
+    else
+        :set spelllang=en
+    endif
+endfunction
+
+"*****************************************************************************
+" Commands
+"*****************************************************************************
+" Run :FixWhitespace to remove end of line white space
+command! -range=% FixWhitespace call <SID>FixWhitespace(<line1>,<line2>)
+
+" Run :Agraw to pass additional parameters to :Ag
+command! -nargs=+ -complete=file Agraw call fzf#vim#ag_raw(<q-args>)
+
+"*****************************************************************************
 " Mappings
 "*****************************************************************************
 " Edit my nvim configuration
@@ -221,19 +248,10 @@ nnoremap <leader>sv :source $MYVIMRC<cr>
 nnoremap <F2> :Vexplore<CR>
 nnoremap <F3> :Vexplore .<CR>
 
-" spell checking
-function! ToggleSpellLang()
-    " toggle between en and fr
-    if &spelllang =~# 'en'
-        :set spelllang=fr
-    else
-        :set spelllang=en
-    endif
-endfunction
 " toggle spell on or off
 nnoremap <F4> :setlocal spell!<CR>
 " toggle language
-nnoremap <F5> :call ToggleSpellLang()<CR>
+nnoremap <F5> :call <SID>ToggleSpellLang()<CR>
 
 " sudo before saving the file
 cmap w!! w !sudo tee > /dev/null %<CR><CR>
@@ -307,8 +325,12 @@ let g:vimwiki_ext2syntax = {'.md': 'markdown', '.mkd': 'markdown', '.wiki': 'med
 "*****************************************************************************
 augroup vimrc-jump-last-position
     autocmd!
+    " jump to last position
 	autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+    " remove white spaces
+    autocmd BufWritePre * call <SID>FixWhitespace(0, line("$"))
 augroup END
+
 " txt
 augroup vimrc-wrapping
     autocmd!
