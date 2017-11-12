@@ -124,6 +124,7 @@ set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
 set wildignore=*.swp,*.bak,*.pyc,*.class
+set wildmode=list:longest,full
 
 " Fix backspace indent
 set backspace=indent,eol,start
