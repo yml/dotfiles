@@ -45,23 +45,23 @@ Plug 'tomasiser/vim-code-dark'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'vimwiki/vimwiki'
-Plug 'davidhalter/jedi-vim'
+" Plug 'davidhalter/jedi-vim'
 Plug 'prabirshrestha/asyncomplete.vim'
 "*****************************************************************************
 " Experimental LSP completion
 "*****************************************************************************"
-" Plug 'prabirshrestha/async.vim'
-" Plug 'prabirshrestha/vim-lsp'
-" Plug 'prabirshrestha/asyncomplete-lsp.vim'
-" let g:lsp_async_completion = 1
-" if executable('pyls')
-"     " pip install python-language-server
-"     au User lsp_setup call lsp#register_server({
-"         \ 'name': 'pyls',
-"         \ 'cmd': {server_info->['pyls']},
-"         \ 'whitelist': ['python'],
-"         \ })
-" endif
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+let g:lsp_async_completion = 1
+if executable('pyls')
+    " pip install python-language-server
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'pyls',
+        \ 'cmd': {server_info->['pyls']},
+        \ 'whitelist': ['python'],
+        \ })
+endif
 "*****************************************************************************"
 
 " Go Lang Bundle
@@ -136,7 +136,7 @@ set shiftwidth=4
 set expandtab
 
 " Map leader to ,
-let mapleader=','
+let mapleader='s'
 let maplocalleader=';'
 
 " Enable hidden buffers
