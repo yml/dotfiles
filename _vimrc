@@ -45,7 +45,6 @@ Plug 'tomasiser/vim-code-dark'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'vimwiki/vimwiki'
-" Plug 'davidhalter/jedi-vim'
 Plug 'prabirshrestha/asyncomplete.vim'
 "*****************************************************************************
 " Experimental LSP completion
@@ -62,6 +61,16 @@ if executable('pyls')
         \ 'whitelist': ['python'],
         \ })
 endif
+
+if executable('`npm bin`/vls')
+    " npm install vue-language-server
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'vls',
+        \ 'cmd': {server_info->['`npm bin`/vls']},
+        \ 'whitelist': ['vue'],
+        \ })
+endif
+
 "*****************************************************************************"
 
 " Go Lang Bundle
@@ -117,6 +126,9 @@ filetype plugin indent on
 " Every wrapped line will continue visually indented
 set breakindent
 
+" Highlight the cursorline
+set cursorline
+
 " Path
 set path+=**
 " Encoding
@@ -137,7 +149,7 @@ set expandtab
 
 " Map leader to ,
 let mapleader='s'
-let maplocalleader=';'
+let maplocalleader=','
 
 " Enable hidden buffers
 set hidden
@@ -169,7 +181,7 @@ if has('nvim')
     " Activate the incremental (live) substitution
     set inccommand=split
     " Terminal settings
-    tnoremap <Leader><ESC> <C-\><C-n>
+    tnoremap <localleader>ESC> <C-\><C-n>
 endif
 
 "*****************************************************************************
@@ -269,6 +281,8 @@ noremap <leader>e :Files<CR>
 noremap <Leader>f :Ag<CR>
 noremap <Leader>ff :exe ':Ag ' . expand('<cword>')<CR>
 nnoremap <leader><leader> :Commands<CR>
+" workaround a bug github.com/junegunn/fzf/issues/809
+let $FZF_DEFAULT_OPTS .= ' --no-height'
 
 " snippets
 let g:UltiSnipsExpandTrigger="<tab>"
@@ -304,17 +318,6 @@ let g:go_fmt_command = "goimports"
 let g:go_list_type = "quickfix"
 let g:go_metalinter_autosave = 1
 
-" jedi-vim
-let g:jedi#popup_on_dot = 0
-let g:jedi#show_call_signatures = 0
-let g:jedi#smart_auto_mappings = 0
-let g:jedi#goto_definitions_command = "<localleader>d"
-let g:jedi#goto_assignments_command = "<localleader>g"
-let g:jedi#documentation_command = "<localleader>k"
-let g:jedi#usages_command = "<localleader>n"
-let g:jedi#rename_command = "<localleader>r"
-let g:jedi#completions_command = "<C-Space>"
-
 " *******************************************
 " vimwiki
 " *******************************************
@@ -342,8 +345,18 @@ augroup END
 " vim-javascript
 augroup vimrc-javascript
     autocmd!
-    autocmd FileType javascript setlocal tabstop=4 shiftwidth=4 expandtab softtabstop=4 smartindent
+    autocmd FileType javascript setlocal tabstop=4 shiftwidth=2 expandtab softtabstop=2 smartindent
 augroup END
+
+" vim-html
+augroup vimrc-html
+    autocmd!
+    autocmd FileType html setlocal tabstop=4 shiftwidth=2 expandtab softtabstop=2 smartindent
+augroup END
+let g:html_indent_script1 = 'inc'
+let g:html_indent_style1  = 'inc'
+let g:html_indent_inctags = 'html,body,head,tbody,p,li,dd,dt,h1,h2,h3,h4,h5,h6,blockquote,section,script,style'
+
 
 " python
 augroup vimrc-python
