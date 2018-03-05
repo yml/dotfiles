@@ -345,7 +345,7 @@ augroup END
 " vim-javascript
 augroup vimrc-javascript
     autocmd!
-    autocmd FileType javascript setlocal tabstop=4 shiftwidth=2 expandtab softtabstop=2 smartindent
+    autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 expandtab softtabstop=4
 augroup END
 
 " vim-html
@@ -362,7 +362,7 @@ let g:html_indent_inctags = 'html,body,head,tbody,p,li,dd,dt,h1,h2,h3,h4,h5,h6,b
 augroup vimrc-python
     autocmd!
     autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 colorcolumn=79
-    autocmd FileType python setlocal formatoptions+=croq softtabstop=4 smartindent
+    autocmd FileType python setlocal formatoptions+=croq softtabstop=4
     autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 augroup END
 
@@ -385,6 +385,14 @@ augroup vimrc-make-cmake
     autocmd!
     autocmd FileType make setlocal noexpandtab
     autocmd BufNewFile,BufRead CMakeLists.txt setlocal filetype=cmake
+augroup END
+
+" htmldjango
+augroup virmc-htmldjango
+    autocmd!
+    autocmd FileType htmldjango setlocal tabstop=2 shiftwidth=2 expandtab softtabstop=2
+    autocmd FileType htmldjango :iabbrev <buffer> {% {%  %}<left><left><left>
+    autocmd FileType htmldjango :iabbrev <buffer> {{ {{  }}<left><left><left>
 augroup END
 
 " Set the filetype to yaml for salt's `.sls` extension
