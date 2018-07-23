@@ -38,7 +38,7 @@ git_prompt_get_git_info () {
   fi
 }
 #############################################################################
-# history 
+# history
 #############################################################################
 function dedup_bash_history () {
     rm -f  ~./.unduped_bash_history && \
@@ -112,6 +112,13 @@ case $TERM in
   ;;
 
 esac
+
+# function to an npm bin to $PATH
+function addNpmBinToPath() {
+    if [[ -d $(npm bin) ]]; then
+        export PATH=$(npm bin):$PATH
+    fi
+}
 
 # Add env variable to work with GO easier
 if [[ -d $HOME/gopath ]]; then

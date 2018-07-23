@@ -62,12 +62,12 @@ if executable('pyls')
         \ })
 endif
 
-if executable('`npm bin`/vls')
+if executable('vls')
     " npm install vue-language-server
     au User lsp_setup call lsp#register_server({
         \ 'name': 'vls',
-        \ 'cmd': {server_info->['`npm bin`/vls']},
-        \ 'whitelist': ['vue'],
+        \ 'cmd': {server_info->['vls']},
+        \ 'whitelist': ['vue', 'js'],
         \ })
 endif
 
@@ -80,12 +80,18 @@ endif
 
 if has('nvim')
     Plug 'neomake/neomake'
+    let g:neomake_verbose = 0
 
     autocmd! BufWritePost * Neomake
     if executable("flake8") && executable("pep8")
         let g:neomake_python_enabled_makers = ['flake8', 'pep8',]
         let g:neomake_python_flake8_maker = { 'args': ['--ignore=E115,E266,E501'], }
         let g:neomake_python_pep8_maker = { 'args': ['--max-line-length=100', '--ignore=E115,E266'], }
+    endif
+    " javascript linting
+    if executable("eslint")
+        let g:neomake_javascript_enabled_makers = ['eslint']
+        let g:neomake_javascript_eslint_exe = '/home/yml/gopath/src/bitbucket.org/yml/gobby/frontend/node_modules/.bin/eslint'
     endif
     if executable("npm")
         " (optional) javascript completion
@@ -180,8 +186,6 @@ set shell=/bin/bash
 if has('nvim')
     " Activate the incremental (live) substitution
     set inccommand=split
-    " Terminal settings
-    tnoremap <localleader>ESC> <C-\><C-n>
 endif
 
 "*****************************************************************************
@@ -348,10 +352,16 @@ augroup vimrc-javascript
     autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 expandtab softtabstop=4
 augroup END
 
+" vim-vue
+augroup vimrc-vue
+    autocmd!
+    autocmd FileType vue setlocal tabstop=4 shiftwidth=2 expandtab softtabstop=2
+augroup END
+
 " vim-html
 augroup vimrc-html
     autocmd!
-    autocmd FileType html setlocal tabstop=4 shiftwidth=2 expandtab softtabstop=2 smartindent
+    autocmd FileType html setlocal tabstop=4 shiftwidth=2 expandtab softtabstop=2
 augroup END
 let g:html_indent_script1 = 'inc'
 let g:html_indent_style1  = 'inc'
@@ -391,8 +401,14 @@ augroup END
 augroup virmc-htmldjango
     autocmd!
     autocmd FileType htmldjango setlocal tabstop=2 shiftwidth=2 expandtab softtabstop=2
-    autocmd FileType htmldjango :iabbrev <buffer> {% {%  %}<left><left><left>
-    autocmd FileType htmldjango :iabbrev <buffer> {{ {{  }}<left><left><left>
+    autocmd FileType htmldjango :iabbrev <buffer> {% {%  %}<left><left><left> " } Cheat to make syntax highlighting happier
+    autocmd FileType htmldjango :iabbrev <buffer> {{ {{  }}<left><left><left> " }} Cheat to make syntax highlighting happier
+augroup END
+
+" gopass
+augroup virmc-htmldjango
+    autocmd!
+    au BufNewFile,BufRead /dev/shm/gopass.* setlocal noswapfile nobackup noundofile
 augroup END
 
 " Set the filetype to yaml for salt's `.sls` extension
