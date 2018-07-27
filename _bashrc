@@ -119,6 +119,13 @@ function addNpmBinToPath() {
         export PATH=$(npm bin):$PATH
     fi
 }
+#function to use go tip
+function useGoTip() {
+    if [[ -d $HOME/go ]]; then
+        export GOROOT=$HOME/go
+        export PATH=$GOROOT/bin:$PATH
+    fi
+}
 
 # Add env variable to work with GO easier
 if [[ -d $HOME/gopath ]]; then
@@ -132,12 +139,7 @@ fi
 
 # Default installation path for GOLANG
 if [[ -d /usr/local/go/bin/ ]]; then
-    export PATH=/usr/local/go/bin:$PATH
-fi
-
-if [[ -d $HOME/go ]]; then
-    export GOROOT=$HOME/go
-    export PATH=$GOROOT/bin:$PATH
+    export PATH=/usr/local/go/bin/:$PATH
 fi
 
 if hash nvim 2>/dev/null; then
@@ -174,3 +176,4 @@ fi
 
 # Local override
 [[ -f ~/.bash_local ]] && source ~/.bash_local
+
