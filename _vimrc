@@ -45,32 +45,46 @@ Plug 'tomasiser/vim-code-dark'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'vimwiki/vimwiki'
-Plug 'prabirshrestha/asyncomplete.vim'
 "*****************************************************************************
 " Experimental LSP completion
 "*****************************************************************************"
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/vim-lsp'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-let g:lsp_async_completion = 1
-if executable('pyls')
-    " pip install python-language-server
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'pyls',
-        \ 'cmd': {server_info->['pyls']},
-        \ 'whitelist': ['python'],
-        \ })
-endif
+Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 
-if executable('vls')
-    " npm install vue-language-server
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'vls',
-        \ 'cmd': {server_info->['vls']},
-        \ 'whitelist': ['vue', 'js'],
-        \ })
-endif
+" Use tab for trigger completion with characters ahead and navigate.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" Use <c-space> for trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+" Use <cr> for confirm completion.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
+" Use `[c` and `]c` for navigate diagnostics
+nmap <silent> [c <Plug>(coc-diagnostic-prev)
+nmap <silent> ]c <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K for show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if &filetype == 'vim'
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
 "*****************************************************************************"
 
 " Go Lang Bundle
