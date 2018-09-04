@@ -85,6 +85,32 @@ function! s:show_documentation()
     call CocAction('doHover')
   endif
 endfunction
+
+" Show signature help while editing
+autocmd CursorHoldI,CursorMovedI * silent! call CocAction('showSignatureHelp')
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Remap for rename current word
+nmap <leader>cr <Plug>(coc-rename)
+
+" Remap for format selected region
+vmap <leader>cf  <Plug>(coc-format-selected)
+nmap <leader>cf  <Plug>(coc-format-selected)
+
+" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+vmap <leader>ca  <Plug>(coc-codeaction-selected)
+nmap <leader>ca  <Plug>(coc-codeaction-selected)
+
+" Remap for do codeAction of current line
+nmap <leader>cal  <Plug>(coc-codeaction)
+
+" Use `:Format` for format current buffer
+command! -nargs=0 Format :call CocAction('format')
+
+" Use `:Fold` for fold current buffer
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 "*****************************************************************************"
 
 " Go Lang Bundle
@@ -168,7 +194,7 @@ set shiftwidth=4
 set expandtab
 
 " Map leader to ,
-let mapleader='s'
+let mapleader= '&'
 let maplocalleader=','
 
 " Enable hidden buffers
@@ -192,6 +218,7 @@ set undodir=~/.undodir/
 
 set fileformats=unix,dos,mac
 set showcmd
+set cmdheight=2
 set shell=/bin/bash
 
 "*****************************************************************************
@@ -271,9 +298,9 @@ command! -nargs=+ -complete=file Agraw call fzf#vim#ag_raw(<q-args>)
 " Mappings
 "*****************************************************************************
 " Edit my nvim configuration
-nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+nnoremap <leader>vo :vsplit $MYVIMRC<cr>
 " Reload nvim configuration
-nnoremap <leader>sv :source $MYVIMRC<cr>
+nnoremap <leader>vs :source $MYVIMRC<cr>
 
 " File explorer
 nnoremap <F2> :Vexplore<CR>
@@ -287,20 +314,14 @@ nnoremap <F5> :call <SID>ToggleSpellLang()<CR>
 " sudo before saving the file
 cmap w!! w !sudo tee > /dev/null %<CR><CR>
 
-" Split
-noremap <leader>v :<C-u>vsplit<CR>
-noremap <leader>s :<C-u>split<CR>
-
 " fzf shortcut
-noremap <Leader>h :History<CR>
-noremap <leader>b :Buffers<CR>
-noremap <leader>l :Lines<CR>
-noremap <leader>e :Files<CR>
+noremap <Leader>fh :History<CR>
+noremap <leader>fb :Buffers<CR>
+noremap <leader>fl :Lines<CR>
+noremap <leader>ff :Files<CR>
+noremap <Leader>fw :exe ':Ag ' . expand('<cword>')<CR>
 noremap <Leader>f :Ag<CR>
-noremap <Leader>ff :exe ':Ag ' . expand('<cword>')<CR>
 nnoremap <leader><leader> :Commands<CR>
-" workaround a bug github.com/junegunn/fzf/issues/809
-let $FZF_DEFAULT_OPTS .= ' --no-height'
 
 " snippets
 let g:UltiSnipsExpandTrigger="<tab>"
@@ -314,7 +335,7 @@ if has('unnamedplus')
 endif
 
 " Close buffer
-noremap <leader>c :bd<CR>
+noremap <leader>q :bd<CR>
 
 " Clean search (highlight)
 nnoremap <silent> <leader><space> :noh<cr>
