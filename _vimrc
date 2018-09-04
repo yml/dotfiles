@@ -300,7 +300,7 @@ command! -nargs=+ -complete=file Agraw call fzf#vim#ag_raw(<q-args>)
 " Edit my nvim configuration
 nnoremap <leader>vo :vsplit $MYVIMRC<cr>
 " Reload nvim configuration
-nnoremap <leader>vs :source $MYVIMRC<cr>
+nnoremap <leader>vl :source $MYVIMRC<cr>
 
 " File explorer
 nnoremap <F2> :Vexplore<CR>
