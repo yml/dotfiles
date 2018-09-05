@@ -142,7 +142,10 @@ if [[ -d /usr/local/go/bin/ ]]; then
     export PATH=/usr/local/go/bin/:$PATH
 fi
 
-if hash nvim 2>/dev/null; then
+# if ag is available use it by default for FZF
+[[ -x $(command -v ag) ]] && export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
+
+if [ -x $(command -v nvim) ]; then
     # nvim
     export EDITOR=nvim
     export VISUAL=nvim
@@ -155,9 +158,7 @@ else
 fi
 
 # remap caps lock to escape
-if setxkbmap -version >/dev/null 2>&1; then
-    setxkbmap -option "caps:swapescape"
-fi
+[[ -x $(command -v setxkbmap) ]] && setxkbmap -option "caps:swapescape"
 
 # Set my GPG key
 export GPGKEY=2F74DA04
