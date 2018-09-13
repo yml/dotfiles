@@ -35,7 +35,6 @@ endif
 " Plug install packages
 "*****************************************************************************
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -45,6 +44,7 @@ Plug 'tomasiser/vim-code-dark'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'vimwiki/vimwiki'
+
 "*****************************************************************************
 " Experimental LSP completion
 "*****************************************************************************"
@@ -112,32 +112,54 @@ command! -nargs=0 Format :call CocAction('format')
 " Use `:Fold` for fold current buffer
 command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 "*****************************************************************************"
-
 " Go Lang Bundle
+"*****************************************************************************"
 if executable('go')
     Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
+    augroup FileType go
+        autocmd!
+        autocmd FileType go nmap <localleader>d <Plug>(go-def)
+        autocmd FileType go nmap <localleader>k <Plug>(go-doc)
+        autocmd FileType go nmap <localleader>dv <Plug>(go-def-vertical)
+        autocmd FileType go nmap <localleader>kv <Plug>(go-doc-vertical)
+        autocmd FileType go nmap <localleader>kb <Plug>(go-doc-browser)
+        autocmd FileType go nmap <localleader>i <Plug>(go-info)
+        autocmd FileType go nmap <localleader>r <Plug>(go-run)
+        autocmd FileType go nmap <localleader>b <Plug>(go-build)
+        autocmd FileType go nmap <localleader>t <Plug>(go-test)
+    augroup END
 endif
 
-if has('nvim')
-    Plug 'neomake/neomake'
-    let g:neomake_verbose = 0
+"*****************************************************************************"
+" gutter plugin
+"*****************************************************************************"
+" Always show up the sign column
+set signcolumn="yes"
 
-    autocmd! BufWritePost * Neomake
-    if executable("flake8") && executable("pep8")
-        let g:neomake_python_enabled_makers = ['flake8', 'pep8',]
-        let g:neomake_python_flake8_maker = { 'args': ['--ignore=E115,E266,E501'], }
-        let g:neomake_python_pep8_maker = { 'args': ['--max-line-length=100', '--ignore=E115,E266'], }
-    endif
-    " javascript linting
-    if executable("eslint")
-        let g:neomake_javascript_enabled_makers = ['eslint']
-        let g:neomake_javascript_eslint_exe = '/home/yml/gopath/src/bitbucket.org/yml/gobby/frontend/node_modules/.bin/eslint'
-    endif
-    if executable("npm")
-        " (optional) javascript completion
-        Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
-    endif
-endif
+" if has('nvim')
+"     Plug 'neomake/neomake'
+"     let g:neomake_verbose = 1
+
+"     autocmd! BufWritePost * Neomake
+"         let g:neomake_python_pycodestyle_maker = { 'args': ['--ignore=E501'], }
+"         let g:neomake_python_flake8_maker = { 'args': ['--ignore=E115,E266,E501'], }
+"         let g:neomake_python_pydocstyle_maker = { 'args': ['--ignore=D101,D102'], }
+"         let g:neomake_python_pylint_maker = { 'args': ['--ignore=C0111'], }
+"     " if executable("flake8") && executable("pep8")
+"     "     let g:neomake_python_enabled_makers = ['flake8', 'pep8']
+"     "     let g:neomake_python_flake8_maker = { 'args': ['--ignore=E115,E266,E501'], }
+"     "     let g:neomake_python_pep8_maker = { 'args': ['--max-line-length=100', '--ignore=E115,E266'], }
+"     " endif
+"     " javascript linting
+"     if executable("eslint")
+"         let g:neomake_javascript_enabled_makers = ['eslint']
+"         let g:neomake_javascript_eslint_exe = '/home/yml/gopath/src/bitbucket.org/yml/gobby/frontend/node_modules/.bin/eslint'
+"     endif
+"     if executable("npm")
+"         " (optional) javascript completion
+"         Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
+"     endif
+" endif
 
 
 call plug#end()
@@ -146,25 +168,8 @@ call plug#end()
 " Completion
 "*****************************************************************************"
 
-set completeopt-=preview
+"set completeopt-=preview
 set shortmess+=co
-" Tab completion
-let g:asyncomplete_auto_popup = 0
-let g:asyncomplete_remove_duplicates = 1
-
-function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-
-inoremap <silent><expr> <TAB>
-  \ pumvisible() ? "\<C-n>" :
-  \ <SID>check_back_space() ? "\<TAB>" :
-  \ asyncomplete#force_refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-" Force refresh completion
-imap <c-space> <Plug>(asyncomplete_force_refresh)
-
 "*****************************************************************************
 " Basic Setup
 "*****************************************************************************"
@@ -175,12 +180,15 @@ set breakindent
 " Highlight the cursorline
 set cursorline
 
+" Reload the file if it has been changed outside vim
+set autoread
+
+
 " Path
 set path+=**
 " Encoding
 set encoding=utf-8
 set fileencoding=utf-8
-set fileencodings=utf-8
 set wildignore=*.swp,*.bak,*.pyc,*.class
 set wildmode=list:longest,full
 
@@ -262,7 +270,6 @@ set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
 "*****************************************************************************
 " Expand the current directory
 ab <expr> %% expand('%:p:h')
-
 iab #! #!/usr/bin/env
 iab @@ yann.malet@gmail.com
 
@@ -366,14 +373,6 @@ let g:vimwiki_ext2syntax = {'.md': 'markdown', '.mkd': 'markdown', '.wiki': 'med
 "*****************************************************************************
 " Autocmd Rules
 "*****************************************************************************
-augroup vimrc-jump-last-position
-    autocmd!
-    " jump to last position
-	autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
-    " remove white spaces
-    autocmd BufWritePre * call <SID>FixWhitespace(0, line("$"))
-augroup END
-
 " txt
 augroup vimrc-wrapping
     autocmd!
@@ -441,28 +440,10 @@ augroup virmc-htmldjango
 augroup END
 
 " gopass
-augroup virmc-htmldjango
+augroup virmc-gopass
     autocmd!
     au BufNewFile,BufRead /dev/shm/gopass.* setlocal noswapfile nobackup noundofile
 augroup END
 
 " Set the filetype to yaml for salt's `.sls` extension
 au BufRead,BufNewFile *.sls set filetype=yaml
-
-if executable("go")
-    augroup FileType go
-        autocmd!
-        autocmd FileType go nmap <localleader>d <Plug>(go-def)
-        autocmd FileType go nmap <localleader>k <Plug>(go-doc)
-        autocmd FileType go nmap <localleader>dv <Plug>(go-def-vertical)
-        autocmd FileType go nmap <localleader>kv <Plug>(go-doc-vertical)
-        autocmd FileType go nmap <localleader>kb <Plug>(go-doc-browser)
-        autocmd FileType go nmap <localleader>i <Plug>(go-info)
-        autocmd FileType go nmap <localleader>r <Plug>(go-run)
-        autocmd FileType go nmap <localleader>b <Plug>(go-build)
-        autocmd FileType go nmap <localleader>t <Plug>(go-test)
-    augroup END
-endif
-
-" Reload the file if it has been changed outside vim
-set autoread
