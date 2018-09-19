@@ -147,7 +147,7 @@ fi
 [[ -d $HOME/.local/bin ]] && PATH+=":$HOME/.local/bin"
 
 # if ag is available use it by default for FZF
-[[ -x $(command -v ag) ]] && export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
+[[ -x $(command -v ag) ]] && export FZF_DEFAULT_COMMAND='ag --hidden --skip-vcs-ignores --smart-case --ignore=".git" --ignore="__pycache__" -g ""'
 
 if [[ -x $(command -v nvim) ]]; then
     # nvim
