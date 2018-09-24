@@ -44,9 +44,11 @@ Plug 'tomasiser/vim-code-dark'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'vimwiki/vimwiki'
+Plug 'sgur/vim-editorconfig'
+Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 
 "*****************************************************************************
-" Experimental LSP completion
+" LSP completion
 "*****************************************************************************"
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 
@@ -111,56 +113,12 @@ command! -nargs=0 Format :call CocAction('format')
 
 " Use `:Fold` for fold current buffer
 command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-"*****************************************************************************"
-" Go Lang Bundle
-"*****************************************************************************"
-if executable('go')
-    Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
-    augroup FileType go
-        autocmd!
-        autocmd FileType go nmap <localleader>d <Plug>(go-def)
-        autocmd FileType go nmap <localleader>k <Plug>(go-doc)
-        autocmd FileType go nmap <localleader>dv <Plug>(go-def-vertical)
-        autocmd FileType go nmap <localleader>kv <Plug>(go-doc-vertical)
-        autocmd FileType go nmap <localleader>kb <Plug>(go-doc-browser)
-        autocmd FileType go nmap <localleader>i <Plug>(go-info)
-        autocmd FileType go nmap <localleader>r <Plug>(go-run)
-        autocmd FileType go nmap <localleader>b <Plug>(go-build)
-        autocmd FileType go nmap <localleader>t <Plug>(go-test)
-    augroup END
-endif
 
 "*****************************************************************************"
 " gutter plugin
 "*****************************************************************************"
 " Always show up the sign column
 set signcolumn="yes"
-
-" if has('nvim')
-"     Plug 'neomake/neomake'
-"     let g:neomake_verbose = 1
-
-"     autocmd! BufWritePost * Neomake
-"         let g:neomake_python_pycodestyle_maker = { 'args': ['--ignore=E501'], }
-"         let g:neomake_python_flake8_maker = { 'args': ['--ignore=E115,E266,E501'], }
-"         let g:neomake_python_pydocstyle_maker = { 'args': ['--ignore=D101,D102'], }
-"         let g:neomake_python_pylint_maker = { 'args': ['--ignore=C0111'], }
-"     " if executable("flake8") && executable("pep8")
-"     "     let g:neomake_python_enabled_makers = ['flake8', 'pep8']
-"     "     let g:neomake_python_flake8_maker = { 'args': ['--ignore=E115,E266,E501'], }
-"     "     let g:neomake_python_pep8_maker = { 'args': ['--max-line-length=100', '--ignore=E115,E266'], }
-"     " endif
-"     " javascript linting
-"     if executable("eslint")
-"         let g:neomake_javascript_enabled_makers = ['eslint']
-"         let g:neomake_javascript_eslint_exe = '/home/yml/gopath/src/bitbucket.org/yml/gobby/frontend/node_modules/.bin/eslint'
-"     endif
-"     if executable("npm")
-"         " (optional) javascript completion
-"         Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
-"     endif
-" endif
-
 
 call plug#end()
 
@@ -292,6 +250,18 @@ function! s:ToggleSpellLang()
     endif
 endfunction
 
+function! s:MkNonExDir(file, buf)
+    if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
+        let dir=fnamemodify(a:file, ':h')
+        if !isdirectory(dir)
+            call mkdir(dir, 'p')
+        endif
+    endif
+endfunction
+
+function! s:OpenTerminalBotRight()
+    :botright split | terminal
+endfunction
 "*****************************************************************************
 " Commands
 "*****************************************************************************
@@ -317,6 +287,10 @@ nnoremap <F3> :Vexplore .<CR>
 nnoremap <F4> :setlocal spell!<CR>
 " toggle language
 nnoremap <F5> :call <SID>ToggleSpellLang()<CR>
+
+" termninal
+nnoremap <silent> <F12> :call <SID>OpenTerminalBotRight()<CR>
+tnoremap <F12> <C-\><C-n>
 
 " sudo before saving the file
 cmap w!! w !sudo tee > /dev/null %<CR><CR>
@@ -377,7 +351,11 @@ let g:vimwiki_ext2syntax = {'.md': 'markdown', '.mkd': 'markdown', '.wiki': 'med
 augroup vimrc-wrapping
     autocmd!
     autocmd BufRead,BufNewFile *.txt setlocal filetype=markdown wrap textwidth=100 wrapmargin=4
+augroup END
 
+augroup vimrc-BWCCreateDir
+    autocmd!
+    autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
 augroup END
 
 " vim-javascript
@@ -438,6 +416,18 @@ augroup virmc-htmldjango
     autocmd FileType htmldjango :iabbrev <buffer> {% {%  %}<left><left><left> " } Cheat to make syntax highlighting happier
     autocmd FileType htmldjango :iabbrev <buffer> {{ {{  }}<left><left><left> " }} Cheat to make syntax highlighting happier
 augroup END
+
+" GO
+augroup vimrc-go
+    autocmd!
+    autocmd FileType go nmap <silent> gd <Plug>(go-def)
+    autocmd FileType go nmap <silent> gk <Plug>(go-doc)
+    autocmd FileType go nmap <silent> gdv <Plug>(go-def-vertical)
+    autocmd FileType go nmap <silent> gkv <Plug>(go-doc-vertical)
+    autocmd FileType go nmap <silent> gkb <Plug>(go-doc-browser)
+    autocmd FileType go nmap <silent> gi <Plug>(go-info)
+augroup END
+
 
 " gopass
 augroup virmc-gopass
