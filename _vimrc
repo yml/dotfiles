@@ -48,7 +48,7 @@ if has("nvim")
     Plug 'sgur/vim-editorconfig'
     Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 endif
-if has("nvim") && v:version >= 800
+if has("nvim-0.3.0") 
     Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 endif
 
@@ -56,7 +56,8 @@ call plug#end()
 "*****************************************************************************
 " LSP completion
 "*****************************************************************************"
-if has("nvim")
+" coc requires at least nvim 0.3.0
+if has("nvim-0.3.0")
     inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
     " Use `[c` and `]c` for navigate diagnostics
@@ -104,7 +105,7 @@ if has("nvim")
     command! -nargs=0 Format :call CocAction('format')
 
     " Use `:Fold` for fold current buffer
-    command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+    command! -nargs=? Fold :call CocAction('fold', <f-args>)
 
     " Use tab for trigger completion with characters ahead and navigate.
     inoremap <silent><expr> <TAB>
