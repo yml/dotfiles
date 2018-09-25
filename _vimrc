@@ -43,76 +43,76 @@ Plug 'Yggdroot/indentLine'
 Plug 'tomasiser/vim-code-dark'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-Plug 'vimwiki/vimwiki'
-Plug 'sgur/vim-editorconfig'
-Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
+if has("nvim")
+    Plug 'vimwiki/vimwiki'
+    Plug 'sgur/vim-editorconfig'
+    Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
+endif
 
 "*****************************************************************************
 " LSP completion
 "*****************************************************************************"
-Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+if has("nvim")
+    Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+    inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
-" Use tab for trigger completion with characters ahead and navigate.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-" Use <c-space> for trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-" Use <cr> for confirm completion.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+    " Use `[c` and `]c` for navigate diagnostics
+    nmap <silent> [c <Plug>(coc-diagnostic-prev)
+    nmap <silent> ]c <Plug>(coc-diagnostic-next)
 
-" Use `[c` and `]c` for navigate diagnostics
-nmap <silent> [c <Plug>(coc-diagnostic-prev)
-nmap <silent> ]c <Plug>(coc-diagnostic-next)
+    " Remap keys for gotos
+    nmap <silent> gd <Plug>(coc-definition)
+    nmap <silent> gy <Plug>(coc-type-definition)
+    nmap <silent> gi <Plug>(coc-implementation)
+    nmap <silent> gr <Plug>(coc-references)
 
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+    " Use K for show documentation in preview window
+    nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-" Use K for show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+    function! s:show_documentation()
+        if &filetype == 'vim'
+            execute 'h '.expand('<cword>')
+        else
+            call CocAction('doHover')
+        endif
+    endfunction
 
-function! s:show_documentation()
-  if &filetype == 'vim'
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
+    " Show signature help while editing
+    autocmd CursorHoldI,CursorMovedI * silent! call CocAction('showSignatureHelp')
 
-" Show signature help while editing
-autocmd CursorHoldI,CursorMovedI * silent! call CocAction('showSignatureHelp')
+    " Highlight symbol under cursor on CursorHold
+    autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
+    " Remap for rename current word
+    nmap <leader>cr <Plug>(coc-rename)
 
-" Remap for rename current word
-nmap <leader>cr <Plug>(coc-rename)
+    " Remap for format selected region
+    vmap <leader>cf  <Plug>(coc-format-selected)
+    nmap <leader>cf  <Plug>(coc-format-selected)
 
-" Remap for format selected region
-vmap <leader>cf  <Plug>(coc-format-selected)
-nmap <leader>cf  <Plug>(coc-format-selected)
+    " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+    vmap <leader>ca  <Plug>(coc-codeaction-selected)
+    nmap <leader>ca  <Plug>(coc-codeaction-selected)
 
-" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-vmap <leader>ca  <Plug>(coc-codeaction-selected)
-nmap <leader>ca  <Plug>(coc-codeaction-selected)
+    " Remap for do codeAction of current line
+    nmap <leader>cal  <Plug>(coc-codeaction)
 
-" Remap for do codeAction of current line
-nmap <leader>cal  <Plug>(coc-codeaction)
+    " Use `:Format` for format current buffer
+    command! -nargs=0 Format :call CocAction('format')
 
-" Use `:Format` for format current buffer
-command! -nargs=0 Format :call CocAction('format')
+    " Use `:Fold` for fold current buffer
+    command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
-" Use `:Fold` for fold current buffer
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+    " Use tab for trigger completion with characters ahead and navigate.
+    inoremap <silent><expr> <TAB>
+          \ pumvisible() ? "\<C-n>" :
+          \ <SID>check_back_space() ? "\<TAB>" :
+          \ coc#refresh()
+    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+    " Use <c-space> for trigger completion.
+    inoremap <silent><expr> <c-space> coc#refresh()
+    " Use <cr> for confirm completion.
+endif
 
 "*****************************************************************************"
 " gutter plugin
@@ -259,9 +259,19 @@ function! s:MkNonExDir(file, buf)
     endif
 endfunction
 
-function! s:OpenTerminalBotRight()
-    :botright split | terminal
-endfunction
+if has("nvim")
+    " Open the terminal window at the bottom in nvim
+    function! s:OpenTerminalBotRight()
+        :botright split | terminal
+    endfunction
+
+
+    " This function is used by coc
+    function! s:check_back_space() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~# '\s'
+    endfunction
+endif
 "*****************************************************************************
 " Commands
 "*****************************************************************************
@@ -288,9 +298,11 @@ nnoremap <F4> :setlocal spell!<CR>
 " toggle language
 nnoremap <F5> :call <SID>ToggleSpellLang()<CR>
 
-" termninal
-nnoremap <silent> <F12> :call <SID>OpenTerminalBotRight()<CR>
-tnoremap <F12> <C-\><C-n>
+if has("nvim")
+    " termninal
+    nnoremap <silent> <F12> :call <SID>OpenTerminalBotRight()<CR>
+    tnoremap <F12> <C-\><C-n>
+endif
 
 " sudo before saving the file
 cmap w!! w !sudo tee > /dev/null %<CR><CR>
@@ -324,10 +336,6 @@ nnoremap <silent> <leader><space> :noh<cr>
 " Vmap for maintain Visual Mode after shifting > and <
 vnoremap < <gv
 vnoremap > >gv
-
-" Move visual block
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
 
 "*****************************************************************************
 " Custom configs
@@ -409,13 +417,6 @@ augroup vimrc-make-cmake
     autocmd BufNewFile,BufRead CMakeLists.txt setlocal filetype=cmake
 augroup END
 
-" htmldjango
-augroup virmc-htmldjango
-    autocmd!
-    autocmd FileType htmldjango setlocal tabstop=2 shiftwidth=2 expandtab softtabstop=2
-    autocmd FileType htmldjango :iabbrev <buffer> {% {%  %}<left><left><left> " } Cheat to make syntax highlighting happier
-    autocmd FileType htmldjango :iabbrev <buffer> {{ {{  }}<left><left><left> " }} Cheat to make syntax highlighting happier
-augroup END
 
 " GO
 augroup vimrc-go
@@ -437,3 +438,14 @@ augroup END
 
 " Set the filetype to yaml for salt's `.sls` extension
 au BufRead,BufNewFile *.sls set filetype=yaml
+"
+" htmldjango
+augroup virmc-htmldjango
+    autocmd!
+    autocmd FileType htmldjango setlocal tabstop=2 shiftwidth=2 expandtab softtabstop=2
+    autocmd FileType htmldjango :iabbrev <buffer> {% {%  %}<left><left><left>
+    " } this is just to make syntax highlight happy
+    autocmd FileType htmldjango :iabbrev <buffer> {{ {{  }}<left><left><left>
+    " }} this is just to make syntax highlight happy
+augroup END
+
