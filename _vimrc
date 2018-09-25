@@ -48,12 +48,15 @@ if has("nvim")
     Plug 'sgur/vim-editorconfig'
     Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 endif
+if has("nvim") && v:version >= 800
+    Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+endif
 
+call plug#end()
 "*****************************************************************************
 " LSP completion
 "*****************************************************************************"
 if has("nvim")
-    Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
     inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
     " Use `[c` and `]c` for navigate diagnostics
@@ -118,9 +121,10 @@ endif
 " gutter plugin
 "*****************************************************************************"
 " Always show up the sign column
-set signcolumn="yes"
+if has("signcolumn")
+    set signcolumn="yes"
+endif
 
-call plug#end()
 
 "*****************************************************************************
 " Completion
