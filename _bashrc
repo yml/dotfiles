@@ -129,6 +129,10 @@ function useGoTip() {
     fi
 }
 
+function pyclean() {
+    find . -type d -name "__pycache__" | xargs rm -rf
+}
+
 # Default installation path for GOLANG
 [[ -d /usr/local/go/bin/ ]] && PATH+=":/usr/local/go/bin/"
 
@@ -147,7 +151,7 @@ fi
 [[ -d $HOME/.local/bin ]] && PATH+=":$HOME/.local/bin"
 
 # if ag is available use it by default for FZF
-[[ -x $(command -v ag) ]] && export FZF_DEFAULT_COMMAND='ag --hidden --skip-vcs-ignores --smart-case --ignore=".git" --ignore="__pycache__" -g ""'
+[[ -x $(command -v ag) ]] && export FZF_DEFAULT_COMMAND='ag --hidden --smart-case --ignore=".git" --ignore="__pycache__" -g ""'
 
 if [[ -x $(command -v nvim) ]]; then
     # nvim

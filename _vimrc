@@ -66,12 +66,10 @@ if has("nvim-0.3.0")
 
     " Remap keys for gotos
     nmap <silent> gd <Plug>(coc-definition)
-    nmap <silent> gy <Plug>(coc-type-definition)
+    nmap <silent> gt <Plug>(coc-type-definition)
     nmap <silent> gi <Plug>(coc-implementation)
     nmap <silent> gr <Plug>(coc-references)
-
-    " Use K for show documentation in preview window
-    nnoremap <silent> K :call <SID>show_documentation()<CR>
+    nnoremap <silent> gk :call <SID>show_documentation()<CR>
 
     function! s:show_documentation()
         if &filetype == 'vim'
@@ -112,6 +110,12 @@ if has("nvim-0.3.0")
           \ pumvisible() ? "\<C-n>" :
           \ <SID>check_back_space() ? "\<TAB>" :
           \ coc#refresh()
+
+    function! s:check_back_space() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~# '\s'
+    endfunction
+
     inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
     " Use <c-space> for trigger completion.
     inoremap <silent><expr> <c-space> coc#refresh()
@@ -271,11 +275,6 @@ if has("nvim")
     endfunction
 
 
-    " This function is used by coc
-    function! s:check_back_space() abort
-      let col = col('.') - 1
-      return !col || getline('.')[col - 1]  =~# '\s'
-    endfunction
 endif
 "*****************************************************************************
 " Commands
@@ -347,6 +346,7 @@ vnoremap > >gv
 "*****************************************************************************
 
 " vim-go
+let g:go_version_warning = 0
 let g:go_fmt_command = "goimports"
 let g:go_list_type = "quickfix"
 let g:go_metalinter_autosave = 1
