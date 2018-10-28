@@ -35,7 +35,6 @@ endif
 " Plug install packages
 "*****************************************************************************
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -44,72 +43,98 @@ Plug 'Yggdroot/indentLine'
 Plug 'tomasiser/vim-code-dark'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-Plug 'vimwiki/vimwiki'
-Plug 'davidhalter/jedi-vim'
-Plug 'prabirshrestha/asyncomplete.vim'
-"*****************************************************************************
-" Experimental LSP completion
-"*****************************************************************************"
-" Plug 'prabirshrestha/async.vim'
-" Plug 'prabirshrestha/vim-lsp'
-" Plug 'prabirshrestha/asyncomplete-lsp.vim'
-" let g:lsp_async_completion = 1
-" if executable('pyls')
-"     " pip install python-language-server
-"     au User lsp_setup call lsp#register_server({
-"         \ 'name': 'pyls',
-"         \ 'cmd': {server_info->['pyls']},
-"         \ 'whitelist': ['python'],
-"         \ })
-" endif
-"*****************************************************************************"
-
-" Go Lang Bundle
-if executable('go')
+if has("nvim")
+    Plug 'vimwiki/vimwiki'
+    Plug 'sgur/vim-editorconfig'
     Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 endif
-
-if has('nvim')
-    Plug 'neomake/neomake'
-
-    autocmd! BufWritePost * Neomake
-    if executable("flake8") && executable("pep8")
-        let g:neomake_python_enabled_makers = ['flake8', 'pep8',]
-        let g:neomake_python_flake8_maker = { 'args': ['--ignore=E115,E266,E501'], }
-        let g:neomake_python_pep8_maker = { 'args': ['--max-line-length=100', '--ignore=E115,E266'], }
-    endif
-    if executable("npm")
-        " (optional) javascript completion
-        Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
-    endif
+if has("nvim-0.3.0") 
+    Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 endif
 
-
 call plug#end()
+"*****************************************************************************
+" LSP completion
+"*****************************************************************************"
+" coc requires at least nvim 0.3.0
+if has("nvim-0.3.0")
+    inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+    " Remap keys for gotos
+    nmap <silent> gd <Plug>(coc-definition)
+    nmap <silent> gt <Plug>(coc-type-definition)
+    nmap <silent> gi <Plug>(coc-implementation)
+    nmap <silent> gr <Plug>(coc-references)
+    nnoremap <silent> gk :call <SID>show_documentation()<CR>
+    nmap <silent> <up> <Plug>(coc-diagnostic-prev)
+    nmap <silent> <down> <Plug>(coc-diagnostic-next)
+
+    function! s:show_documentation()
+        if &filetype == 'vim'
+            execute 'h '.expand('<cword>')
+        else
+            call CocAction('doHover')
+        endif
+    endfunction
+
+    " Show signature help while editing
+    autocmd CursorHoldI,CursorMovedI * silent! call CocAction('showSignatureHelp')
+
+    " Highlight symbol under cursor on CursorHold
+    autocmd CursorHold * silent call CocActionAsync('highlight')
+
+    " Remap for rename current word
+    nmap <leader>cr <Plug>(coc-rename)
+
+    " Remap for format selected region
+    vmap <leader>cf  <Plug>(coc-format-selected)
+    nmap <leader>cf  <Plug>(coc-format-selected)
+
+    " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+    vmap <leader>ca  <Plug>(coc-codeaction-selected)
+    nmap <leader>ca  <Plug>(coc-codeaction-selected)
+
+    " Remap for do codeAction of current line
+    nmap <leader>cal  <Plug>(coc-codeaction)
+
+    " Use `:CocFormat` for format current buffer
+    command! -nargs=0 CocFormat :call CocAction('format')
+
+    " Use `:CocFold` for fold current buffer
+    command! -nargs=? CocFold :call CocAction('fold', <f-args>)
+    
+    " Use tab for trigger completion with characters ahead and navigate.
+    inoremap <silent><expr> <TAB>
+          \ pumvisible() ? "\<C-n>" :
+          \ <SID>check_back_space() ? "\<TAB>" :
+          \ coc#refresh()
+
+    function! s:check_back_space() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~# '\s'
+    endfunction
+
+    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+    " Use <c-space> for trigger completion.
+    inoremap <silent><expr> <c-space> coc#refresh()
+    " Use <cr> for confirm completion.
+endif
+
+"*****************************************************************************"
+" gutter plugin
+"*****************************************************************************"
+" Always show up the sign column
+if has("signcolumn")
+    set signcolumn="yes"
+endif
+
 
 "*****************************************************************************
 " Completion
 "*****************************************************************************"
 
-set completeopt-=preview
+"set completeopt-=preview
 set shortmess+=co
-" Tab completion
-let g:asyncomplete_auto_popup = 0
-let g:asyncomplete_remove_duplicates = 1
-
-function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-
-inoremap <silent><expr> <TAB>
-  \ pumvisible() ? "\<C-n>" :
-  \ <SID>check_back_space() ? "\<TAB>" :
-  \ asyncomplete#force_refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-" Force refresh completion
-imap <c-space> <Plug>(asyncomplete_force_refresh)
-
 "*****************************************************************************
 " Basic Setup
 "*****************************************************************************"
@@ -117,12 +142,18 @@ filetype plugin indent on
 " Every wrapped line will continue visually indented
 set breakindent
 
+" Highlight the cursorline
+set cursorline
+
+" Reload the file if it has been changed outside vim
+set autoread
+
+
 " Path
 set path+=**
 " Encoding
 set encoding=utf-8
 set fileencoding=utf-8
-set fileencodings=utf-8
 set wildignore=*.swp,*.bak,*.pyc,*.class
 set wildmode=list:longest,full
 
@@ -136,8 +167,8 @@ set shiftwidth=4
 set expandtab
 
 " Map leader to ,
-let mapleader='s'
-let maplocalleader=';'
+let mapleader= '&'
+let maplocalleader=','
 
 " Enable hidden buffers
 set hidden
@@ -160,6 +191,7 @@ set undodir=~/.undodir/
 
 set fileformats=unix,dos,mac
 set showcmd
+set cmdheight=2
 set shell=/bin/bash
 
 "*****************************************************************************
@@ -168,8 +200,6 @@ set shell=/bin/bash
 if has('nvim')
     " Activate the incremental (live) substitution
     set inccommand=split
-    " Terminal settings
-    tnoremap <Leader><ESC> <C-\><C-n>
 endif
 
 "*****************************************************************************
@@ -205,7 +235,6 @@ set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
 "*****************************************************************************
 " Expand the current directory
 ab <expr> %% expand('%:p:h')
-
 iab #! #!/usr/bin/env
 iab @@ yann.malet@gmail.com
 
@@ -228,6 +257,41 @@ function! s:ToggleSpellLang()
     endif
 endfunction
 
+function! s:MkNonExDir(file, buf)
+    if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
+        let dir=fnamemodify(a:file, ':h')
+        if !isdirectory(dir)
+            call mkdir(dir, 'p')
+        endif
+    endif
+endfunction
+
+if has("nvim")
+    " Open the terminal window at the bottom in nvim
+    let s:term_buf = 0
+    let s:term_win = 0
+
+    function! TermToggle(height)
+        if win_gotoid(s:term_win)
+            hide
+        else
+            new terminal
+            exec "resize ".a:height
+            try
+                exec "buffer ".s:term_buf
+                exec "bd terminal"
+            catch
+                call termopen($SHELL, {"detach": 0})
+                let s:term_buf = bufnr("")
+                setlocal nonu nornu scl=no nocul
+            endtry
+            startinsert!
+            let s:term_win = win_getid()
+        endif
+    endfunction
+
+
+endif
 "*****************************************************************************
 " Commands
 "*****************************************************************************
@@ -241,9 +305,9 @@ command! -nargs=+ -complete=file Agraw call fzf#vim#ag_raw(<q-args>)
 " Mappings
 "*****************************************************************************
 " Edit my nvim configuration
-nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+nnoremap <leader>vo :vsplit $MYVIMRC<cr>
 " Reload nvim configuration
-nnoremap <leader>sv :source $MYVIMRC<cr>
+nnoremap <leader>vl :source $MYVIMRC<cr>
 
 " File explorer
 nnoremap <F2> :Vexplore<CR>
@@ -254,20 +318,24 @@ nnoremap <F4> :setlocal spell!<CR>
 " toggle language
 nnoremap <F5> :call <SID>ToggleSpellLang()<CR>
 
+if has("nvim")
+    " termninal
+    nnoremap <silent><F9> :call TermToggle(20)<CR>
+    inoremap <silent><F9> <Esc>:call TermToggle(20)<CR>
+    tnoremap <silent><F9> <C-\><C-n>
+    tnoremap <silent><F9><F9> <C-\><C-n>:call TermToggle(20)<CR>
+endif
+
 " sudo before saving the file
 cmap w!! w !sudo tee > /dev/null %<CR><CR>
 
-" Split
-noremap <leader>v :<C-u>vsplit<CR>
-noremap <leader>s :<C-u>split<CR>
-
 " fzf shortcut
-noremap <Leader>h :History<CR>
-noremap <leader>b :Buffers<CR>
-noremap <leader>l :Lines<CR>
-noremap <leader>e :Files<CR>
+noremap <Leader>fh :History<CR>
+noremap <leader>fb :Buffers<CR>
+noremap <leader>fl :Lines<CR>
+noremap <leader>ff :Files<CR>
+noremap <Leader>fw :exe ':Ag ' . expand('<cword>')<CR>
 noremap <Leader>f :Ag<CR>
-noremap <Leader>ff :exe ':Ag ' . expand('<cword>')<CR>
 nnoremap <leader><leader> :Commands<CR>
 
 " snippets
@@ -282,7 +350,7 @@ if has('unnamedplus')
 endif
 
 " Close buffer
-noremap <leader>c :bd<CR>
+noremap <leader>q :bd<CR>
 
 " Clean search (highlight)
 nnoremap <silent> <leader><space> :noh<cr>
@@ -291,29 +359,15 @@ nnoremap <silent> <leader><space> :noh<cr>
 vnoremap < <gv
 vnoremap > >gv
 
-" Move visual block
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
-
 "*****************************************************************************
 " Custom configs
 "*****************************************************************************
 
 " vim-go
+let g:go_version_warning = 0
 let g:go_fmt_command = "goimports"
 let g:go_list_type = "quickfix"
 let g:go_metalinter_autosave = 1
-
-" jedi-vim
-let g:jedi#popup_on_dot = 0
-let g:jedi#show_call_signatures = 0
-let g:jedi#smart_auto_mappings = 0
-let g:jedi#goto_definitions_command = "<localleader>d"
-let g:jedi#goto_assignments_command = "<localleader>g"
-let g:jedi#documentation_command = "<localleader>k"
-let g:jedi#usages_command = "<localleader>n"
-let g:jedi#rename_command = "<localleader>r"
-let g:jedi#completions_command = "<C-Space>"
 
 " *******************************************
 " vimwiki
@@ -324,19 +378,15 @@ let g:vimwiki_ext2syntax = {'.md': 'markdown', '.mkd': 'markdown', '.wiki': 'med
 "*****************************************************************************
 " Autocmd Rules
 "*****************************************************************************
-augroup vimrc-jump-last-position
-    autocmd!
-    " jump to last position
-	autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
-    " remove white spaces
-    autocmd BufWritePre * call <SID>FixWhitespace(0, line("$"))
-augroup END
-
 " txt
 augroup vimrc-wrapping
     autocmd!
     autocmd BufRead,BufNewFile *.txt setlocal filetype=markdown wrap textwidth=100 wrapmargin=4
+augroup END
 
+augroup vimrc-BWCCreateDir
+    autocmd!
+    autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
 augroup END
 
 " vim-javascript
@@ -344,6 +394,22 @@ augroup vimrc-javascript
     autocmd!
     autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 expandtab softtabstop=4
 augroup END
+
+" vim-vue
+augroup vimrc-vue
+    autocmd!
+    autocmd FileType vue setlocal tabstop=4 shiftwidth=2 expandtab softtabstop=2
+augroup END
+
+" vim-html
+augroup vimrc-html
+    autocmd!
+    autocmd FileType html setlocal tabstop=4 shiftwidth=2 expandtab softtabstop=2
+augroup END
+let g:html_indent_script1 = 'inc'
+let g:html_indent_style1  = 'inc'
+let g:html_indent_inctags = 'html,body,head,tbody,p,li,dd,dt,h1,h2,h3,h4,h5,h6,blockquote,section,script,style'
+
 
 " python
 augroup vimrc-python
@@ -374,31 +440,35 @@ augroup vimrc-make-cmake
     autocmd BufNewFile,BufRead CMakeLists.txt setlocal filetype=cmake
 augroup END
 
+
+" GO
+augroup vimrc-go
+    autocmd!
+    autocmd FileType go nmap <silent> gd <Plug>(go-def)
+    autocmd FileType go nmap <silent> gk <Plug>(go-doc)
+    autocmd FileType go nmap <silent> gdv <Plug>(go-def-vertical)
+    autocmd FileType go nmap <silent> gkv <Plug>(go-doc-vertical)
+    autocmd FileType go nmap <silent> gkb <Plug>(go-doc-browser)
+    autocmd FileType go nmap <silent> gi <Plug>(go-info)
+augroup END
+
+
+" gopass
+augroup virmc-gopass
+    autocmd!
+    au BufNewFile,BufRead /dev/shm/gopass.* setlocal noswapfile nobackup noundofile
+augroup END
+
+" Set the filetype to yaml for salt's `.sls` extension
+au BufRead,BufNewFile *.sls set filetype=yaml
+"
 " htmldjango
 augroup virmc-htmldjango
     autocmd!
     autocmd FileType htmldjango setlocal tabstop=2 shiftwidth=2 expandtab softtabstop=2
     autocmd FileType htmldjango :iabbrev <buffer> {% {%  %}<left><left><left>
+    " } this is just to make syntax highlight happy
     autocmd FileType htmldjango :iabbrev <buffer> {{ {{  }}<left><left><left>
+    " }} this is just to make syntax highlight happy
 augroup END
 
-" Set the filetype to yaml for salt's `.sls` extension
-au BufRead,BufNewFile *.sls set filetype=yaml
-
-if executable("go")
-    augroup FileType go
-        autocmd!
-        autocmd FileType go nmap <localleader>d <Plug>(go-def)
-        autocmd FileType go nmap <localleader>k <Plug>(go-doc)
-        autocmd FileType go nmap <localleader>dv <Plug>(go-def-vertical)
-        autocmd FileType go nmap <localleader>kv <Plug>(go-doc-vertical)
-        autocmd FileType go nmap <localleader>kb <Plug>(go-doc-browser)
-        autocmd FileType go nmap <localleader>i <Plug>(go-info)
-        autocmd FileType go nmap <localleader>r <Plug>(go-run)
-        autocmd FileType go nmap <localleader>b <Plug>(go-build)
-        autocmd FileType go nmap <localleader>t <Plug>(go-test)
-    augroup END
-endif
-
-" Reload the file if it has been changed outside vim
-set autoread

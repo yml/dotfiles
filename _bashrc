@@ -17,7 +17,7 @@ shopt -s checkwinsize
 #############################################################################
 # GIT prompt in PS1
 #############################################################################
-function git_prompt_get_git_branch() {
+function git_prompt_get_git_branch () {
   # On branches, this will return the branch name
   # On non-branches, (no branch)
   ref="$(git symbolic-ref HEAD 2> /dev/null | sed -e 's/refs\/heads\///')"
@@ -28,7 +28,7 @@ function git_prompt_get_git_branch() {
   fi
 }
 
-git_prompt_get_git_info () {
+function git_prompt_get_git_info () {
   # Grab the branch
   branch="$(git_prompt_get_git_branch)"
 
@@ -38,7 +38,7 @@ git_prompt_get_git_info () {
   fi
 }
 #############################################################################
-# history 
+# history
 #############################################################################
 function dedup_bash_history () {
     rm -f  ~./.unduped_bash_history && \
@@ -61,75 +61,99 @@ xterm*|rxvt*)
     ;;
 esac
 
+# TODO delete if it is still commented in few months (2018-09-13)
 # Set up TERM variables.
 # vt100 and xterm have no color in vim (at least on unixs), but if we call them xterm-color, they will.
 # (vt100 for F-Secure SSH.)
 # This may well be the case for some other terms, so I'm putting them here.
 # Also set up a variable to indicate whether to set up the title functions.
 # TODO gnome-terminal, or however it reports itself
-case $TERM in
+# case $TERM in
 
-  screen)
-    TERM_IS_COLOR=true
-    TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=false
-    TERM_NOT_RECOGNIZED_BY_SUN_UTILS=false
-    TERM_CAN_TITLE=true
-  ;;
+#   screen)
+#     TERM_IS_COLOR=true
+#     TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=false
+#     TERM_NOT_RECOGNIZED_BY_SUN_UTILS=false
+#     TERM_CAN_TITLE=true
+#   ;;
 
-  xterm-color|color_xterm|rxvt|Eterm|screen*) # screen.linux|screen-w
-    TERM_IS_COLOR=true
-    TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=false
-    TERM_NOT_RECOGNIZED_BY_SUN_UTILS=true
-    TERM_CAN_TITLE=true
-  ;;
+#   xterm-color|color_xterm|rxvt|Eterm|screen*) # screen.linux|screen-w
+#     TERM_IS_COLOR=true
+#     TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=false
+#     TERM_NOT_RECOGNIZED_BY_SUN_UTILS=true
+#     TERM_CAN_TITLE=true
+#   ;;
 
-  linux)
-    TERM_IS_COLOR=true
-    TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=false
-    TERM_NOT_RECOGNIZED_BY_SUN_UTILS=true
-    TERM_CAN_TITLE=false
-  ;;
+#   linux)
+#     TERM_IS_COLOR=true
+#     TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=false
+#     TERM_NOT_RECOGNIZED_BY_SUN_UTILS=true
+#     TERM_CAN_TITLE=false
+#   ;;
 
-  xterm|vt100)
-    TERM_IS_COLOR=true
-    TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=true
-    TERM_NOT_RECOGNIZED_BY_SUN_UTILS=false
-    TERM_CAN_TITLE=true
-  ;;
+#   xterm|vt100)
+#     TERM_IS_COLOR=true
+#     TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=true
+#     TERM_NOT_RECOGNIZED_BY_SUN_UTILS=false
+#     TERM_CAN_TITLE=true
+#   ;;
 
-  *xterm*|eterm|rxvt*)
-    TERM_IS_COLOR=true
-    TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=true
-    TERM_NOT_RECOGNIZED_BY_SUN_UTILS=true
-    TERM_CAN_TITLE=true
-  ;;
+#   *xterm*|eterm|rxvt*)
+#     TERM_IS_COLOR=true
+#     TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=true
+#     TERM_NOT_RECOGNIZED_BY_SUN_UTILS=true
+#     TERM_CAN_TITLE=true
+#   ;;
 
-  *)
-    TERM_IS_COLOR=false
-    TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=false
-    TERM_NOT_RECOGNIZED_BY_SUN_UTILS=false
-    TERM_CAN_TITLE=false
-  ;;
+#   *)
+#     TERM_IS_COLOR=false
+#     TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=false
+#     TERM_NOT_RECOGNIZED_BY_SUN_UTILS=false
+#     TERM_CAN_TITLE=false
+#   ;;
 
-esac
+# esac
+# ----------- End of previous section ----------------
+
+# function to an npm bin to $PATH
+function addNpmBinToPath() {
+    if [[ -d $(npm bin) ]]; then
+        export PATH=$(npm bin):$PATH
+    fi
+}
+#function to use go tip
+function useGoTip() {
+    if [[ -d $HOME/gotip ]]; then
+        export GOROOT=$HOME/gotip
+        export PATH=$GOROOT/bin:$PATH
+    fi
+}
+
+function pyclean() {
+    find . -type d -name "__pycache__" | xargs rm -rf
+}
+
+# Default installation path for GOLANG
+[[ -d /usr/local/go/bin/ ]] && PATH+=":/usr/local/go/bin/"
 
 # Add env variable to work with GO easier
 if [[ -d $HOME/gopath ]]; then
     export GOPATH=$HOME/gopath
-    export PATH=$PATH:$GOPATH/bin
+    PATH+=":$GOPATH/bin"
 fi
 
-if [[ -d $HOME/.local/bin ]]; then
-    export PATH=$PATH:$HOME/.local/bin
-fi
+# Starting with go 1.11 GOPATH is not needed anymore
+[[ -d $HOME/go/bin ]] && PATH+=":$HOME/go/bin"
 
-if [[ -d $HOME/go ]]; then
-    export GOROOT=$HOME/go
-    export PATH=$GOROOT/bin:$PATH
-fi
+# Interative node js version manager
+[[ -d $HOME/n/bin ]] && PATH+=":$HOME/n/bin"
 
+[[ -d $HOME/.local/bin ]] && PATH+=":$HOME/.local/bin"
 
-if hash nvim 2>/dev/null; then
+# if ag is available use it by default for FZF
+[[ -x $(command -v ag) ]] && export FZF_DEFAULT_COMMAND='ag --hidden --smart-case --ignore=".git" --ignore="__pycache__" -g ""'
+
+if [[ -x $(command -v nvim) ]]; then
     # nvim
     export EDITOR=nvim
     export VISUAL=nvim
@@ -142,9 +166,7 @@ else
 fi
 
 # remap caps lock to escape
-if setxkbmap -version >/dev/null 2>&1; then
-    setxkbmap -option "caps:swapescape"
-fi
+[[ -x $(command -v setxkbmap) ]] && setxkbmap -option "caps:swapescape"
 
 # Set my GPG key
 export GPGKEY=2F74DA04
@@ -153,7 +175,7 @@ export GPGKEY=2F74DA04
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
 if [[ -f /etc/bash_completion ]] && ! shopt -oq posix; then
-    . /etc/bash_completion
+    source /etc/bash_completion
 fi
 
 [[ -f ~/.fzf.bash ]] && source ~/.fzf.bash
@@ -163,3 +185,4 @@ fi
 
 # Local override
 [[ -f ~/.bash_local ]] && source ~/.bash_local
+
