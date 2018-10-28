@@ -60,16 +60,14 @@ call plug#end()
 if has("nvim-0.3.0")
     inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
-    " Use `[c` and `]c` for navigate diagnostics
-    nmap <silent> [c <Plug>(coc-diagnostic-prev)
-    nmap <silent> ]c <Plug>(coc-diagnostic-next)
-
     " Remap keys for gotos
     nmap <silent> gd <Plug>(coc-definition)
     nmap <silent> gt <Plug>(coc-type-definition)
     nmap <silent> gi <Plug>(coc-implementation)
     nmap <silent> gr <Plug>(coc-references)
     nnoremap <silent> gk :call <SID>show_documentation()<CR>
+    nmap <silent> <up> <Plug>(coc-diagnostic-prev)
+    nmap <silent> <down> <Plug>(coc-diagnostic-next)
 
     function! s:show_documentation()
         if &filetype == 'vim'
@@ -99,12 +97,12 @@ if has("nvim-0.3.0")
     " Remap for do codeAction of current line
     nmap <leader>cal  <Plug>(coc-codeaction)
 
-    " Use `:Format` for format current buffer
-    command! -nargs=0 Format :call CocAction('format')
+    " Use `:CocFormat` for format current buffer
+    command! -nargs=0 CocFormat :call CocAction('format')
 
-    " Use `:Fold` for fold current buffer
-    command! -nargs=? Fold :call CocAction('fold', <f-args>)
-
+    " Use `:CocFold` for fold current buffer
+    command! -nargs=? CocFold :call CocAction('fold', <f-args>)
+    
     " Use tab for trigger completion with characters ahead and navigate.
     inoremap <silent><expr> <TAB>
           \ pumvisible() ? "\<C-n>" :
@@ -270,8 +268,26 @@ endfunction
 
 if has("nvim")
     " Open the terminal window at the bottom in nvim
-    function! s:OpenTerminalBotRight()
-        :botright split | terminal
+    let s:term_buf = 0
+    let s:term_win = 0
+
+    function! TermToggle(height)
+        if win_gotoid(s:term_win)
+            hide
+        else
+            new terminal
+            exec "resize ".a:height
+            try
+                exec "buffer ".s:term_buf
+                exec "bd terminal"
+            catch
+                call termopen($SHELL, {"detach": 0})
+                let s:term_buf = bufnr("")
+                setlocal nonu nornu scl=no nocul
+            endtry
+            startinsert!
+            let s:term_win = win_getid()
+        endif
     endfunction
 
 
@@ -304,8 +320,10 @@ nnoremap <F5> :call <SID>ToggleSpellLang()<CR>
 
 if has("nvim")
     " termninal
-    nnoremap <silent> <F12> :call <SID>OpenTerminalBotRight()<CR>
-    tnoremap <F12> <C-\><C-n>
+    nnoremap <silent><F9> :call TermToggle(20)<CR>
+    inoremap <silent><F9> <Esc>:call TermToggle(20)<CR>
+    tnoremap <silent><F9> <C-\><C-n>
+    tnoremap <silent><F9><F9> <C-\><C-n>:call TermToggle(20)<CR>
 endif
 
 " sudo before saving the file
