@@ -61,13 +61,13 @@ if has("nvim-0.3.0")
     inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
     " Remap keys for gotos
-    nmap <silent> gd <Plug>(coc-definition)
-    nmap <silent> gt <Plug>(coc-type-definition)
-    nmap <silent> gi <Plug>(coc-implementation)
-    nmap <silent> gr <Plug>(coc-references)
-    nnoremap <silent> gk :call <SID>show_documentation()<CR>
-    nmap <silent> <up> <Plug>(coc-diagnostic-prev)
-    nmap <silent> <down> <Plug>(coc-diagnostic-next)
+    nmap <leader>cd <Plug>(coc-definition)
+    nmap <leader>ct <Plug>(coc-type-definition)
+    nmap <leader>ci <Plug>(coc-implementation)
+    nmap <leader>cr <Plug>(coc-references)
+    nnoremap <leader>ck :call <SID>show_documentation()<CR>
+    nmap <up>  <Plug>(coc-diagnostic-prev)
+    nmap <down> <Plug>(coc-diagnostic-next)
 
     function! s:show_documentation()
         if &filetype == 'vim'
@@ -108,16 +108,23 @@ if has("nvim-0.3.0")
           \ pumvisible() ? "\<C-n>" :
           \ <SID>check_back_space() ? "\<TAB>" :
           \ coc#refresh()
+    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+    " Use <c-space> for trigger completion.
+    inoremap <silent><expr> <c-space> coc#refresh()
+
+    " Use <C-x><C-o> to complete 'word', 'emoji' and 'include' sources
+    imap <silent> <C-x><C-o> <Plug>(coc-complete-custom)
 
     function! s:check_back_space() abort
       let col = col('.') - 1
       return !col || getline('.')[col - 1]  =~# '\s'
     endfunction
 
-    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-    " Use <c-space> for trigger completion.
-    inoremap <silent><expr> <c-space> coc#refresh()
     " Use <cr> for confirm completion.
+    " Coc only does snippet and additional edit on confirm.
+    inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
 endif
 
 "*****************************************************************************"
