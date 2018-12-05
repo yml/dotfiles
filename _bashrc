@@ -149,6 +149,7 @@ fi
 [[ -d $HOME/n/bin ]] && PATH+=":$HOME/n/bin"
 
 [[ -d $HOME/.local/bin ]] && PATH+=":$HOME/.local/bin"
+[[ -d $HOME/neovim/bin ]] && PATH+=":$HOME/neovim/bin"
 
 # if ag is available use it by default for FZF
 [[ -x $(command -v ag) ]] && export FZF_DEFAULT_COMMAND='ag --hidden --smart-case --ignore=".git" --ignore="__pycache__" -g ""'
