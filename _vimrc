@@ -35,6 +35,7 @@ endif
 " Plug install packages
 "*****************************************************************************
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -342,10 +343,15 @@ endif
 cmap w!! w !sudo tee > /dev/null %<CR><CR>
 
 " fzf shortcut
-noremap <Leader>fh :History<CR>
-noremap <leader>fb :Buffers<CR>
-noremap <leader>fl :Lines<CR>
-noremap <leader>ff :Files<CR>
+let g:fzf_commits_log_options = '--graph --color=always
+  \ --format="%C(yellow)%h%C(red)%d%C(reset)
+  \ - %C(bold green)(%ar)%C(reset) %s %C(blue)<%an>%C(reset)"'
+
+nnoremap <Leader>fh :History<CR>
+nnoremap <leader>fb :Buffers<CR>
+nnoremap <leader>fl :Lines<CR>
+nnoremap <leader>ff :Files<CR>
+nnoremap <leader>fc  :Commits<CR>
 noremap <Leader>fw :exe ':Ag ' . expand('<cword>')<CR>
 noremap <Leader>f :Ag<CR>
 nnoremap <leader><leader> :Commands<CR>
