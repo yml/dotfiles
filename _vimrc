@@ -130,6 +130,7 @@ if has("nvim-0.3.0")
 
     " Use `:Fold` for fold current buffer
     command! -nargs=? CocFold :call     CocAction('fold', <f-args>)
+    command! -nargs=0 CocPrettier :CocCommand prettier.formatFile
 
 endif
 
