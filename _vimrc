@@ -103,7 +103,7 @@ if has("nvim-0.3.0")
     endfunction
 
     " Highlight symbol under cursor on CursorHold
-    autocmd CursorHold * silent call CocActionAsync('highlight')
+    " autocmd CursorHold * silent call CocActionAsync('highlight')
 
     " Remap for rename current word
     nmap <leader>rn <Plug>(coc-rename)
@@ -164,7 +164,11 @@ set autoread
 
 
 " Path
-set path+=**
+set path=.,,**
+if !empty($VIRTUAL_ENV)
+    set path+=$VIRTUAL_ENV/lib/**
+endif
+
 " Encoding
 set encoding=utf-8
 set fileencoding=utf-8
@@ -242,7 +246,28 @@ set title
 set titleold="Terminal"
 set titlestring=%F
 
-set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
+" Statusline definition 
+set statusline=                                 " Clear
+set statusline+=%t                              " Tail of the filename
+set statusline+=%h                              " Help file flag
+set statusline+=%r                              " Read only flag
+set statusline+=%m                              " Modified flag
+set statusline+=%=                              " Left/right separator
+set statusline+=\ \                             " --
+set statusline+=%{&filetype}                    " Filetype
+set statusline+=\ \                             " --
+set statusline+=%{&fenc}                        " File encoding
+set statusline+=[%{&ff}]                        " File format
+set statusline+=[                               " Indent settings: begin
+set statusline+=%{&expandtab?\"sp\":\"tab\"}\   " Indent settings
+set statusline+=%{&shiftwidth}                  " Indent settings
+set statusline+=]                               " Indent settings: end
+set statusline+=\ \                             " --
+set statusline+=col:\ \%2c                      " Cursor column
+set statusline+=\ \                             " --
+set statusline+=line:\ \%l\/\%L                 " Cursor line/total lines
+set statusline+=\ \                             " --
+set statusline+=%P                              " Percent through file
 
 "*****************************************************************************
 " Abbreviations
