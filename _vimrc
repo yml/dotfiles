@@ -246,9 +246,13 @@ set title
 set titleold="Terminal"
 set titlestring=%F
 
+function! ShortFilename() abort
+    return pathshorten(expand("%"))
+endfunction
+
 " Statusline definition 
 set statusline=                                 " Clear
-set statusline+=%t                              " Tail of the filename
+set statusline+=%{ShortFilename()}              " Tail of the filename
 set statusline+=%h                              " Help file flag
 set statusline+=%r                              " Read only flag
 set statusline+=%m                              " Modified flag
