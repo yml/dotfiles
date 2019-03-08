@@ -61,58 +61,6 @@ xterm*|rxvt*)
     ;;
 esac
 
-# TODO delete if it is still commented in few months (2018-09-13)
-# Set up TERM variables.
-# vt100 and xterm have no color in vim (at least on unixs), but if we call them xterm-color, they will.
-# (vt100 for F-Secure SSH.)
-# This may well be the case for some other terms, so I'm putting them here.
-# Also set up a variable to indicate whether to set up the title functions.
-# TODO gnome-terminal, or however it reports itself
-# case $TERM in
-
-#   screen)
-#     TERM_IS_COLOR=true
-#     TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=false
-#     TERM_NOT_RECOGNIZED_BY_SUN_UTILS=false
-#     TERM_CAN_TITLE=true
-#   ;;
-
-#   xterm-color|color_xterm|rxvt|Eterm|screen*) # screen.linux|screen-w
-#     TERM_IS_COLOR=true
-#     TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=false
-#     TERM_NOT_RECOGNIZED_BY_SUN_UTILS=true
-#     TERM_CAN_TITLE=true
-#   ;;
-
-#   linux)
-#     TERM_IS_COLOR=true
-#     TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=false
-#     TERM_NOT_RECOGNIZED_BY_SUN_UTILS=true
-#     TERM_CAN_TITLE=false
-#   ;;
-
-#   xterm|vt100)
-#     TERM_IS_COLOR=true
-#     TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=true
-#     TERM_NOT_RECOGNIZED_BY_SUN_UTILS=false
-#     TERM_CAN_TITLE=true
-#   ;;
-
-#   *xterm*|eterm|rxvt*)
-#     TERM_IS_COLOR=true
-#     TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=true
-#     TERM_NOT_RECOGNIZED_BY_SUN_UTILS=true
-#     TERM_CAN_TITLE=true
-#   ;;
-
-#   *)
-#     TERM_IS_COLOR=false
-#     TERM_NOT_RECOGNIZED_AS_COLOR_BY_VIM=false
-#     TERM_NOT_RECOGNIZED_BY_SUN_UTILS=false
-#     TERM_CAN_TITLE=false
-#   ;;
-
-# esac
 # ----------- End of previous section ----------------
 
 # function to an npm bin to $PATH
@@ -167,7 +115,7 @@ else
 fi
 
 # remap caps lock to escape
-[[ -x $(command -v setxkbmap) ]] && setxkbmap -option "caps:swapescape"
+# [[ -x $(command -v setxkbmap) ]] && setxkbmap -option "caps:swapescape"
 
 # Set my GPG key
 export GPGKEY=2F74DA04

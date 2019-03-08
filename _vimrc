@@ -82,8 +82,8 @@ if has("nvim-0.3.0")
     inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
     " Use `[c` and `]c` for navigate diagnostics
-    nmap <silent> [c <Plug>(coc-diagnostic-prev)
-    nmap <silent> ]c <Plug>(coc-diagnostic-next)
+    nmap <silent> <LEFT> <Plug>(coc-diagnostic-prev)
+    nmap <silent> <RIGHT> <Plug>(coc-diagnostic-next)
 
     " Remap keys for gotos
     nmap <silent> gd <Plug>(coc-definition)
@@ -132,6 +132,19 @@ if has("nvim-0.3.0")
     command! -nargs=? CocFold :call     CocAction('fold', <f-args>)
     command! -nargs=0 CocPrettier :CocCommand prettier.formatFile
 
+    " Using CocList
+    " Show all diagnostics
+    nnoremap <silent> <space>d  :<C-u>CocList diagnostics<cr>
+    " Manage extensions
+    nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+    " Show commands
+    nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+    " Find symbol of current document
+    nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+    " Search workspace symbols
+    nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+    " Resume latest coc list
+    nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 endif
 
 "*****************************************************************************"
@@ -246,13 +259,9 @@ set title
 set titleold="Terminal"
 set titlestring=%F
 
-function! ShortFilename() abort
-    return pathshorten(expand("%"))
-endfunction
-
 " Statusline definition 
 set statusline=                                 " Clear
-set statusline+=%{ShortFilename()}              " Tail of the filename
+set statusline+=%{pathshorten(expand('%'))}     " Tail of the filename
 set statusline+=%h                              " Help file flag
 set statusline+=%r                              " Read only flag
 set statusline+=%m                              " Modified flag
@@ -347,6 +356,9 @@ command! -nargs=+ -complete=file Agraw call fzf#vim#ag_raw(<q-args>)
 "*****************************************************************************
 " Mappings
 "*****************************************************************************
+" Remap escape
+imap ii <ESC>
+
 " Edit my nvim configuration
 nnoremap <leader>vo :vsplit $MYVIMRC<cr>
 " Reload nvim configuration
@@ -381,6 +393,7 @@ nnoremap <Leader>fh :History<CR>
 nnoremap <leader>fb :Buffers<CR>
 nnoremap <leader>fl :Lines<CR>
 nnoremap <leader>ff :Files<CR>
+nnoremap <C-p> :Files<CR>
 nnoremap <leader>fc  :Commits<CR>
 noremap <Leader>fw :exe ':Ag ' . expand('<cword>')<CR>
 noremap <Leader>f :Ag<CR>
